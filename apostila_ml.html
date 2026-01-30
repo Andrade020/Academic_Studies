@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apostila de Programação e Machine Learning: Do Python ao Deep Learning</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e3a5f;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --accent-orange: #f59e0b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --surface-dark: #1e293b;
+            --surface-darker: #0f172a;
+            --surface-card: #1e293b;
+            --border-subtle: #334155;
+            --code-bg: #0d1117;
+            --code-text: #c9d1d9;
+            --code-keyword: #ff7b72;
+            --code-string: #a5d6ff;
+            --code-function: #d2a8ff;
+            --code-comment: #8b949e;
+            --code-number: #79c0ff;
+            --sidebar-width: 280px;
+            --content-max-width: 900px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--primary-dark); color: var(--text-primary); line-height: 1.7; font-size: 16px; }
+        .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100vh; background: linear-gradient(180deg, var(--surface-darker) 0%, var(--primary-dark) 100%); border-right: 1px solid var(--border-subtle); overflow-y: auto; z-index: 100; padding: 2rem 0; }
+        .sidebar-header { padding: 0 1.5rem 2rem; border-bottom: 1px solid var(--border-subtle); margin-bottom: 1.5rem; }
+        .sidebar-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem; }
+        .sidebar-subtitle { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        .nav-section { margin-bottom: 1.5rem; }
+        .nav-section-title { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; padding: 0.5rem 1.5rem; }
+        .nav-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1.5rem; color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 400; transition: all 0.2s ease; border-left: 3px solid transparent; }
+        .nav-link:hover { background: rgba(59, 130, 246, 0.1); color: var(--text-primary); border-left-color: var(--accent-blue); }
+        .nav-link .icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
+        .nav-link.python .icon { color: var(--accent-green); }
+        .nav-link.pandas .icon { color: var(--accent-cyan); }
+        .nav-link.sklearn .icon { color: var(--accent-orange); }
+        .nav-link.pytorch .icon { color: var(--code-keyword); }
+        .nav-link.tensorflow .icon { color: var(--accent-purple); }
+        .nav-link.git .icon { color: var(--accent-orange); }
+        .nav-link.simulado .icon { color: var(--accent-blue); }
+        .main-content { margin-left: var(--sidebar-width); min-height: 100vh; }
+        .hero { background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 50%, var(--surface-dark) 100%); padding: 5rem 3rem; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 80%; height: 200%; background: radial-gradient(ellipse, rgba(59, 130, 246, 0.15) 0%, transparent 60%); pointer-events: none; }
+        .hero::after { content: ''; position: absolute; bottom: -30%; left: -10%; width: 50%; height: 100%; background: radial-gradient(ellipse, rgba(6, 182, 212, 0.1) 0%, transparent 60%); pointer-events: none; }
+        .hero-content { max-width: var(--content-max-width); position: relative; z-index: 1; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.3); padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.8rem; color: var(--accent-cyan); margin-bottom: 1.5rem; }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 3.2rem; font-weight: 700; line-height: 1.2; margin-bottom: 1rem; background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-subtitle { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem; max-width: 600px; }
+        .hero-meta { display: flex; gap: 2rem; flex-wrap: wrap; }
+        .meta-item { display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.9rem; }
+        .meta-item strong { color: var(--text-primary); }
+        .content-wrapper { max-width: var(--content-max-width); padding: 3rem; }
+        section { margin-bottom: 4rem; }
+        .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); }
+        .section-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .section-icon.python { background: linear-gradient(135deg, #306998, #FFD43B); }
+        .section-icon.pandas { background: linear-gradient(135deg, #130754, #E70488); }
+        .section-icon.sklearn { background: linear-gradient(135deg, #F7931E, #3499CD); }
+        .section-icon.pytorch { background: linear-gradient(135deg, #EE4C2C, #DE3412); }
+        .section-icon.tensorflow { background: linear-gradient(135deg, #FF6F00, #FFA000); }
+        .section-icon.git { background: linear-gradient(135deg, #F05032, #DE4C36); }
+        .section-icon.quiz { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); }
+        .section-title-group h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .section-title-group span { font-size: 0.85rem; color: var(--text-muted); }
+        h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 1rem; color: var(--accent-cyan); }
+        h4 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: var(--text-primary); }
+        p { margin-bottom: 1rem; color: var(--text-secondary); }
+        .info-box { background: var(--surface-card); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid var(--accent-blue); }
+        .info-box.tip { border-left-color: var(--accent-green); background: rgba(16, 185, 129, 0.1); }
+        .info-box.warning { border-left-color: var(--accent-orange); background: rgba(245, 158, 11, 0.1); }
+        .info-box-title { font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .code-block { background: var(--code-bg); border-radius: 12px; margin: 1.5rem 0; overflow: hidden; border: 1px solid var(--border-subtle); }
+        .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: rgba(255, 255, 255, 0.03); border-bottom: 1px solid var(--border-subtle); }
+        .code-lang { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .code-dots { display: flex; gap: 6px; }
+        .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .code-dot.red { background: #ff5f56; }
+        .code-dot.yellow { background: #ffbd2e; }
+        .code-dot.green { background: #27ca40; }
+        pre { margin: 0; padding: 1.25rem; overflow-x: auto; }
+        code { font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.6; color: var(--code-text); }
+        .keyword { color: var(--code-keyword); }
+        .string { color: var(--code-string); }
+        .function { color: var(--code-function); }
+        .comment { color: var(--code-comment); font-style: italic; }
+        .number { color: var(--code-number); }
+        .decorator { color: var(--accent-purple); }
+        .class-name { color: #7ee787; }
+        .param { color: #ffa657; }
+        .operator { color: var(--code-keyword); }
+        .builtin { color: var(--code-number); }
+        p code, li code { background: rgba(59, 130, 246, 0.15); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.875em; color: var(--accent-cyan); }
+        ul, ol { margin: 1rem 0 1rem 1.5rem; color: var(--text-secondary); }
+        li { margin-bottom: 0.5rem; }
+        .table-wrapper { overflow-x: auto; margin: 1.5rem 0; border-radius: 12px; border: 1px solid var(--border-subtle); }
+        table { width: 100%; border-collapse: collapse; background: var(--surface-card); }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-subtle); }
+        th { background: rgba(59, 130, 246, 0.1); font-weight: 600; color: var(--text-primary); font-size: 0.9rem; }
+        td { color: var(--text-secondary); font-size: 0.9rem; }
+        tr:last-child td { border-bottom: none; }
+        .quiz-section { background: linear-gradient(135deg, var(--surface-dark) 0%, var(--primary-dark) 100%); padding: 3rem; border-radius: 20px; margin: 3rem 0; }
+        .quiz-grid { display: grid; gap: 1.5rem; }
+        .question-card { background: var(--surface-card); border-radius: 16px; padding: 1.75rem; border: 1px solid var(--border-subtle); transition: all 0.3s ease; }
+        .question-card:hover { border-color: var(--accent-blue); transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); }
+        .question-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .question-number { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; flex-shrink: 0; }
+        .question-category { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.25rem 0.75rem; border-radius: 50px; background: rgba(139, 92, 246, 0.2); color: var(--accent-purple); }
+        .question-category.python { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .question-category.pandas { background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); }
+        .question-category.sklearn { background: rgba(245, 158, 11, 0.2); color: var(--accent-orange); }
+        .question-category.pytorch { background: rgba(238, 76, 44, 0.2); color: #ff7b72; }
+        .question-category.git { background: rgba(240, 80, 50, 0.2); color: #ffa657; }
+        .question-category.logica { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
+        .question-category.tensorflow { background: rgba(255, 111, 0, 0.2); color: var(--accent-orange); }
+        .question-text { font-size: 1rem; color: var(--text-primary); margin-bottom: 1.25rem; line-height: 1.6; }
+        .question-text code { background: var(--code-bg); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.9em; }
+        .options-list { list-style: none; margin: 0; padding: 0; }
+        .option { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: rgba(255, 255, 255, 0.02); border-radius: 10px; border: 1px solid transparent; cursor: pointer; transition: all 0.2s ease; }
+        .option:hover { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); }
+        .option-marker { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border-subtle); flex-shrink: 0; margin-top: 2px; }
+        .option-text { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
+        .option-text code { background: var(--code-bg); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; }
+        .answer { display: none; margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 10px; border-left: 4px solid var(--accent-green); }
+        .answer.visible { display: block; }
+        .answer-label { font-weight: 600; color: var(--accent-green); margin-bottom: 0.25rem; font-size: 0.85rem; }
+        .answer-text { color: var(--text-primary); margin: 0; }
+        .btn-container { text-align: center; margin-top: 2rem; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: white; border: none; padding: 1rem 2.5rem; font-size: 1rem; font-weight: 600; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5); }
+        .btn-primary:active { transform: translateY(0); }
+        footer { text-align: center; padding: 3rem; border-top: 1px solid var(--border-subtle); color: var(--text-muted); }
+        footer p { margin: 0; font-size: 0.9rem; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--primary-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+        @media (max-width: 1024px) { .sidebar { width: 240px; } .main-content { margin-left: 240px; } .hero h1 { font-size: 2.5rem; } }
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } .hero { padding: 3rem 1.5rem; } .hero h1 { font-size: 2rem; } .content-wrapper { padding: 1.5rem; } .hero-meta { flex-direction: column; gap: 1rem; } }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">CodeML</div>
+            <div class="sidebar-subtitle">Apostila Educacional</div>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Fundamentos</div>
+            <a href="#python" class="nav-link python"><span class="icon">🐍</span>Python</a>
+            <a href="#pandas" class="nav-link pandas"><span class="icon">🐼</span>Pandas</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Machine Learning</div>
+            <a href="#sklearn" class="nav-link sklearn"><span class="icon">⚙️</span>Scikit-Learn</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Deep Learning</div>
+            <a href="#pytorch" class="nav-link pytorch"><span class="icon">🔥</span>PyTorch</a>
+            <a href="#tensorflow" class="nav-link tensorflow"><span class="icon">🧠</span>TensorFlow/Keras</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Ferramentas</div>
+            <a href="#git" class="nav-link git"><span class="icon">📂</span>Git</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Avaliação</div>
+            <a href="#simulado" class="nav-link simulado"><span class="icon">📝</span>Simulado</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="hero">
+            <div class="hero-content">
+                <span class="hero-badge">📚 Material Educacional 2025</span>
+                <h1>Apostila de Programação e Machine Learning</h1>
+                <p class="hero-subtitle">Do Python ao Deep Learning: um guia completo para estudantes de tecnologia e aspirantes a Cientistas de Dados.</p>
+                <div class="hero-meta">
+                    <div class="meta-item"><span>👤</span><span>Autor: <strong>Lucas Andrade</strong></span></div>
+                    <div class="meta-item"><span>🎯</span><span>Público: <strong>Estudantes de Tecnologia</strong></span></div>
+                    <div class="meta-item"><span>📖</span><span>Seções: <strong>6 Módulos + Simulado</strong></span></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <!-- PYTHON -->
+            <section id="python">
+                <div class="section-header">
+                    <div class="section-icon python">🐍</div>
+                    <div class="section-title-group">
+                        <h2>Fundamentos de Python</h2>
+                        <span>Decorators, List Comprehensions e Pickling</span>
+                    </div>
+                </div>
+
+                <h3>1.1 Decorators</h3>
+                <p><strong>Decorators</strong> são uma funcionalidade poderosa em Python que permite modificar ou estender o comportamento de funções ou métodos sem alterar seu código fonte. Eles são essencialmente funções que recebem outra função como argumento e retornam uma nova função com funcionalidades adicionais.</p>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Conceito Chave</div>
+                    <p style="margin-bottom: 0;">Decorators são capazes de <strong>aceitar argumentos</strong> para funções e <strong>modificá-los</strong>. Isso os torna extremamente versáteis para logging, autenticação, cache, validação de dados e muito mais.</p>
+                </div>
+
+                <h4>Decorator Básico</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="keyword">def</span> <span class="function">meu_decorator</span>(<span class="param">func</span>):
+    <span class="keyword">def</span> <span class="function">wrapper</span>(<span class="param">*args</span>, <span class="param">**kwargs</span>):
+        <span class="builtin">print</span>(<span class="string">"Antes da função"</span>)
+        <span class="param">resultado</span> = <span class="function">func</span>(*args, **kwargs)
+        <span class="builtin">print</span>(<span class="string">"Depois da função"</span>)
+        <span class="keyword">return</span> resultado
+    <span class="keyword">return</span> wrapper
+
+<span class="decorator">@meu_decorator</span>
+<span class="keyword">def</span> <span class="function">saudacao</span>(<span class="param">nome</span>):
+    <span class="builtin">print</span>(<span class="string">f"Olá, {nome}!"</span>)
+
+<span class="function">saudacao</span>(<span class="string">"Lucas"</span>)
+<span class="comment"># Saída: Antes da função / Olá, Lucas! / Depois da função</span></code></pre>
+                </div>
+
+                <h4>Decorator com Argumentos</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="keyword">def</span> <span class="function">repetir</span>(<span class="param">vezes</span>):
+    <span class="keyword">def</span> <span class="function">decorator</span>(<span class="param">func</span>):
+        <span class="keyword">def</span> <span class="function">wrapper</span>(<span class="param">*args</span>, <span class="param">**kwargs</span>):
+            <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(vezes):
+                resultado = <span class="function">func</span>(*args, **kwargs)
+            <span class="keyword">return</span> resultado
+        <span class="keyword">return</span> wrapper
+    <span class="keyword">return</span> decorator
+
+<span class="decorator">@repetir(vezes=3)</span>
+<span class="keyword">def</span> <span class="function">dizer_ola</span>():
+    <span class="builtin">print</span>(<span class="string">"Olá!"</span>)
+
+<span class="function">dizer_ola</span>()  <span class="comment"># Saída: Olá! (3 vezes)</span></code></pre>
+                </div>
+
+                <h3>1.2 List Comprehensions</h3>
+                <p><strong>List Comprehensions</strong> são uma forma concisa e elegante de criar listas em Python. Elas permitem gerar novas listas aplicando uma expressão a cada item de uma sequência iterável, opcionalmente filtrando elementos com condições.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="comment"># Criando uma lista com os quadrados dos números</span>
+mylist = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]
+squared = [x**<span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> mylist]
+<span class="builtin">print</span>(squared)  <span class="comment"># [1, 4, 9, 16, 25]</span>
+
+<span class="comment"># Com condição (filtro)</span>
+pares = [x <span class="keyword">for</span> x <span class="keyword">in</span> mylist <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>]
+<span class="builtin">print</span>(pares)  <span class="comment"># [2, 4]</span>
+
+<span class="comment"># List comprehension aninhada (matriz)</span>
+matriz = [[i*j <span class="keyword">for</span> j <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, <span class="number">4</span>)] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, <span class="number">4</span>)]
+<span class="builtin">print</span>(matriz)  <span class="comment"># [[1, 2, 3], [2, 4, 6], [3, 6, 9]]</span></code></pre>
+                </div>
+
+                <div class="info-box tip">
+                    <div class="info-box-title">✅ Dica de Performance</div>
+                    <p style="margin-bottom: 0;">List comprehensions são geralmente mais rápidas que loops <code>for</code> tradicionais porque são otimizadas internamente pelo interpretador Python.</p>
+                </div>
+
+                <h3>1.3 Pickling (Serialização)</h3>
+                <p><strong>Pickling</strong> é o processo de <strong>serialização</strong> em Python — ou seja, converter objetos Python em uma sequência de bytes que pode ser salva em arquivo ou transmitida pela rede. O processo inverso (deserialização) é chamado de <em>unpickling</em>.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="keyword">import</span> pickle
+
+<span class="comment"># Objeto a ser serializado</span>
+dados = {<span class="string">'nome'</span>: <span class="string">'Lucas'</span>, <span class="string">'idade'</span>: <span class="number">25</span>, <span class="string">'habilidades'</span>: [<span class="string">'Python'</span>, <span class="string">'ML'</span>]}
+
+<span class="comment"># Serialização (salvando em arquivo)</span>
+<span class="keyword">with</span> <span class="builtin">open</span>(<span class="string">'dados.pkl'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> arquivo:
+    pickle.<span class="function">dump</span>(dados, arquivo)
+
+<span class="comment"># Deserialização (carregando do arquivo)</span>
+<span class="keyword">with</span> <span class="builtin">open</span>(<span class="string">'dados.pkl'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> arquivo:
+    dados_carregados = pickle.<span class="function">load</span>(arquivo)</code></pre>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ Cuidado com Segurança</div>
+                    <p style="margin-bottom: 0;">Nunca faça unpickle de dados de fontes não confiáveis! Arquivos pickle podem conter código malicioso.</p>
+                </div>
+            </section>
+
+            <!-- PANDAS -->
+            <section id="pandas">
+                <div class="section-header">
+                    <div class="section-icon pandas">🐼</div>
+                    <div class="section-title-group">
+                        <h2>Manipulação de Dados com Pandas</h2>
+                        <span>Series, DataFrame e operações essenciais</span>
+                    </div>
+                </div>
+
+                <p>O <strong>Pandas</strong> é a biblioteca mais popular para análise e manipulação de dados em Python. Ela fornece estruturas de dados flexíveis e eficientes para trabalhar com dados tabulares.</p>
+
+                <h3>2.1 Estruturas de Dados</h3>
+                <h4>Series (Unidimensional)</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+notas = pd.<span class="class-name">Series</span>([<span class="number">8.5</span>, <span class="number">7.0</span>, <span class="number">9.2</span>, <span class="number">6.8</span>], index=[<span class="string">'João'</span>, <span class="string">'Maria'</span>, <span class="string">'Pedro'</span>, <span class="string">'Ana'</span>])
+<span class="builtin">print</span>(notas[<span class="string">'Pedro'</span>])  <span class="comment"># 9.2</span>
+<span class="builtin">print</span>(notas.<span class="function">mean</span>())    <span class="comment"># 7.875</span></code></pre>
+                </div>
+
+                <h4>DataFrame (Bidimensional)</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code>dados = {<span class="string">'Nome'</span>: [<span class="string">'João'</span>, <span class="string">'Maria'</span>], <span class="string">'Idade'</span>: [<span class="number">25</span>, <span class="number">30</span>], <span class="string">'Cidade'</span>: [<span class="string">'SP'</span>, <span class="string">'RJ'</span>]}
+df = pd.<span class="class-name">DataFrame</span>(dados)</code></pre>
+                </div>
+
+                <h3>2.2 Leitura de Arquivos CSV</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code>df = pd.<span class="function">read_csv</span>(<span class="string">'dados.csv'</span>, sep=<span class="string">';'</span>, encoding=<span class="string">'utf-8'</span>)
+<span class="builtin">print</span>(df.<span class="function">head</span>())  <span class="comment"># primeiras 5 linhas</span></code></pre>
+                </div>
+
+                <h3>2.3 Verificação de Valores Nulos</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="builtin">print</span>(df.<span class="function">isnull</span>().<span class="function">sum</span>())  <span class="comment"># contagem por coluna</span>
+df_limpo = df.<span class="function">dropna</span>()       <span class="comment"># remove linhas com nulos</span>
+df_preenchido = df.<span class="function">fillna</span>(<span class="number">0</span>) <span class="comment"># preenche com 0</span></code></pre>
+                </div>
+
+                <h3>2.4 Resumos Estatísticos</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="builtin">print</span>(df.<span class="function">describe</span>())  <span class="comment"># count, mean, std, min, 25%, 50%, 75%, max</span></code></pre>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Método</th><th>Descrição</th><th>Exemplo</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>head(n)</code></td><td>Retorna as primeiras n linhas</td><td><code>df.head(5)</code></td></tr>
+                            <tr><td><code>read_csv()</code></td><td>Lê arquivo CSV em DataFrame</td><td><code>pd.read_csv('arquivo.csv')</code></td></tr>
+                            <tr><td><code>isnull()</code></td><td>Verifica valores nulos</td><td><code>df.isnull().sum()</code></td></tr>
+                            <tr><td><code>describe()</code></td><td>Resumo estatístico</td><td><code>df.describe()</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SCIKIT-LEARN -->
+            <section id="sklearn">
+                <div class="section-header">
+                    <div class="section-icon sklearn">⚙️</div>
+                    <div class="section-title-group">
+                        <h2>Machine Learning com Scikit-Learn</h2>
+                        <span>Treinamento, divisão de dados e clustering</span>
+                    </div>
+                </div>
+
+                <p>O <strong>Scikit-Learn</strong> é a biblioteca mais popular para Machine Learning em Python.</p>
+
+                <h3>3.1 O Método fit()</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+X = np.<span class="function">array</span>([[<span class="number">1</span>], [<span class="number">2</span>], [<span class="number">3</span>], [<span class="number">4</span>], [<span class="number">5</span>]])
+y = np.<span class="function">array</span>([<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>])
+
+modelo = <span class="class-name">LinearRegression</span>()
+modelo.<span class="function">fit</span>(X, y)  <span class="comment"># ← Treinamento!</span>
+previsao = modelo.<span class="function">predict</span>([[<span class="number">6</span>]])  <span class="comment"># [12.]</span></code></pre>
+                </div>
+
+                <h3>3.2 Divisão de Dados: train_test_split</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+
+X_train, X_test, y_train, y_test = <span class="function">train_test_split</span>(X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)
+modelo.<span class="function">fit</span>(X_train, y_train)
+score = modelo.<span class="function">score</span>(X_test, y_test)</code></pre>
+                </div>
+
+                <h3>3.3 Módulo cluster (Agrupamento)</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> KMeans
+
+X = np.<span class="function">array</span>([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">1.5</span>, <span class="number">1.8</span>], [<span class="number">5</span>, <span class="number">8</span>], [<span class="number">8</span>, <span class="number">8</span>], [<span class="number">1</span>, <span class="number">0.6</span>], [<span class="number">9</span>, <span class="number">11</span>]])
+kmeans = <span class="class-name">KMeans</span>(n_clusters=<span class="number">2</span>, random_state=<span class="number">42</span>)
+kmeans.<span class="function">fit</span>(X)
+<span class="builtin">print</span>(kmeans.labels_)  <span class="comment"># [0, 0, 1, 1, 0, 1]</span></code></pre>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">📊 Algoritmos Populares do módulo cluster</div>
+                    <ul style="margin-bottom: 0;">
+                        <li><code>KMeans</code> - Agrupamento por centróides</li>
+                        <li><code>DBSCAN</code> - Agrupamento baseado em densidade</li>
+                        <li><code>AgglomerativeClustering</code> - Clustering hierárquico</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- PYTORCH -->
+            <section id="pytorch">
+                <div class="section-header">
+                    <div class="section-icon pytorch">🔥</div>
+                    <div class="section-title-group">
+                        <h2>Deep Learning com PyTorch</h2>
+                        <span>Autograd, gradientes e computação em GPU</span>
+                    </div>
+                </div>
+
+                <p><strong>PyTorch</strong> é uma biblioteca de aprendizado de máquina de código aberto baseada na biblioteca Torch.</p>
+
+                <h3>4.1 O Módulo autograd</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="keyword">import</span> torch
+
+x = torch.<span class="function">tensor</span>([<span class="number">2.0</span>, <span class="number">3.0</span>], requires_grad=<span class="keyword">True</span>)
+y = x ** <span class="number">2</span>       <span class="comment"># y = [4, 9]</span>
+z = y.<span class="function">sum</span>()      <span class="comment"># z = 13</span></code></pre>
+                </div>
+
+                <h3>4.2 O Método backward()</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code>z.<span class="function">backward</span>()      <span class="comment"># Calcula gradientes: dz/dx</span>
+<span class="builtin">print</span>(x.grad)      <span class="comment"># tensor([4., 6.]) → 2x = [2*2, 2*3]</span></code></pre>
+                </div>
+
+                <h3>4.3 torch.no_grad()</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="keyword">with</span> torch.<span class="function">no_grad</span>():  <span class="comment"># Desabilita gradiente (inferência)</span>
+    y = x * <span class="number">2</span>
+    <span class="builtin">print</span>(y.requires_grad)  <span class="comment"># False</span></code></pre>
+                </div>
+
+                <h3>4.4 Enviando Tensores para GPU</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code>device = torch.<span class="function">device</span>(<span class="string">'cuda'</span> <span class="keyword">if</span> torch.cuda.<span class="function">is_available</span>() <span class="keyword">else</span> <span class="string">'cpu'</span>)
+x_gpu = x_cpu.<span class="function">to</span>(device)
+modelo = modelo.<span class="function">to</span>(device)</code></pre>
+                </div>
+
+                <div class="info-box tip">
+                    <div class="info-box-title">🚀 Dica de Performance</div>
+                    <p style="margin-bottom: 0;">Sempre verifique se os tensores e o modelo estão no mesmo dispositivo antes de operações!</p>
+                </div>
+            </section>
+
+            <!-- TENSORFLOW -->
+            <section id="tensorflow">
+                <div class="section-header">
+                    <div class="section-icon tensorflow">🧠</div>
+                    <div class="section-title-group">
+                        <h2>Deep Learning com TensorFlow/Keras</h2>
+                        <span>Modelos Sequential e camadas Dense</span>
+                    </div>
+                </div>
+
+                <p><strong>TensorFlow</strong> é uma plataforma de código aberto para Machine Learning desenvolvida pelo Google. <strong>Keras</strong> é sua API de alto nível.</p>
+
+                <h3>5.1 Modelo Sequential</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Python</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf
+<span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras
+<span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> layers
+
+modelo = keras.<span class="class-name">Sequential</span>([
+    layers.<span class="class-name">Dense</span>(<span class="number">64</span>, activation=<span class="string">'relu'</span>, input_shape=(<span class="number">4</span>,)),
+    layers.<span class="class-name">Dense</span>(<span class="number">1</span>)  <span class="comment"># Camada de saída (regressão)</span>
+])
+
+modelo.<span class="function">compile</span>(
+    optimizer=keras.optimizers.<span class="class-name">Adam</span>(),
+    loss=keras.losses.<span class="class-name">MeanSquaredError</span>()
+)
+
+history = modelo.<span class="function">fit</span>(X, y, epochs=<span class="number">10</span>, verbose=<span class="number">0</span>)
+modelo.<span class="function">summary</span>()</code></pre>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Componente</th><th>Descrição</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>Sequential</code></td><td>Modelo de empilhamento linear de camadas</td></tr>
+                            <tr><td><code>Dense</code></td><td>Camada totalmente conectada</td></tr>
+                            <tr><td><code>Adam</code></td><td>Otimizador adaptativo com momentum</td></tr>
+                            <tr><td><code>MeanSquaredError</code></td><td>Função de perda para regressão</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- GIT -->
+            <section id="git">
+                <div class="section-header">
+                    <div class="section-icon git">📂</div>
+                    <div class="section-title-group">
+                        <h2>Controle de Versão com Git</h2>
+                        <span>Comandos essenciais para desenvolvedores</span>
+                    </div>
+                </div>
+
+                <h3>6.1 Comando git diff-tree</h3>
+                <p>O comando <code>git diff-tree -r {hash}</code> é usado para <strong>listar todos os arquivos que foram alterados em um commit específico</strong>.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Bash</span>
+                        <div class="code-dots"><span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span></div>
+                    </div>
+                    <pre><code>git diff-tree -r a1b2c3d4e5f6
+<span class="comment"># -r : recursivo (inclui subdiretórios)</span>
+<span class="comment"># --name-only : mostra apenas nomes dos arquivos</span>
+<span class="comment"># --name-status : mostra nomes + status (M/A/D)</span></code></pre>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">📝 Status de Arquivos</div>
+                    <ul style="margin-bottom: 0;">
+                        <li><strong>M</strong> - Modified | <strong>A</strong> - Added | <strong>D</strong> - Deleted | <strong>R</strong> - Renamed</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SIMULADO -->
+            <section id="simulado">
+                <div class="section-header">
+                    <div class="section-icon quiz">📝</div>
+                    <div class="section-title-group">
+                        <h2>Simulado de Aplicação</h2>
+                        <span>Teste seus conhecimentos com 18 questões</span>
+                    </div>
+                </div>
+
+                <div class="quiz-section">
+                    <div class="quiz-grid">
+                        <!-- Q1 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">1</span><span class="question-category python">Python</span></div>
+                            <p class="question-text">Decorators em Python são capazes de aceitar argumentos para funções e modificá-los?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text">false</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">true</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>true</strong> — Decorators podem interceptar e modificar argumentos via *args e **kwargs.</p></div>
+                        </div>
+
+                        <!-- Q2 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">2</span><span class="question-category python">Python</span></div>
+                            <p class="question-text">O código <code>squared = [x**2 for x in mylist]</code> é um exemplo de quê?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text">list updating</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">list comprehension</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">list expansion</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">list rolling</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>list comprehension</strong> — Sintaxe [expressão for item in iterável].</p></div>
+                        </div>
+
+                        <!-- Q3 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">3</span><span class="question-category python">Python</span></div>
+                            <p class="question-text">O que é Pickling em Python?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text">É um algoritmo de compressão de strings</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">É um processo de serialização</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">É um estilo de nomear arquivos e variáveis</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>É um processo de serialização</strong> — Converte objetos em bytes.</p></div>
+                        </div>
+
+                        <!-- Q4 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">4</span><span class="question-category pytorch">PyTorch</span></div>
+                            <p class="question-text">No PyTorch, o que o módulo <code>autograd</code> faz?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Processamento de imagem</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Web scraping</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Diferenciação automática</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Carregamento de dados</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>Diferenciação automática</strong> — Essencial para calcular gradientes.</p></div>
+                        </div>
+
+                        <!-- Q5 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">5</span><span class="question-category pytorch">PyTorch</span></div>
+                            <p class="question-text">Qual função calcula os gradientes no PyTorch?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>backward()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>forward()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>gradient()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>calculate()</code></span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>backward()</strong> — Executa a retropropagação.</p></div>
+                        </div>
+
+                        <!-- Q6 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">6</span><span class="question-category pytorch">PyTorch</span></div>
+                            <p class="question-text">Qual método envia tensores para a GPU?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>move()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>push()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>send()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>to()</code></span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>to()</strong> — Ex: tensor.to('cuda')</p></div>
+                        </div>
+
+                        <!-- Q7 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">7</span><span class="question-category pytorch">PyTorch</span></div>
+                            <p class="question-text">O que <code>torch.no_grad()</code> faz?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Calcula o gradiente</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Desabilita o cálculo do gradiente</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Habilita o cálculo do gradiente</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Inicializa gradientes em zero</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>Desabilita o cálculo do gradiente</strong> — Usado durante inferência.</p></div>
+                        </div>
+
+                        <!-- Q8 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">8</span><span class="question-category pytorch">PyTorch</span></div>
+                            <p class="question-text">O que é PyTorch?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Biblioteca para web scraping</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Biblioteca de ML baseada na biblioteca Torch</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Framework para aplicações web</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Plataforma de computação em nuvem</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>Biblioteca de ML baseada na biblioteca Torch</strong> — Desenvolvida pelo Facebook AI Research.</p></div>
+                        </div>
+
+                        <!-- Q9 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">9</span><span class="question-category pandas">Pandas</span></div>
+                            <p class="question-text">Qual método retorna as primeiras n linhas de um DataFrame?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>head()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>first()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>begin()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>start()</code></span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>head()</strong> — df.head(n) retorna as primeiras n linhas.</p></div>
+                        </div>
+
+                        <!-- Q10 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">10</span><span class="question-category pandas">Pandas</span></div>
+                            <p class="question-text">Qual função lê um arquivo CSV em um DataFrame?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>read_csv()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>load_csv()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>import_csv()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>open_csv()</code></span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>read_csv()</strong> — pd.read_csv('arquivo.csv')</p></div>
+                        </div>
+
+                        <!-- Q11 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">11</span><span class="question-category sklearn">Scikit-Learn</span></div>
+                            <p class="question-text">Qual método no scikit-learn treina um modelo?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>fit()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>learn()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>train()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>build()</code></span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>fit()</strong> — Ajusta os parâmetros do modelo aos dados.</p></div>
+                        </div>
+
+                        <!-- Q12 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">12</span><span class="question-category pandas">Pandas</span></div>
+                            <p class="question-text">Qual função obtém o resumo estatístico de um DataFrame?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>describe()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>info()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>summary()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>statistics()</code></span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>describe()</strong> — Gera count, mean, std, min, quartis e max.</p></div>
+                        </div>
+
+                        <!-- Q13 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">13</span><span class="question-category git">Git</span></div>
+                            <p class="question-text">O que <code>git diff-tree -r {hash}</code> faz?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Lista arquivos alterados em um commit</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Mostra um DAG de mudanças</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>Lista arquivos alterados em um commit</strong> — O -r garante listagem recursiva.</p></div>
+                        </div>
+
+                        <!-- Q14 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">14</span><span class="question-category logica">Lógica</span></div>
+                            <p class="question-text">Qual estrutura de dados usa FIFO (First In, First Out)?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Pilha (Stack)</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Fila (Queue)</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Árvore</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Grafo</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>Fila (Queue)</strong> — Primeiro a entrar, primeiro a sair.</p></div>
+                        </div>
+
+                        <!-- Q15 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">15</span><span class="question-category sklearn">Scikit-Learn</span></div>
+                            <p class="question-text">O que o módulo <code>cluster</code> do scikit-learn contém?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Algoritmos de classificação</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Algoritmos de agrupamento</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Algoritmos de regressão</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Algoritmos de redução de dimensionalidade</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>Algoritmos de agrupamento</strong> — Como KMeans, DBSCAN, etc.</p></div>
+                        </div>
+
+                        <!-- Q16 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">16</span><span class="question-category tensorflow">TensorFlow</span></div>
+                            <p class="question-text">O que é o modelo <code>Sequential</code> no Keras?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Modelo com múltiplas entradas</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Pilha linear de camadas</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Modelo para séries temporais</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Modelo de transferência de aprendizado</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>Pilha linear de camadas</strong> — Forma mais simples de construir redes neurais.</p></div>
+                        </div>
+
+                        <!-- Q17 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">17</span><span class="question-category pandas">Pandas</span></div>
+                            <p class="question-text">Qual método verifica valores nulos em um DataFrame?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>isnull()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>isna()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text"><code>checknull()</code></span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Ambos isnull() e isna()</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>Ambos isnull() e isna()</strong> — São equivalentes no Pandas.</p></div>
+                        </div>
+
+                        <!-- Q18 -->
+                        <div class="question-card">
+                            <div class="question-header"><span class="question-number">18</span><span class="question-category sklearn">Scikit-Learn</span></div>
+                            <p class="question-text">Para que serve o <code>train_test_split</code>?</p>
+                            <ul class="options-list">
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Treinar o modelo</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Dividir dados em treino e teste</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Normalizar os dados</span></li>
+                                <li class="option"><span class="option-marker"></span><span class="option-text">Fazer previsões</span></li>
+                            </ul>
+                            <div class="answer"><div class="answer-label">✓ Resposta Correta</div><p class="answer-text"><strong>Dividir dados em treino e teste</strong> — Essencial para avaliar a performance do modelo.</p></div>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="btn-primary" onclick="toggleAnswers()">Mostrar Respostas</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>📚 Apostila de Programação e Machine Learning — Material Educacional 2025</p>
+        </footer>
+    </main>
+
+    <script>
+        function toggleAnswers() {
+            const answers = document.querySelectorAll('.answer');
+            const btn = document.querySelector('.btn-primary');
+            const isVisible = answers[0].classList.contains('visible');
+            
+            answers.forEach(answer => {
+                answer.classList.toggle('visible', !isVisible);
+            });
+            
+            btn.textContent = isVisible ? 'Mostrar Respostas' : 'Ocultar Respostas';
+        }
+    </script>
+</body>
+</html>
