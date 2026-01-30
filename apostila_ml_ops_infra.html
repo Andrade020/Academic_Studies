@@ -1,0 +1,3505 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infraestrutura e MLOps - Fase 3</title>
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #5b21b6;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-code: #0d1117;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --success: #22c55e;
+            --warning: #eab308;
+            --error: #ef4444;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .badge-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .module {
+            background: var(--bg-card);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .module-header {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+            padding: 1.5rem 2rem;
+        }
+
+        .module-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .module-content {
+            padding: 2rem;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h3 {
+            color: var(--secondary);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+        }
+
+        .section h4 {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        pre {
+            background: var(--bg-code);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+        }
+
+        code {
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .keyword {
+            color: #c792ea;
+        }
+
+        .string {
+            color: #c3e88d;
+        }
+
+        .number {
+            color: #f78c6c;
+        }
+
+        .function {
+            color: #82aaff;
+        }
+
+        .comment {
+            color: #676e95;
+            font-style: italic;
+        }
+
+        .command {
+            color: #89ddff;
+        }
+
+        .flag {
+            color: #ffcb6b;
+        }
+
+        .path {
+            color: #c3e88d;
+        }
+
+        .note,
+        .tip,
+        .warning,
+        .cloud-box {
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .note {
+            background: rgba(59, 130, 246, 0.15);
+            border-left: 4px solid var(--info);
+        }
+
+        .tip {
+            background: rgba(34, 197, 94, 0.15);
+            border-left: 4px solid var(--success);
+        }
+
+        .warning {
+            background: rgba(234, 179, 8, 0.15);
+            border-left: 4px solid var(--warning);
+        }
+
+        .cloud-box {
+            background: rgba(124, 58, 237, 0.15);
+            border-left: 4px solid var(--primary);
+        }
+
+        .cloud-box.gcp {
+            background: rgba(66, 133, 244, 0.15);
+            border-left: 4px solid #4285f4;
+        }
+
+        .cloud-box.aws {
+            background: rgba(255, 153, 0, 0.15);
+            border-left: 4px solid #ff9900;
+        }
+
+        .exercise {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(16, 185, 129, 0.1));
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .exercise-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .exercise-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .difficulty {
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .difficulty.easy {
+            background: var(--success);
+            color: #000;
+        }
+
+        .difficulty.medium {
+            background: var(--warning);
+            color: #000;
+        }
+
+        .difficulty.hard {
+            background: var(--error);
+            color: #fff;
+        }
+
+        .solution {
+            margin-top: 1rem;
+        }
+
+        .solution-toggle {
+            background: var(--bg-code);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .solution-toggle:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .solution-content {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .solution-content.show {
+            display: block;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.8rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: var(--primary-dark);
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        ul,
+        ol {
+            margin: 1rem 0 1rem 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>☁️ Infraestrutura e MLOps</h1>
+        <p>Fase 3: Como modelos vão para produção</p>
+        <div class="badge-row">
+            <span class="badge">🌩️ Cloud (GCP + AWS)</span>
+            <span class="badge">🔄 Airflow</span>
+            <span class="badge">🐳 Docker</span>
+            <span class="badge">🚀 MLOps</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- MÓDULO 1: CLOUD COMPUTING -->
+        <div class="module" id="modulo1">
+            <div class="module-header">
+                <h2>☁️ Módulo 1: Cloud Computing</h2>
+            </div>
+            <div class="module-content">
+                <!-- 1.1 CONCEITOS DE CLOUD -->
+                <div class="section">
+                    <h3>1.1 Conceitos de Cloud</h3>
+
+                    <p>Antes de usar AWS ou GCP, é essencial entender os conceitos fundamentais de cloud computing.</p>
+
+                    <h4>Modelos de Serviço</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Modelo</th>
+                            <th>O que você gerencia</th>
+                            <th>Exemplos</th>
+                        </tr>
+                        <tr>
+                            <td><strong>IaaS</strong> (Infrastructure)</td>
+                            <td>OS, Runtime, Dados</td>
+                            <td>EC2, Compute Engine</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PaaS</strong> (Platform)</td>
+                            <td>Aplicação, Dados</td>
+                            <td>App Engine, Elastic Beanstalk</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SaaS</strong> (Software)</td>
+                            <td>Apenas configuração</td>
+                            <td>BigQuery, Redshift</td>
+                        </tr>
+                    </table>
+
+                    <h4>Regiões e Zonas</h4>
+                    <pre><code><span class="comment"># Conceitos importantes:</span>
+
+<span class="comment"># REGIÃO: localização geográfica (ex: us-east-1, southamerica-east1)</span>
+<span class="comment"># - Escolha próxima aos usuários</span>
+<span class="comment"># - Alguns serviços só existem em certas regiões</span>
+<span class="comment"># - Preços variam por região</span>
+
+<span class="comment"># ZONA: datacenter dentro de uma região (ex: us-east-1a, us-east-1b)</span>
+<span class="comment"># - Alta disponibilidade = múltiplas zonas</span>
+
+<span class="comment"># Para Data Science no Brasil:</span>
+<span class="comment"># GCP: southamerica-east1 (São Paulo)</span>
+<span class="comment"># AWS: sa-east-1 (São Paulo)</span>
+</code></pre>
+
+                    <h4>Billing e Cost Management</h4>
+                    <div class="warning">
+                        <strong>⚠️ IMPORTANTE:</strong> Cloud pode ficar caro rapidamente!<br>
+                        • Configure alertas de billing (ex: aviso aos $10)<br>
+                        • Use Free Tier sempre que possível<br>
+                        • Desligue recursos quando não estiver usando<br>
+                        • Cuidado com data egress (saída de dados)
+                    </div>
+
+                    <pre><code><span class="comment"># Free Tier (uso gratuito mensal)</span>
+
+<span class="comment"># GCP:</span>
+<span class="comment"># - BigQuery: 1TB queries/mês</span>
+<span class="comment"># - Cloud Storage: 5GB</span>
+<span class="comment"># - Compute Engine: 1 e2-micro</span>
+
+<span class="comment"># AWS:</span>
+<span class="comment"># - S3: 5GB</span>
+<span class="comment"># - EC2: 750h t2.micro/mês (12 meses)</span>
+<span class="comment"># - Lambda: 1M requests/mês</span>
+</code></pre>
+
+                    <!-- EXERCÍCIO 1 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 1</span>
+                            <span class="exercise-title">Criar Contas Free Tier</span>
+                            <span class="difficulty easy">Fácil</span>
+                        </div>
+                        <p>Crie contas no GCP e AWS Free Tier e configure alertas de billing.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="comment"># Passo a passo:</span>
+
+<span class="comment"># 1. GCP (Google Cloud Platform)</span>
+<span class="comment"># - Acesse: https://cloud.google.com/free</span>
+<span class="comment"># - Crie conta com Gmail</span>
+<span class="comment"># - Ganhe $300 créditos por 90 dias</span>
+<span class="comment"># - Menu → Billing → Budgets & Alerts → Create Budget</span>
+<span class="comment"># - Configure alerta para $10</span>
+
+<span class="comment"># 2. AWS (Amazon Web Services)</span>
+<span class="comment"># - Acesse: https://aws.amazon.com/free</span>
+<span class="comment"># - Crie conta (precisa cartão, mas não cobra)</span>
+<span class="comment"># - 12 meses de Free Tier</span>
+<span class="comment"># - Console → Billing → Budgets → Create Budget</span>
+<span class="comment"># - Configure alerta para $10</span>
+
+<span class="comment"># 3. CLIs (instale localmente)</span>
+<span class="comment"># GCP:</span>
+<span class="command">pip install google-cloud-bigquery google-cloud-storage</span>
+
+<span class="comment"># AWS:</span>
+<span class="command">pip install boto3 awscli</span>
+<span class="command">aws configure</span>  <span class="comment"># Configurar credenciais</span>
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.2 GCP -->
+                <div class="section">
+                    <h3>1.2 GCP (Google Cloud Platform)</h3>
+
+                    <p>GCP é muito popular em vagas brasileiras, especialmente BigQuery para analytics.</p>
+
+                    <div class="cloud-box gcp">
+                        <strong>🔵 Serviços GCP para Data Science:</strong><br>
+                        • <strong>BigQuery:</strong> Data warehouse serverless (SQL em TB de dados)<br>
+                        • <strong>Cloud Storage:</strong> Armazenamento de objetos (como S3)<br>
+                        • <strong>Vertex AI:</strong> MLOps managed (treino + deploy)<br>
+                        • <strong>Dataflow:</strong> Processamento streaming/batch
+                    </div>
+
+                    <h4>BigQuery: SQL em Escala</h4>
+                    <pre><code><span class="keyword">from</span> google.cloud <span class="keyword">import</span> bigquery
+
+<span class="comment"># Criar cliente</span>
+client = bigquery.<span class="function">Client</span>()
+
+<span class="comment"># Query em dataset público (não precisa configurar nada)</span>
+query = <span class="string">"""
+SELECT 
+    name,
+    SUM(number) as total
+FROM `bigquery-public-data.usa_names.usa_1910_current`
+WHERE state = 'CA'
+GROUP BY name
+ORDER BY total DESC
+LIMIT 10
+"""</span>
+
+<span class="comment"># Executar query</span>
+df = client.<span class="function">query</span>(query).<span class="function">to_dataframe</span>()
+<span class="function">print</span>(df)
+</code></pre>
+
+                    <h4>Cloud Storage: Upload de Dados</h4>
+                    <pre><code><span class="keyword">from</span> google.cloud <span class="keyword">import</span> storage
+
+<span class="comment"># Criar cliente</span>
+client = storage.<span class="function">Client</span>()
+
+<span class="comment"># Criar bucket (nome único globalmente)</span>
+bucket_name = <span class="string">'meu-bucket-ml-projeto'</span>
+bucket = client.<span class="function">create_bucket</span>(bucket_name, location=<span class="string">'southamerica-east1'</span>)
+
+<span class="comment"># Upload de arquivo</span>
+blob = bucket.<span class="function">blob</span>(<span class="string">'dados/train.csv'</span>)
+blob.<span class="function">upload_from_filename</span>(<span class="string">'local/train.csv'</span>)
+<span class="function">print</span>(<span class="string">f'Arquivo enviado para gs://{bucket_name}/dados/train.csv'</span>)
+
+<span class="comment"># Download de arquivo</span>
+blob.<span class="function">download_to_filename</span>(<span class="string">'local/train_downloaded.csv'</span>)
+
+<span class="comment"># Listar arquivos no bucket</span>
+blobs = client.<span class="function">list_blobs</span>(bucket_name)
+<span class="keyword">for</span> blob <span class="keyword">in</span> blobs:
+    <span class="function">print</span>(blob.name)
+</code></pre>
+
+                    <h4>Carregar CSV para BigQuery</h4>
+                    <pre><code><span class="keyword">from</span> google.cloud <span class="keyword">import</span> bigquery
+
+client = bigquery.<span class="function">Client</span>()
+
+<span class="comment"># Configurar job de load</span>
+table_id = <span class="string">'meu-projeto.meu_dataset.vendas'</span>
+
+job_config = bigquery.<span class="function">LoadJobConfig</span>(
+    source_format=bigquery.SourceFormat.CSV,
+    skip_leading_rows=<span class="number">1</span>,  <span class="comment"># Pular header</span>
+    autodetect=<span class="keyword">True</span>,       <span class="comment"># Detectar schema</span>
+    write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE  <span class="comment"># Sobrescrever</span>
+)
+
+<span class="comment"># Carregar de arquivo local</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">'vendas.csv'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> f:
+    job = client.<span class="function">load_table_from_file</span>(f, table_id, job_config=job_config)
+
+job.<span class="function">result</span>()  <span class="comment"># Aguardar conclusão</span>
+<span class="function">print</span>(<span class="string">f'Carregadas {job.output_rows} linhas'</span>)
+
+<span class="comment"># OU carregar do Cloud Storage</span>
+uri = <span class="string">'gs://meu-bucket/vendas.csv'</span>
+job = client.<span class="function">load_table_from_uri</span>(uri, table_id, job_config=job_config)
+</code></pre>
+
+                    <!-- EXERCÍCIO 2 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 2</span>
+                            <span class="exercise-title">Query em Dataset Público do BigQuery</span>
+                            <span class="difficulty easy">Fácil</span>
+                        </div>
+                        <p>Use BigQuery para analisar o dataset público de viagens de táxi de Chicago.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">from</span> google.cloud <span class="keyword">import</span> bigquery
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+client = bigquery.<span class="function">Client</span>()
+
+<span class="comment"># Query: Análise de viagens de táxi em Chicago</span>
+query = <span class="string">"""
+SELECT 
+    EXTRACT(HOUR FROM trip_start_timestamp) as hour,
+    ROUND(AVG(trip_miles), 2) as avg_miles,
+    ROUND(AVG(fare), 2) as avg_fare,
+    COUNT(*) as total_trips
+FROM `bigquery-public-data.chicago_taxi_trips.taxi_trips`
+WHERE trip_start_timestamp BETWEEN '2023-01-01' AND '2023-01-31'
+    AND fare > 0
+    AND trip_miles > 0
+GROUP BY hour
+ORDER BY hour
+"""</span>
+
+<span class="comment"># Executar e converter para DataFrame</span>
+df = client.<span class="function">query</span>(query).<span class="function">to_dataframe</span>()
+
+<span class="function">print</span>(<span class="string">'=== Análise de Táxi Chicago (Jan/2023) ==='</span>)
+<span class="function">print</span>(df)
+
+<span class="comment"># Visualizar</span>
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+fig, axes = plt.<span class="function">subplots</span>(<span class="number">1</span>, <span class="number">2</span>, figsize=(<span class="number">12</span>, <span class="number">4</span>))
+
+df.<span class="function">plot</span>(x=<span class="string">'hour'</span>, y=<span class="string">'total_trips'</span>, kind=<span class="string">'bar'</span>, ax=axes[<span class="number">0</span>], title=<span class="string">'Viagens por Hora'</span>)
+df.<span class="function">plot</span>(x=<span class="string">'hour'</span>, y=<span class="string">'avg_fare'</span>, kind=<span class="string">'line'</span>, ax=axes[<span class="number">1</span>], title=<span class="string">'Tarifa Média por Hora'</span>, marker=<span class="string">'o'</span>)
+
+plt.<span class="function">tight_layout</span>()
+plt.<span class="function">show</span>()
+
+<span class="comment"># Bytes processados (para monitorar custos)</span>
+<span class="function">print</span>(<span class="string">f'\\nQuery processou dados sem custo (Free Tier)'</span>)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.3 AWS -->
+                <div class="section">
+                    <h3>1.3 AWS (Amazon Web Services)</h3>
+
+                    <p>AWS domina o mercado global. Para Data Science, os principais serviços são S3, Redshift e
+                        SageMaker.</p>
+
+                    <div class="cloud-box aws">
+                        <strong>🟠 Serviços AWS para Data Science:</strong><br>
+                        • <strong>S3:</strong> Simple Storage Service (data lake)<br>
+                        • <strong>Redshift:</strong> Data warehouse (como BigQuery)<br>
+                        • <strong>SageMaker:</strong> MLOps completo (notebooks + training + deploy)<br>
+                        • <strong>Athena:</strong> Query SQL direto no S3
+                    </div>
+
+                    <h4>S3: Upload e Download</h4>
+                    <pre><code><span class="keyword">import</span> boto3
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># Criar cliente S3</span>
+s3 = boto3.<span class="function">client</span>(<span class="string">'s3'</span>)
+
+<span class="comment"># Criar bucket</span>
+bucket_name = <span class="string">'meu-bucket-ml-2024'</span>
+s3.<span class="function">create_bucket</span>(
+    Bucket=bucket_name,
+    CreateBucketConfiguration={<span class="string">'LocationConstraint'</span>: <span class="string">'sa-east-1'</span>}
+)
+
+<span class="comment"># Upload de arquivo</span>
+s3.<span class="function">upload_file</span>(
+    <span class="string">'local/dados.csv'</span>,       <span class="comment"># Arquivo local</span>
+    bucket_name,               <span class="comment"># Bucket</span>
+    <span class="string">'raw/dados.csv'</span>            <span class="comment"># Caminho no S3</span>
+)
+
+<span class="comment"># Download de arquivo</span>
+s3.<span class="function">download_file</span>(bucket_name, <span class="string">'raw/dados.csv'</span>, <span class="string">'local/downloaded.csv'</span>)
+
+<span class="comment"># Listar objetos</span>
+response = s3.<span class="function">list_objects_v2</span>(Bucket=bucket_name)
+<span class="keyword">for</span> obj <span class="keyword">in</span> response.<span class="function">get</span>(<span class="string">'Contents'</span>, []):
+    <span class="function">print</span>(obj[<span class="string">'Key'</span>], obj[<span class="string">'Size'</span>])
+</code></pre>
+
+                    <h4>Pandas direto do S3</h4>
+                    <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> s3fs  <span class="comment"># pip install s3fs</span>
+
+<span class="comment"># Ler CSV direto do S3</span>
+df = pd.<span class="function">read_csv</span>(<span class="string">'s3://meu-bucket/dados.csv'</span>)
+
+<span class="comment"># Salvar direto no S3</span>
+df.<span class="function">to_parquet</span>(<span class="string">'s3://meu-bucket/dados.parquet'</span>)
+
+<span class="comment"># Ler múltiplos arquivos (glob)</span>
+df = pd.<span class="function">read_parquet</span>(<span class="string">'s3://meu-bucket/dados/*.parquet'</span>)
+</code></pre>
+
+                    <h4>Athena: SQL no S3</h4>
+                    <pre><code><span class="keyword">import</span> boto3
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> time
+
+<span class="comment"># Cliente Athena</span>
+athena = boto3.<span class="function">client</span>(<span class="string">'athena'</span>)
+
+<span class="comment"># Executar query</span>
+query = <span class="string">"""
+SELECT *
+FROM meu_database.vendas
+WHERE data >= '2024-01-01'
+LIMIT 1000
+"""</span>
+
+response = athena.<span class="function">start_query_execution</span>(
+    QueryString=query,
+    QueryExecutionContext={<span class="string">'Database'</span>: <span class="string">'meu_database'</span>},
+    ResultConfiguration={<span class="string">'OutputLocation'</span>: <span class="string">'s3://meu-bucket/athena-results/'</span>}
+)
+
+<span class="comment"># Aguardar resultado</span>
+query_id = response[<span class="string">'QueryExecutionId'</span>]
+<span class="keyword">while</span> <span class="keyword">True</span>:
+    result = athena.<span class="function">get_query_execution</span>(QueryExecutionId=query_id)
+    status = result[<span class="string">'QueryExecution'</span>][<span class="string">'Status'</span>][<span class="string">'State'</span>]
+    <span class="keyword">if</span> status <span class="keyword">in</span> [<span class="string">'SUCCEEDED'</span>, <span class="string">'FAILED'</span>]:
+        <span class="keyword">break</span>
+    time.<span class="function">sleep</span>(<span class="number">1</span>)
+
+<span class="comment"># Resultado salvo em S3, carregar com pandas</span>
+result_path = <span class="string">f's3://meu-bucket/athena-results/{query_id}.csv'</span>
+df = pd.<span class="function">read_csv</span>(result_path)
+</code></pre>
+
+                    <div class="tip">
+                        <strong>💡 Dica:</strong> Use a biblioteca <code>awswrangler</code> para simplificar:
+                        <pre><code><span class="keyword">import</span> awswrangler <span class="keyword">as</span> wr  <span class="comment"># pip install awswrangler</span>
+
+<span class="comment"># Query Athena em uma linha</span>
+df = wr.athena.<span class="function">read_sql_query</span>(query, database=<span class="string">'meu_database'</span>)
+
+<span class="comment"># Escrever DataFrame para S3</span>
+wr.s3.<span class="function">to_parquet</span>(df, path=<span class="string">'s3://bucket/dados/'</span>)
+</code></pre>
+                    </div>
+
+                    <!-- EXERCÍCIO 3 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 3</span>
+                            <span class="exercise-title">Pipeline S3 → Pandas</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Crie um pipeline que lê dados do S3, processa com Pandas e salva resultado de volta.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> boto3
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">from</span> io <span class="keyword">import</span> BytesIO
+
+<span class="keyword">def</span> <span class="function">s3_etl_pipeline</span>(bucket, input_key, output_key):
+    <span class="string">"""Pipeline ETL: S3 → Pandas → S3"""</span>
+    s3 = boto3.<span class="function">client</span>(<span class="string">'s3'</span>)
+    
+    <span class="comment"># 1. EXTRACT: Ler do S3</span>
+    <span class="function">print</span>(<span class="string">f'📥 Lendo s3://{bucket}/{input_key}'</span>)
+    response = s3.<span class="function">get_object</span>(Bucket=bucket, Key=input_key)
+    df = pd.<span class="function">read_csv</span>(response[<span class="string">'Body'</span>])
+    <span class="function">print</span>(<span class="string">f'   Linhas: {len(df)}'</span>)
+    
+    <span class="comment"># 2. TRANSFORM: Processar</span>
+    <span class="function">print</span>(<span class="string">'🔄 Processando...'</span>)
+    
+    <span class="comment"># Limpeza</span>
+    df = df.<span class="function">dropna</span>()
+    
+    <span class="comment"># Feature engineering</span>
+    <span class="keyword">if</span> <span class="string">'date'</span> <span class="keyword">in</span> df.columns:
+        df[<span class="string">'date'</span>] = pd.<span class="function">to_datetime</span>(df[<span class="string">'date'</span>])
+        df[<span class="string">'month'</span>] = df[<span class="string">'date'</span>].dt.month
+        df[<span class="string">'dayofweek'</span>] = df[<span class="string">'date'</span>].dt.dayofweek
+    
+    <span class="comment"># Agregação exemplo</span>
+    <span class="keyword">if</span> <span class="string">'value'</span> <span class="keyword">in</span> df.columns:
+        summary = df.<span class="function">groupby</span>(<span class="string">'month'</span>).<span class="function">agg</span>({
+            <span class="string">'value'</span>: [<span class="string">'sum'</span>, <span class="string">'mean'</span>, <span class="string">'count'</span>]
+        }).<span class="function">round</span>(<span class="number">2</span>)
+        <span class="function">print</span>(summary)
+    
+    <span class="function">print</span>(<span class="string">f'   Linhas após processamento: {len(df)}'</span>)
+    
+    <span class="comment"># 3. LOAD: Salvar no S3 (Parquet é melhor que CSV)</span>
+    <span class="function">print</span>(<span class="string">f'📤 Salvando s3://{bucket}/{output_key}'</span>)
+    
+    buffer = <span class="function">BytesIO</span>()
+    df.<span class="function">to_parquet</span>(buffer, index=<span class="keyword">False</span>)
+    buffer.<span class="function">seek</span>(<span class="number">0</span>)
+    
+    s3.<span class="function">put_object</span>(Bucket=bucket, Key=output_key, Body=buffer.<span class="function">getvalue</span>())
+    
+    <span class="function">print</span>(<span class="string">'✅ Pipeline concluído!'</span>)
+    <span class="keyword">return</span> df
+
+<span class="comment"># Executar</span>
+df = <span class="function">s3_etl_pipeline</span>(
+    bucket=<span class="string">'meu-bucket'</span>,
+    input_key=<span class="string">'raw/vendas.csv'</span>,
+    output_key=<span class="string">'processed/vendas.parquet'</span>
+)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.4 CERTIFICAÇÕES -->
+                <div class="section">
+                    <h3>1.4 Certificações e Próximos Passos</h3>
+
+                    <p>Certificações validam seu conhecimento e são valorizadas pelo mercado.</p>
+
+                    <h4>Roadmap de Certificações</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Cloud</th>
+                            <th>Nível Inicial</th>
+                            <th>Data/ML</th>
+                        </tr>
+                        <tr>
+                            <td><strong>GCP</strong></td>
+                            <td>Cloud Digital Leader</td>
+                            <td>Professional Data Engineer / ML Engineer</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AWS</strong></td>
+                            <td>Cloud Practitioner</td>
+                            <td>Data Analytics / Machine Learning Specialty</td>
+                        </tr>
+                    </table>
+
+                    <h4>Recursos Gratuitos</h4>
+                    <div class="note">
+                        <strong>📚 Para Estudar:</strong><br>
+                        • <strong>GCP:</strong> <a href="https://cloud.google.com/training">Google Cloud Skills
+                            Boost</a> (labs gratuitos)<br>
+                        • <strong>AWS:</strong> <a href="https://aws.amazon.com/training">AWS Skill Builder</a><br>
+                        • <strong>Ambos:</strong> Coursera (auditar cursos grátis)
+                    </div>
+
+                    <h4>Comparação GCP vs AWS</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Critério</th>
+                            <th>GCP</th>
+                            <th>AWS</th>
+                        </tr>
+                        <tr>
+                            <td>Data Warehouse</td>
+                            <td>BigQuery ⭐</td>
+                            <td>Redshift</td>
+                        </tr>
+                        <tr>
+                            <td>Storage</td>
+                            <td>Cloud Storage</td>
+                            <td>S3 ⭐</td>
+                        </tr>
+                        <tr>
+                            <td>ML Platform</td>
+                            <td>Vertex AI</td>
+                            <td>SageMaker ⭐</td>
+                        </tr>
+                        <tr>
+                            <td>Vagas Brasil</td>
+                            <td>⭐ Mais comum</td>
+                            <td>Crescendo</td>
+                        </tr>
+                        <tr>
+                            <td>Vagas Global</td>
+                            <td>Comum</td>
+                            <td>⭐ Dominante</td>
+                        </tr>
+                    </table>
+
+                    <!-- EXERCÍCIO 4 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 4</span>
+                            <span class="exercise-title">Projeto Multi-Cloud</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Crie um script que sincroniza dados entre GCP Cloud Storage e AWS S3.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> boto3
+<span class="keyword">from</span> google.cloud <span class="keyword">import</span> storage
+<span class="keyword">from</span> io <span class="keyword">import</span> BytesIO
+<span class="keyword">import</span> os
+
+<span class="keyword">class</span> <span class="function">MultiCloudSync</span>:
+    <span class="string">"""Sincroniza dados entre GCP e AWS"""</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        self.gcs = storage.<span class="function">Client</span>()
+        self.s3 = boto3.<span class="function">client</span>(<span class="string">'s3'</span>)
+    
+    <span class="keyword">def</span> <span class="function">gcs_to_s3</span>(self, gcs_bucket, gcs_path, s3_bucket, s3_path):
+        <span class="string">"""Copia arquivo do GCS para S3"""</span>
+        <span class="function">print</span>(<span class="string">f'📥 Baixando gs://{gcs_bucket}/{gcs_path}'</span>)
+        
+        <span class="comment"># Download do GCS</span>
+        bucket = self.gcs.<span class="function">bucket</span>(gcs_bucket)
+        blob = bucket.<span class="function">blob</span>(gcs_path)
+        data = blob.<span class="function">download_as_bytes</span>()
+        
+        <span class="comment"># Upload para S3</span>
+        <span class="function">print</span>(<span class="string">f'📤 Enviando s3://{s3_bucket}/{s3_path}'</span>)
+        self.s3.<span class="function">put_object</span>(Bucket=s3_bucket, Key=s3_path, Body=data)
+        
+        <span class="function">print</span>(<span class="string">'✅ Sincronizado GCS → S3'</span>)
+    
+    <span class="keyword">def</span> <span class="function">s3_to_gcs</span>(self, s3_bucket, s3_path, gcs_bucket, gcs_path):
+        <span class="string">"""Copia arquivo do S3 para GCS"""</span>
+        <span class="function">print</span>(<span class="string">f'📥 Baixando s3://{s3_bucket}/{s3_path}'</span>)
+        
+        <span class="comment"># Download do S3</span>
+        response = self.s3.<span class="function">get_object</span>(Bucket=s3_bucket, Key=s3_path)
+        data = response[<span class="string">'Body'</span>].<span class="function">read</span>()
+        
+        <span class="comment"># Upload para GCS</span>
+        <span class="function">print</span>(<span class="string">f'📤 Enviando gs://{gcs_bucket}/{gcs_path}'</span>)
+        bucket = self.gcs.<span class="function">bucket</span>(gcs_bucket)
+        blob = bucket.<span class="function">blob</span>(gcs_path)
+        blob.<span class="function">upload_from_string</span>(data)
+        
+        <span class="function">print</span>(<span class="string">'✅ Sincronizado S3 → GCS'</span>)
+    
+    <span class="keyword">def</span> <span class="function">sync_folder</span>(self, source, dest):
+        <span class="string">"""Sincroniza pasta inteira"""</span>
+        <span class="comment"># Parse source e dest (gs:// ou s3://)</span>
+        <span class="keyword">if</span> source.<span class="function">startswith</span>(<span class="string">'gs://'</span>):
+            <span class="comment"># GCS to S3</span>
+            gcs_parts = source.<span class="function">replace</span>(<span class="string">'gs://'</span>, <span class="string">''</span>).<span class="function">split</span>(<span class="string">'/'</span>, <span class="number">1</span>)
+            s3_parts = dest.<span class="function">replace</span>(<span class="string">'s3://'</span>, <span class="string">''</span>).<span class="function">split</span>(<span class="string">'/'</span>, <span class="number">1</span>)
+            
+            bucket = self.gcs.<span class="function">bucket</span>(gcs_parts[<span class="number">0</span>])
+            prefix = gcs_parts[<span class="number">1</span>] <span class="keyword">if</span> <span class="function">len</span>(gcs_parts) > <span class="number">1</span> <span class="keyword">else</span> <span class="string">''</span>
+            
+            <span class="keyword">for</span> blob <span class="keyword">in</span> bucket.<span class="function">list_blobs</span>(prefix=prefix):
+                s3_key = blob.name.<span class="function">replace</span>(prefix, s3_parts[<span class="number">1</span>] <span class="keyword">if</span> <span class="function">len</span>(s3_parts) > <span class="number">1</span> <span class="keyword">else</span> <span class="string">''</span>)
+                self.<span class="function">gcs_to_s3</span>(gcs_parts[<span class="number">0</span>], blob.name, s3_parts[<span class="number">0</span>], s3_key)
+
+<span class="comment"># Usar</span>
+sync = <span class="function">MultiCloudSync</span>()
+sync.<span class="function">gcs_to_s3</span>(
+    gcs_bucket=<span class="string">'meu-bucket-gcs'</span>,
+    gcs_path=<span class="string">'dados/train.csv'</span>,
+    s3_bucket=<span class="string">'meu-bucket-s3'</span>,
+    s3_path=<span class="string">'dados/train.csv'</span>
+)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 2: PIPELINES -->
+        <div class="module" id="modulo2">
+            <div class="module-header">
+                <h2>🔄 Módulo 2: Pipelines e Orquestração</h2>
+            </div>
+            <div class="module-content">
+                <!-- 2.1 ETL/ELT CONCEITOS -->
+                <div class="section">
+                    <h3>2.1 ETL/ELT: Conceitos Fundamentais</h3>
+
+                    <p>Pipelines de dados movem informações de fontes para destinos. Entender ETL vs ELT é essencial.
+                    </p>
+
+                    <h4>ETL vs ELT</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>ETL (Extract-Transform-Load)</th>
+                            <th>ELT (Extract-Load-Transform)</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Transformação</strong></td>
+                            <td>Fora do warehouse</td>
+                            <td>Dentro do warehouse</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quando usar</strong></td>
+                            <td>Dados sensíveis, limpeza pesada</td>
+                            <td>Big Data, Cloud DW (BigQuery)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ferramentas</strong></td>
+                            <td>Airflow, Luigi, Python</td>
+                            <td>dbt, Dataform</td>
+                        </tr>
+                    </table>
+
+                    <h4>Pipeline ETL com Python</h4>
+                    <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<span class="keyword">import</span> logging
+
+logging.<span class="function">basicConfig</span>(level=logging.INFO)
+logger = logging.<span class="function">getLogger</span>(__name__)
+
+<span class="keyword">class</span> <span class="function">ETLPipeline</span>:
+    <span class="string">"""Pipeline ETL simples e robusto"""</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, source_path, dest_path):
+        self.source_path = source_path
+        self.dest_path = dest_path
+        self.start_time = <span class="keyword">None</span>
+    
+    <span class="keyword">def</span> <span class="function">extract</span>(self):
+        <span class="string">"""E - Extrair dados da fonte"""</span>
+        logger.<span class="function">info</span>(<span class="string">f'📥 Extraindo de {self.source_path}'</span>)
+        self.start_time = datetime.<span class="function">now</span>()
+        
+        <span class="comment"># Suporta múltiplos formatos</span>
+        <span class="keyword">if</span> self.source_path.<span class="function">endswith</span>(<span class="string">'.csv'</span>):
+            df = pd.<span class="function">read_csv</span>(self.source_path)
+        <span class="keyword">elif</span> self.source_path.<span class="function">endswith</span>(<span class="string">'.parquet'</span>):
+            df = pd.<span class="function">read_parquet</span>(self.source_path)
+        <span class="keyword">elif</span> self.source_path.<span class="function">endswith</span>(<span class="string">'.json'</span>):
+            df = pd.<span class="function">read_json</span>(self.source_path)
+        <span class="keyword">else</span>:
+            <span class="keyword">raise</span> <span class="function">ValueError</span>(<span class="string">f'Formato não suportado'</span>)
+        
+        logger.<span class="function">info</span>(<span class="string">f'   Extraídas {len(df)} linhas'</span>)
+        <span class="keyword">return</span> df
+    
+    <span class="keyword">def</span> <span class="function">transform</span>(self, df):
+        <span class="string">"""T - Transformar dados"""</span>
+        logger.<span class="function">info</span>(<span class="string">'🔄 Transformando dados...'</span>)
+        
+        <span class="comment"># 1. Limpeza</span>
+        initial_rows = <span class="function">len</span>(df)
+        df = df.<span class="function">drop_duplicates</span>()
+        df = df.<span class="function">dropna</span>(subset=[<span class="string">'id'</span>])  <span class="comment"># Apenas colunas críticas</span>
+        
+        <span class="comment"># 2. Padronização</span>
+        <span class="keyword">for</span> col <span class="keyword">in</span> df.<span class="function">select_dtypes</span>(include=[<span class="string">'object'</span>]).columns:
+            df[col] = df[col].str.<span class="function">strip</span>().str.<span class="function">lower</span>()
+        
+        <span class="comment"># 3. Feature engineering</span>
+        <span class="keyword">if</span> <span class="string">'date'</span> <span class="keyword">in</span> df.columns:
+            df[<span class="string">'date'</span>] = pd.<span class="function">to_datetime</span>(df[<span class="string">'date'</span>])
+            df[<span class="string">'year'</span>] = df[<span class="string">'date'</span>].dt.year
+            df[<span class="string">'month'</span>] = df[<span class="string">'date'</span>].dt.month
+            df[<span class="string">'day_of_week'</span>] = df[<span class="string">'date'</span>].dt.dayofweek
+        
+        <span class="comment"># 4. Metadados</span>
+        df[<span class="string">'_etl_timestamp'</span>] = datetime.<span class="function">now</span>()
+        
+        removed = initial_rows - <span class="function">len</span>(df)
+        logger.<span class="function">info</span>(<span class="string">f'   Removidas {removed} linhas ({len(df)} restantes)'</span>)
+        <span class="keyword">return</span> df
+    
+    <span class="keyword">def</span> <span class="function">load</span>(self, df):
+        <span class="string">"""L - Carregar no destino"""</span>
+        logger.<span class="function">info</span>(<span class="string">f'📤 Carregando para {self.dest_path}'</span>)
+        
+        <span class="comment"># Salvar como Parquet (melhor performance)</span>
+        df.<span class="function">to_parquet</span>(self.dest_path, index=<span class="keyword">False</span>)
+        
+        elapsed = (datetime.<span class="function">now</span>() - self.start_time).total_seconds()
+        logger.<span class="function">info</span>(<span class="string">f'✅ Pipeline concluído em {elapsed:.2f}s'</span>)
+    
+    <span class="keyword">def</span> <span class="function">run</span>(self):
+        <span class="string">"""Executar pipeline completo"""</span>
+        <span class="keyword">try</span>:
+            df = self.<span class="function">extract</span>()
+            df = self.<span class="function">transform</span>(df)
+            self.<span class="function">load</span>(df)
+            <span class="keyword">return</span> <span class="keyword">True</span>
+        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+            logger.<span class="function">error</span>(<span class="string">f'❌ Pipeline falhou: {e}'</span>)
+            <span class="keyword">return</span> <span class="keyword">False</span>
+
+<span class="comment"># Usar</span>
+pipeline = <span class="function">ETLPipeline</span>(<span class="string">'dados/raw.csv'</span>, <span class="string">'dados/processed.parquet'</span>)
+pipeline.<span class="function">run</span>()
+</code></pre>
+
+                    <div class="note">
+                        <strong>📝 Batch vs Streaming:</strong><br>
+                        • <strong>Batch:</strong> Processa dados em lotes (diário, horário). Mais simples.<br>
+                        • <strong>Streaming:</strong> Processa em tempo real (Kafka, Spark Streaming). Mais
+                        complexo.<br>
+                        Para Data Science, comece com Batch!
+                    </div>
+
+                    <!-- EXERCÍCIO 5 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 5</span>
+                            <span class="exercise-title">Pipeline ETL com Validação</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Crie um pipeline ETL que inclua validação de qualidade de dados antes do load.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass
+<span class="keyword">from</span> typing <span class="keyword">import</span> List, Callable
+
+<span class="decorator">@dataclass</span>
+<span class="keyword">class</span> <span class="function">ValidationRule</span>:
+    name: str
+    check: <span class="function">Callable</span>[[pd.DataFrame], bool]
+    severity: str  <span class="comment"># 'error' ou 'warning'</span>
+
+<span class="keyword">class</span> <span class="function">ETLWithValidation</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        self.rules: List[ValidationRule] = []
+        self.validation_results = []
+    
+    <span class="keyword">def</span> <span class="function">add_rule</span>(self, name, check, severity=<span class="string">'error'</span>):
+        self.rules.<span class="function">append</span>(<span class="function">ValidationRule</span>(name, check, severity))
+    
+    <span class="keyword">def</span> <span class="function">validate</span>(self, df) -> bool:
+        <span class="string">"""Executar todas as validações"""</span>
+        <span class="function">print</span>(<span class="string">'🔍 Validando dados...'</span>)
+        has_errors = <span class="keyword">False</span>
+        
+        <span class="keyword">for</span> rule <span class="keyword">in</span> self.rules:
+            passed = rule.<span class="function">check</span>(df)
+            status = <span class="string">'✅'</span> <span class="keyword">if</span> passed <span class="keyword">else</span> (<span class="string">'❌'</span> <span class="keyword">if</span> rule.severity == <span class="string">'error'</span> <span class="keyword">else</span> <span class="string">'⚠️'</span>)
+            <span class="function">print</span>(<span class="string">f'   {status} {rule.name}'</span>)
+            
+            <span class="keyword">if</span> <span class="keyword">not</span> passed <span class="keyword">and</span> rule.severity == <span class="string">'error'</span>:
+                has_errors = <span class="keyword">True</span>
+        
+        <span class="keyword">return</span> <span class="keyword">not</span> has_errors
+    
+    <span class="keyword">def</span> <span class="function">run</span>(self, source, dest):
+        <span class="comment"># Extract</span>
+        <span class="function">print</span>(<span class="string">f'📥 Extraindo {source}'</span>)
+        df = pd.<span class="function">read_csv</span>(source)
+        
+        <span class="comment"># Transform</span>
+        <span class="function">print</span>(<span class="string">'🔄 Transformando...'</span>)
+        df = df.<span class="function">drop_duplicates</span>()
+        
+        <span class="comment"># Validate</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> self.<span class="function">validate</span>(df):
+            <span class="function">print</span>(<span class="string">'❌ Validação falhou! Abortando...'</span>)
+            <span class="keyword">return</span> <span class="keyword">False</span>
+        
+        <span class="comment"># Load</span>
+        <span class="function">print</span>(<span class="string">f'📤 Salvando {dest}'</span>)
+        df.<span class="function">to_parquet</span>(dest)
+        <span class="function">print</span>(<span class="string">'✅ Pipeline concluído!'</span>)
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+<span class="comment"># Usar</span>
+etl = <span class="function">ETLWithValidation</span>()
+
+<span class="comment"># Adicionar regras de validação</span>
+etl.<span class="function">add_rule</span>(
+    <span class="string">'Não pode estar vazio'</span>,
+    <span class="keyword">lambda</span> df: <span class="function">len</span>(df) > <span class="number">0</span>
+)
+etl.<span class="function">add_rule</span>(
+    <span class="string">'Coluna ID sem nulos'</span>,
+    <span class="keyword">lambda</span> df: df[<span class="string">'id'</span>].<span class="function">notna</span>().<span class="function">all</span>()
+)
+etl.<span class="function">add_rule</span>(
+    <span class="string">'Valores positivos'</span>,
+    <span class="keyword">lambda</span> df: (df[<span class="string">'value'</span>] >= <span class="number">0</span>).<span class="function">all</span>() <span class="keyword">if</span> <span class="string">'value'</span> <span class="keyword">in</span> df.columns <span class="keyword">else</span> <span class="keyword">True</span>
+)
+etl.<span class="function">add_rule</span>(
+    <span class="string">'Menos de 10% duplicatas'</span>,
+    <span class="keyword">lambda</span> df: df.<span class="function">duplicated</span>().<span class="function">mean</span>() < <span class="number">0.1</span>,
+    severity=<span class="string">'warning'</span>
+)
+
+etl.<span class="function">run</span>(<span class="string">'dados/vendas.csv'</span>, <span class="string">'dados/vendas_clean.parquet'</span>)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.2 APACHE AIRFLOW -->
+                <div class="section">
+                    <h3>2.2 Apache Airflow</h3>
+
+                    <p>Airflow é o orquestrador de workflows mais pedido no mercado. Você define DAGs (Directed Acyclic
+                        Graphs) que representam seus pipelines.</p>
+
+                    <div class="cloud-box">
+                        <strong>🔄 Conceitos Airflow:</strong><br>
+                        • <strong>DAG:</strong> Workflow (grafo de tarefas)<br>
+                        • <strong>Task:</strong> Uma unidade de trabalho<br>
+                        • <strong>Operator:</strong> Tipo de tarefa (Python, Bash, SQL...)<br>
+                        • <strong>Sensor:</strong> Aguarda condição (arquivo existir, API responder)
+                    </div>
+
+                    <h4>Instalação Local</h4>
+                    <pre><code><span class="comment"># Instalar Airflow (versão standalone para estudo)</span>
+<span class="command">pip install apache-airflow</span>
+
+<span class="comment"># Inicializar banco de dados</span>
+<span class="command">airflow db init</span>
+
+<span class="comment"># Criar usuário admin</span>
+<span class="command">airflow users create \
+    --username admin \
+    --firstname Admin \
+    --lastname User \
+    --role Admin \
+    --email admin@example.com \
+    --password admin</span>
+
+<span class="comment"># Iniciar webserver (em um terminal)</span>
+<span class="command">airflow webserver --port 8080</span>
+
+<span class="comment"># Iniciar scheduler (em outro terminal)</span>
+<span class="command">airflow scheduler</span>
+
+<span class="comment"># Acesse: http://localhost:8080</span>
+</code></pre>
+
+                    <h4>Primeira DAG</h4>
+                    <pre><code><span class="comment"># dags/minha_primeira_dag.py</span>
+<span class="keyword">from</span> airflow <span class="keyword">import</span> DAG
+<span class="keyword">from</span> airflow.operators.python <span class="keyword">import</span> PythonOperator
+<span class="keyword">from</span> airflow.operators.bash <span class="keyword">import</span> BashOperator
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime, timedelta
+
+<span class="comment"># Configurações padrão</span>
+default_args = {
+    <span class="string">'owner'</span>: <span class="string">'data_team'</span>,
+    <span class="string">'depends_on_past'</span>: <span class="keyword">False</span>,
+    <span class="string">'email_on_failure'</span>: <span class="keyword">False</span>,
+    <span class="string">'retries'</span>: <span class="number">1</span>,
+    <span class="string">'retry_delay'</span>: timedelta(minutes=<span class="number">5</span>),
+}
+
+<span class="comment"># Funções Python</span>
+<span class="keyword">def</span> <span class="function">extract_data</span>():
+    <span class="function">print</span>(<span class="string">'📥 Extraindo dados...'</span>)
+    <span class="comment"># Simular extração</span>
+    <span class="keyword">return</span> {<span class="string">'rows'</span>: <span class="number">1000</span>}
+
+<span class="keyword">def</span> <span class="function">transform_data</span>(ti):
+    <span class="comment"># XCom: comunicação entre tasks</span>
+    data = ti.<span class="function">xcom_pull</span>(task_ids=<span class="string">'extract'</span>)
+    <span class="function">print</span>(<span class="string">f'🔄 Transformando {data["rows"]} linhas...'</span>)
+    <span class="keyword">return</span> {<span class="string">'rows_processed'</span>: data[<span class="string">'rows'</span>]}
+
+<span class="keyword">def</span> <span class="function">load_data</span>(ti):
+    result = ti.<span class="function">xcom_pull</span>(task_ids=<span class="string">'transform'</span>)
+    <span class="function">print</span>(<span class="string">f'📤 Carregando {result["rows_processed"]} linhas...'</span>)
+
+<span class="comment"># Definir DAG</span>
+<span class="keyword">with</span> <span class="function">DAG</span>(
+    <span class="string">'etl_diario'</span>,
+    default_args=default_args,
+    description=<span class="string">'Pipeline ETL diário'</span>,
+    schedule_interval=<span class="string">'0 6 * * *'</span>,  <span class="comment"># 6h todo dia (cron)</span>
+    start_date=datetime(<span class="number">2024</span>, <span class="number">1</span>, <span class="number">1</span>),
+    catchup=<span class="keyword">False</span>,
+    tags=[<span class="string">'etl'</span>, <span class="string">'dados'</span>],
+) <span class="keyword">as</span> dag:
+
+    <span class="comment"># Task 1: Bash</span>
+    inicio = <span class="function">BashOperator</span>(
+        task_id=<span class="string">'inicio'</span>,
+        bash_command=<span class="string">'echo "Iniciando pipeline..."'</span>
+    )
+
+    <span class="comment"># Task 2: Python - Extract</span>
+    extract = <span class="function">PythonOperator</span>(
+        task_id=<span class="string">'extract'</span>,
+        python_callable=extract_data
+    )
+
+    <span class="comment"># Task 3: Python - Transform</span>
+    transform = <span class="function">PythonOperator</span>(
+        task_id=<span class="string">'transform'</span>,
+        python_callable=transform_data
+    )
+
+    <span class="comment"># Task 4: Python - Load</span>
+    load = <span class="function">PythonOperator</span>(
+        task_id=<span class="string">'load'</span>,
+        python_callable=load_data
+    )
+
+    <span class="comment"># Task 5: Fim</span>
+    fim = <span class="function">BashOperator</span>(
+        task_id=<span class="string">'fim'</span>,
+        bash_command=<span class="string">'echo "Pipeline concluído!"'</span>
+    )
+
+    <span class="comment"># Definir dependências</span>
+    inicio >> extract >> transform >> load >> fim
+</code></pre>
+
+                    <h4>DAG com Branches e Sensors</h4>
+                    <pre><code><span class="keyword">from</span> airflow <span class="keyword">import</span> DAG
+<span class="keyword">from</span> airflow.operators.python <span class="keyword">import</span> PythonOperator, BranchPythonOperator
+<span class="keyword">from</span> airflow.sensors.filesystem <span class="keyword">import</span> FileSensor
+<span class="keyword">from</span> airflow.operators.dummy <span class="keyword">import</span> DummyOperator
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+<span class="keyword">def</span> <span class="function">check_data_quality</span>(ti):
+    <span class="string">"""Decide o branch baseado na qualidade"""</span>
+    <span class="comment"># Simular verificação</span>
+    quality_score = <span class="number">0.95</span>  <span class="comment"># 95%</span>
+    
+    <span class="keyword">if</span> quality_score >= <span class="number">0.9</span>:
+        <span class="keyword">return</span> <span class="string">'load_to_production'</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">'send_alert'</span>
+
+<span class="keyword">with</span> <span class="function">DAG</span>(
+    <span class="string">'etl_com_validacao'</span>,
+    start_date=datetime(<span class="number">2024</span>, <span class="number">1</span>, <span class="number">1</span>),
+    schedule_interval=<span class="string">'@daily'</span>,
+    catchup=<span class="keyword">False</span>
+) <span class="keyword">as</span> dag:
+
+    <span class="comment"># Sensor: aguarda arquivo existir</span>
+    wait_for_file = <span class="function">FileSensor</span>(
+        task_id=<span class="string">'wait_for_file'</span>,
+        filepath=<span class="string">'/data/input/daily_data.csv'</span>,
+        poke_interval=<span class="number">60</span>,  <span class="comment"># Verifica a cada 60s</span>
+        timeout=<span class="number">3600</span>,       <span class="comment"># Timeout após 1h</span>
+    )
+
+    process = <span class="function">PythonOperator</span>(
+        task_id=<span class="string">'process'</span>,
+        python_callable=<span class="keyword">lambda</span>: <span class="function">print</span>(<span class="string">'Processando...'</span>)
+    )
+
+    <span class="comment"># Branch: decide caminho</span>
+    check_quality = <span class="function">BranchPythonOperator</span>(
+        task_id=<span class="string">'check_quality'</span>,
+        python_callable=check_data_quality
+    )
+
+    <span class="comment"># Dois caminhos possíveis</span>
+    load_prod = <span class="function">PythonOperator</span>(
+        task_id=<span class="string">'load_to_production'</span>,
+        python_callable=<span class="keyword">lambda</span>: <span class="function">print</span>(<span class="string">'✅ Dados em produção!'</span>)
+    )
+
+    send_alert = <span class="function">PythonOperator</span>(
+        task_id=<span class="string">'send_alert'</span>,
+        python_callable=<span class="keyword">lambda</span>: <span class="function">print</span>(<span class="string">'⚠️ Alerta enviado!'</span>)
+    )
+
+    <span class="comment"># Join: reconverge os branches</span>
+    end = <span class="function">DummyOperator</span>(
+        task_id=<span class="string">'end'</span>,
+        trigger_rule=<span class="string">'none_failed_min_one_success'</span>
+    )
+
+    <span class="comment"># Dependências</span>
+    wait_for_file >> process >> check_quality
+    check_quality >> [load_prod, send_alert] >> end
+</code></pre>
+
+                    <div class="tip">
+                        <strong>💡 Schedule Interval (Cron):</strong><br>
+                        • <code>@daily</code> = <code>0 0 * * *</code> (meia-noite)<br>
+                        • <code>@hourly</code> = <code>0 * * * *</code><br>
+                        • <code>0 6 * * 1-5</code> = 6h, seg a sex<br>
+                        • <code>None</code> = apenas manual
+                    </div>
+
+                    <!-- EXERCÍCIO 6 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 6</span>
+                            <span class="exercise-title">DAG de ML Pipeline</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Crie uma DAG que executa um pipeline de ML: extrai dados, treina modelo e salva métricas.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">from</span> airflow <span class="keyword">import</span> DAG
+<span class="keyword">from</span> airflow.operators.python <span class="keyword">import</span> PythonOperator
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<span class="keyword">import</span> json
+
+<span class="keyword">def</span> <span class="function">extract_training_data</span>(ti):
+    <span class="string">"""Extrai dados de treino"""</span>
+    <span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+    <span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris
+    
+    iris = <span class="function">load_iris</span>()
+    df = pd.<span class="function">DataFrame</span>(iris.data, columns=iris.feature_names)
+    df[<span class="string">'target'</span>] = iris.target
+    
+    <span class="comment"># Salvar temporário</span>
+    path = <span class="string">'/tmp/train_data.parquet'</span>
+    df.<span class="function">to_parquet</span>(path)
+    
+    <span class="keyword">return</span> {<span class="string">'path'</span>: path, <span class="string">'rows'</span>: <span class="function">len</span>(df)}
+
+<span class="keyword">def</span> <span class="function">train_model</span>(ti):
+    <span class="string">"""Treina modelo"""</span>
+    <span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+    <span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+    <span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+    <span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score
+    <span class="keyword">import</span> joblib
+    
+    <span class="comment"># Recuperar dados</span>
+    data = ti.<span class="function">xcom_pull</span>(task_ids=<span class="string">'extract_data'</span>)
+    df = pd.<span class="function">read_parquet</span>(data[<span class="string">'path'</span>])
+    
+    X = df.<span class="function">drop</span>(<span class="string">'target'</span>, axis=<span class="number">1</span>)
+    y = df[<span class="string">'target'</span>]
+    
+    X_train, X_test, y_train, y_test = <span class="function">train_test_split</span>(
+        X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>
+    )
+    
+    <span class="comment"># Treinar</span>
+    model = <span class="function">RandomForestClassifier</span>(n_estimators=<span class="number">100</span>, random_state=<span class="number">42</span>)
+    model.<span class="function">fit</span>(X_train, y_train)
+    
+    <span class="comment"># Métricas</span>
+    accuracy = <span class="function">accuracy_score</span>(y_test, model.<span class="function">predict</span>(X_test))
+    
+    <span class="comment"># Salvar modelo</span>
+    model_path = <span class="string">'/tmp/model.joblib'</span>
+    joblib.<span class="function">dump</span>(model, model_path)
+    
+    <span class="keyword">return</span> {
+        <span class="string">'model_path'</span>: model_path,
+        <span class="string">'accuracy'</span>: accuracy,
+        <span class="string">'train_size'</span>: <span class="function">len</span>(X_train)
+    }
+
+<span class="keyword">def</span> <span class="function">save_metrics</span>(ti):
+    <span class="string">"""Salva métricas do modelo"""</span>
+    result = ti.<span class="function">xcom_pull</span>(task_ids=<span class="string">'train_model'</span>)
+    
+    metrics = {
+        <span class="string">'timestamp'</span>: datetime.<span class="function">now</span>().<span class="function">isoformat</span>(),
+        <span class="string">'accuracy'</span>: result[<span class="string">'accuracy'</span>],
+        <span class="string">'train_size'</span>: result[<span class="string">'train_size'</span>],
+        <span class="string">'model_path'</span>: result[<span class="string">'model_path'</span>]
+    }
+    
+    <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'/tmp/metrics.json'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> f:
+        json.<span class="function">dump</span>(metrics, f, indent=<span class="number">2</span>)
+    
+    <span class="function">print</span>(<span class="string">f'✅ Modelo treinado! Accuracy: {result["accuracy"]:.4f}'</span>)
+
+<span class="keyword">with</span> <span class="function">DAG</span>(
+    <span class="string">'ml_training_pipeline'</span>,
+    start_date=datetime(<span class="number">2024</span>, <span class="number">1</span>, <span class="number">1</span>),
+    schedule_interval=<span class="string">'@weekly'</span>,  <span class="comment"># Retreino semanal</span>
+    catchup=<span class="keyword">False</span>,
+    tags=[<span class="string">'ml'</span>, <span class="string">'training'</span>]
+) <span class="keyword">as</span> dag:
+
+    extract = <span class="function">PythonOperator</span>(
+        task_id=<span class="string">'extract_data'</span>,
+        python_callable=extract_training_data
+    )
+
+    train = <span class="function">PythonOperator</span>(
+        task_id=<span class="string">'train_model'</span>,
+        python_callable=train_model
+    )
+
+    save = <span class="function">PythonOperator</span>(
+        task_id=<span class="string">'save_metrics'</span>,
+        python_callable=save_metrics
+    )
+
+    extract >> train >> save
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.3 DBT -->
+                <div class="section">
+                    <h3>2.3 dbt (Data Build Tool)</h3>
+
+                    <p>dbt transforma dados <strong>dentro</strong> do warehouse usando SQL. É o coração do ELT moderno
+                        e do Analytics Engineering.</p>
+
+                    <div class="cloud-box">
+                        <strong>🔧 Conceitos dbt:</strong><br>
+                        • <strong>Model:</strong> SELECT que vira tabela/view<br>
+                        • <strong>Source:</strong> Tabelas raw no warehouse<br>
+                        • <strong>Test:</strong> Validação de dados (unique, not_null)<br>
+                        • <strong>Documentation:</strong> Gerada automaticamente
+                    </div>
+
+                    <h4>Instalação e Setup</h4>
+                    <pre><code><span class="comment"># Instalar dbt (escolha o adapter do seu DW)</span>
+<span class="command">pip install dbt-bigquery</span>    <span class="comment"># Para BigQuery</span>
+<span class="command">pip install dbt-postgres</span>    <span class="comment"># Para PostgreSQL</span>
+<span class="command">pip install dbt-snowflake</span>   <span class="comment"># Para Snowflake</span>
+
+<span class="comment"># Criar projeto</span>
+<span class="command">dbt init meu_projeto</span>
+
+<span class="comment"># Estrutura criada:</span>
+<span class="comment"># meu_projeto/</span>
+<span class="comment"># ├── dbt_project.yml    # Configuração</span>
+<span class="comment"># ├── models/            # Seus modelos SQL</span>
+<span class="comment"># ├── tests/             # Testes customizados</span>
+<span class="comment"># ├── macros/            # Funções reutilizáveis</span>
+<span class="comment"># └── seeds/             # Dados estáticos (CSV)</span>
+</code></pre>
+
+                    <h4>Modelo dbt Básico</h4>
+                    <pre><code><span class="comment">-- models/staging/stg_vendas.sql</span>
+<span class="comment">-- Modelo de staging: limpeza inicial</span>
+
+<span class="keyword">WITH</span> source <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> {{ <span class="function">source</span>(<span class="string">'raw'</span>, <span class="string">'vendas'</span>) }}
+),
+
+cleaned <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span>
+        id,
+        <span class="function">LOWER</span>(<span class="function">TRIM</span>(produto)) <span class="keyword">AS</span> produto,
+        <span class="function">CAST</span>(valor <span class="keyword">AS</span> NUMERIC) <span class="keyword">AS</span> valor,
+        <span class="function">DATE</span>(data_venda) <span class="keyword">AS</span> data_venda,
+        <span class="function">CURRENT_TIMESTAMP</span>() <span class="keyword">AS</span> _loaded_at
+    <span class="keyword">FROM</span> source
+    <span class="keyword">WHERE</span> id <span class="keyword">IS NOT NULL</span>
+)
+
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> cleaned
+</code></pre>
+
+                    <pre><code><span class="comment">-- models/marts/fct_vendas_diarias.sql</span>
+<span class="comment">-- Fact table: agregação para análise</span>
+
+{{ <span class="function">config</span>(materialized=<span class="string">'table'</span>) }}
+
+<span class="keyword">WITH</span> vendas <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> {{ <span class="function">ref</span>(<span class="string">'stg_vendas'</span>) }}
+)
+
+<span class="keyword">SELECT</span>
+    data_venda,
+    produto,
+    <span class="function">COUNT</span>(*) <span class="keyword">AS</span> total_vendas,
+    <span class="function">SUM</span>(valor) <span class="keyword">AS</span> receita_total,
+    <span class="function">AVG</span>(valor) <span class="keyword">AS</span> ticket_medio
+<span class="keyword">FROM</span> vendas
+<span class="keyword">GROUP BY</span> data_venda, produto
+</code></pre>
+
+                    <h4>Sources e Schema</h4>
+                    <pre><code><span class="comment"># models/staging/_sources.yml</span>
+<span class="keyword">version</span>: <span class="number">2</span>
+
+<span class="keyword">sources</span>:
+  - <span class="keyword">name</span>: raw
+    <span class="keyword">database</span>: meu_projeto
+    <span class="keyword">schema</span>: raw_data
+    <span class="keyword">tables</span>:
+      - <span class="keyword">name</span>: vendas
+        <span class="keyword">description</span>: <span class="string">"Dados brutos de vendas"</span>
+        <span class="keyword">columns</span>:
+          - <span class="keyword">name</span>: id
+            <span class="keyword">description</span>: <span class="string">"ID único da venda"</span>
+            <span class="keyword">tests</span>:
+              - unique
+              - not_null
+</code></pre>
+
+                    <h4>Testes e Documentação</h4>
+                    <pre><code><span class="comment"># models/marts/_schema.yml</span>
+<span class="keyword">version</span>: <span class="number">2</span>
+
+<span class="keyword">models</span>:
+  - <span class="keyword">name</span>: fct_vendas_diarias
+    <span class="keyword">description</span>: <span class="string">"Vendas agregadas por dia e produto"</span>
+    <span class="keyword">columns</span>:
+      - <span class="keyword">name</span>: data_venda
+        <span class="keyword">description</span>: <span class="string">"Data da venda"</span>
+        <span class="keyword">tests</span>:
+          - not_null
+      - <span class="keyword">name</span>: receita_total
+        <span class="keyword">description</span>: <span class="string">"Soma do valor das vendas"</span>
+        <span class="keyword">tests</span>:
+          - not_null
+          - <span class="keyword">dbt_utils.accepted_range</span>:
+              <span class="keyword">min_value</span>: <span class="number">0</span>
+</code></pre>
+
+                    <pre><code><span class="comment"># Comandos dbt principais</span>
+
+<span class="comment"># Testar conexão</span>
+<span class="command">dbt debug</span>
+
+<span class="comment"># Rodar todos os modelos</span>
+<span class="command">dbt run</span>
+
+<span class="comment"># Rodar modelo específico</span>
+<span class="command">dbt run --select stg_vendas</span>
+
+<span class="comment"># Rodar modelo e dependências</span>
+<span class="command">dbt run --select +fct_vendas_diarias</span>
+
+<span class="comment"># Executar testes</span>
+<span class="command">dbt test</span>
+
+<span class="comment"># Gerar documentação</span>
+<span class="command">dbt docs generate</span>
+<span class="command">dbt docs serve</span>  <span class="comment"># Abre no navegador</span>
+</code></pre>
+
+                    <div class="warning">
+                        <strong>⚠️ dbt vs Pandas:</strong><br>
+                        • <strong>dbt:</strong> Transforma dados no warehouse (SQL). Escala infinita.<br>
+                        • <strong>Pandas:</strong> Transforma na memória local. Limitado pela RAM.<br>
+                        Use dbt para transformações que seu warehouse pode fazer!
+                    </div>
+
+                    <!-- EXERCÍCIO 7 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 7</span>
+                            <span class="exercise-title">Projeto dbt Completo</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Crie um projeto dbt com staging, intermediate e marts layers para dados de e-commerce.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="comment"># Estrutura do projeto:</span>
+<span class="comment"># models/</span>
+<span class="comment"># ├── staging/</span>
+<span class="comment"># │   ├── _sources.yml</span>
+<span class="comment"># │   ├── stg_orders.sql</span>
+<span class="comment"># │   └── stg_customers.sql</span>
+<span class="comment"># ├── intermediate/</span>
+<span class="comment"># │   └── int_orders_enriched.sql</span>
+<span class="comment"># └── marts/</span>
+<span class="comment">#     ├── _schema.yml</span>
+<span class="comment">#     └── fct_customer_orders.sql</span>
+
+<span class="comment">-- models/staging/stg_orders.sql</span>
+<span class="keyword">SELECT</span>
+    order_id,
+    customer_id,
+    <span class="function">CAST</span>(order_date <span class="keyword">AS</span> DATE) <span class="keyword">AS</span> order_date,
+    <span class="function">CAST</span>(total_amount <span class="keyword">AS</span> NUMERIC) <span class="keyword">AS</span> total_amount,
+    status
+<span class="keyword">FROM</span> {{ <span class="function">source</span>(<span class="string">'raw'</span>, <span class="string">'orders'</span>) }}
+<span class="keyword">WHERE</span> order_id <span class="keyword">IS NOT NULL</span>
+</code></pre>
+
+                                <pre><code><span class="comment">-- models/staging/stg_customers.sql</span>
+<span class="keyword">SELECT</span>
+    customer_id,
+    <span class="function">LOWER</span>(<span class="function">TRIM</span>(email)) <span class="keyword">AS</span> email,
+    <span class="function">INITCAP</span>(name) <span class="keyword">AS</span> name,
+    <span class="function">CAST</span>(created_at <span class="keyword">AS</span> DATE) <span class="keyword">AS</span> signup_date
+<span class="keyword">FROM</span> {{ <span class="function">source</span>(<span class="string">'raw'</span>, <span class="string">'customers'</span>) }}
+</code></pre>
+
+                                <pre><code><span class="comment">-- models/intermediate/int_orders_enriched.sql</span>
+<span class="keyword">WITH</span> orders <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> {{ <span class="function">ref</span>(<span class="string">'stg_orders'</span>) }}
+),
+customers <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> {{ <span class="function">ref</span>(<span class="string">'stg_customers'</span>) }}
+)
+
+<span class="keyword">SELECT</span>
+    o.order_id,
+    o.customer_id,
+    c.name <span class="keyword">AS</span> customer_name,
+    c.email,
+    o.order_date,
+    o.total_amount,
+    o.status,
+    <span class="comment">-- Calcular dias desde signup</span>
+    <span class="function">DATE_DIFF</span>(o.order_date, c.signup_date, DAY) <span class="keyword">AS</span> days_since_signup
+<span class="keyword">FROM</span> orders o
+<span class="keyword">LEFT JOIN</span> customers c <span class="keyword">ON</span> o.customer_id = c.customer_id
+</code></pre>
+
+                                <pre><code><span class="comment">-- models/marts/fct_customer_orders.sql</span>
+{{ <span class="function">config</span>(materialized=<span class="string">'table'</span>) }}
+
+<span class="keyword">WITH</span> enriched <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> {{ <span class="function">ref</span>(<span class="string">'int_orders_enriched'</span>) }}
+)
+
+<span class="keyword">SELECT</span>
+    customer_id,
+    customer_name,
+    email,
+    <span class="function">COUNT</span>(*) <span class="keyword">AS</span> total_orders,
+    <span class="function">SUM</span>(total_amount) <span class="keyword">AS</span> lifetime_value,
+    <span class="function">AVG</span>(total_amount) <span class="keyword">AS</span> avg_order_value,
+    <span class="function">MIN</span>(order_date) <span class="keyword">AS</span> first_order_date,
+    <span class="function">MAX</span>(order_date) <span class="keyword">AS</span> last_order_date,
+    <span class="function">DATE_DIFF</span>(<span class="function">CURRENT_DATE</span>(), <span class="function">MAX</span>(order_date), DAY) <span class="keyword">AS</span> days_since_last_order
+<span class="keyword">FROM</span> enriched
+<span class="keyword">WHERE</span> status = <span class="string">'completed'</span>
+<span class="keyword">GROUP BY</span> customer_id, customer_name, email
+</code></pre>
+
+                                <pre><code><span class="comment"># models/marts/_schema.yml</span>
+<span class="keyword">version</span>: <span class="number">2</span>
+
+<span class="keyword">models</span>:
+  - <span class="keyword">name</span>: fct_customer_orders
+    <span class="keyword">description</span>: <span class="string">"Métricas de clientes agregadas"</span>
+    <span class="keyword">columns</span>:
+      - <span class="keyword">name</span>: customer_id
+        <span class="keyword">tests</span>:
+          - unique
+          - not_null
+      - <span class="keyword">name</span>: lifetime_value
+        <span class="keyword">tests</span>:
+          - not_null
+          - dbt_utils.accepted_range:
+              <span class="keyword">min_value</span>: <span class="number">0</span>
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- MÓDULO 3: DOCKER -->
+        <div class="module" id="modulo3">
+            <div class="module-header">
+                <h2>🐳 Módulo 3: Containerização</h2>
+            </div>
+            <div class="module-content">
+                <!-- 3.1 DOCKER FUNDAMENTOS -->
+                <div class="section">
+                    <h3>3.1 Docker: Fundamentos</h3>
+
+                    <p>Docker permite empacotar aplicações com todas as dependências, garantindo que funcionem igual em
+                        qualquer ambiente.</p>
+
+                    <h4>Containers vs VMs</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Virtual Machine</th>
+                            <th>Container</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Tamanho</strong></td>
+                            <td>GBs (inclui OS completo)</td>
+                            <td>MBs (compartilha kernel)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Startup</strong></td>
+                            <td>Minutos</td>
+                            <td>Segundos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Isolamento</strong></td>
+                            <td>Completo (hypervisor)</td>
+                            <td>Processo (namespaces)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Performance</strong></td>
+                            <td>Overhead significativo</td>
+                            <td>Quase nativo</td>
+                        </tr>
+                    </table>
+
+                    <h4>Instalação</h4>
+                    <pre><code><span class="comment"># Windows/Mac: Docker Desktop</span>
+<span class="comment"># https://www.docker.com/products/docker-desktop</span>
+
+<span class="comment"># Linux (Ubuntu)</span>
+<span class="command">sudo apt update</span>
+<span class="command">sudo apt install docker.io</span>
+<span class="command">sudo systemctl enable docker</span>
+<span class="command">sudo usermod -aG docker $USER</span>  <span class="comment"># Rodar sem sudo</span>
+
+<span class="comment"># Verificar instalação</span>
+<span class="command">docker --version</span>
+<span class="command">docker run hello-world</span>
+</code></pre>
+
+                    <h4>Comandos Essenciais</h4>
+                    <pre><code><span class="comment"># ===== IMAGENS =====</span>
+<span class="command">docker images</span>                    <span class="comment"># Listar imagens locais</span>
+<span class="command">docker pull python:3.11</span>          <span class="comment"># Baixar imagem</span>
+<span class="command">docker rmi python:3.11</span>           <span class="comment"># Remover imagem</span>
+
+<span class="comment"># ===== CONTAINERS =====</span>
+<span class="command">docker ps</span>                        <span class="comment"># Containers rodando</span>
+<span class="command">docker ps -a</span>                     <span class="comment"># Todos (incluindo parados)</span>
+
+<span class="comment"># Rodar container</span>
+<span class="command">docker run python:3.11 python --version</span>
+
+<span class="comment"># Rodar interativo (-it) e remover ao sair (--rm)</span>
+<span class="command">docker run -it --rm python:3.11 bash</span>
+
+<span class="comment"># Rodar em background (-d) com porta mapeada (-p)</span>
+<span class="command">docker run -d -p 8080:80 --name meu_nginx nginx</span>
+
+<span class="comment"># Acessar container rodando</span>
+<span class="command">docker exec -it meu_nginx bash</span>
+
+<span class="comment"># Parar e remover</span>
+<span class="command">docker stop meu_nginx</span>
+<span class="command">docker rm meu_nginx</span>
+
+<span class="comment"># Ver logs</span>
+<span class="command">docker logs meu_nginx</span>
+<span class="command">docker logs -f meu_nginx</span>        <span class="comment"># Follow (tempo real)</span>
+
+<span class="comment"># ===== VOLUMES (persistência) =====</span>
+<span class="command">docker run -v /local/path:/container/path python:3.11</span>
+<span class="command">docker run -v meu_volume:/data python:3.11</span>  <span class="comment"># Volume nomeado</span>
+
+<span class="comment"># ===== LIMPEZA =====</span>
+<span class="command">docker system prune</span>              <span class="comment"># Limpar recursos não usados</span>
+<span class="command">docker system prune -a</span>           <span class="comment"># Incluir imagens</span>
+</code></pre>
+
+                    <div class="tip">
+                        <strong>💡 Dica de Performance:</strong><br>
+                        Use <code>docker run --rm</code> para containers temporários. Isso remove automaticamente ao
+                        sair, evitando acumular containers parados.
+                    </div>
+
+                    <!-- EXERCÍCIO 8 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 8</span>
+                            <span class="exercise-title">Container Python Interativo</span>
+                            <span class="difficulty easy">Fácil</span>
+                        </div>
+                        <p>Rode um container Python, instale pandas e execute uma análise simples.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="comment"># 1. Rodar container interativo</span>
+<span class="command">docker run -it --rm python:3.11 bash</span>
+
+<span class="comment"># 2. Dentro do container:</span>
+<span class="command">pip install pandas</span>
+
+<span class="comment"># 3. Executar Python</span>
+<span class="command">python</span>
+>>> <span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+>>> df = pd.<span class="function">DataFrame</span>({<span class="string">'a'</span>: [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>], <span class="string">'b'</span>: [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]})
+>>> <span class="function">print</span>(df.<span class="function">describe</span>())
+>>> exit()
+
+<span class="comment"># 4. Sair do container</span>
+<span class="command">exit</span>
+
+<span class="comment"># Container removido automaticamente (--rm)</span>
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3.2 DOCKERFILE -->
+                <div class="section">
+                    <h3>3.2 Dockerfile: Criando Imagens</h3>
+
+                    <p>Dockerfile é a receita para criar sua imagem customizada.</p>
+
+                    <h4>Dockerfile Básico</h4>
+                    <pre><code><span class="comment"># Dockerfile</span>
+<span class="keyword">FROM</span> python:3.11-slim
+
+<span class="comment"># Metadados</span>
+<span class="keyword">LABEL</span> maintainer="seu@email.com"
+<span class="keyword">LABEL</span> version="1.0"
+
+<span class="comment"># Variáveis de ambiente</span>
+<span class="keyword">ENV</span> PYTHONDONTWRITEBYTECODE=1
+<span class="keyword">ENV</span> PYTHONUNBUFFERED=1
+
+<span class="comment"># Diretório de trabalho</span>
+<span class="keyword">WORKDIR</span> /app
+
+<span class="comment"># Copiar requirements primeiro (cache de layers)</span>
+<span class="keyword">COPY</span> requirements.txt .
+<span class="keyword">RUN</span> pip install --no-cache-dir -r requirements.txt
+
+<span class="comment"># Copiar código</span>
+<span class="keyword">COPY</span> . .
+
+<span class="comment"># Porta exposta (documentação)</span>
+<span class="keyword">EXPOSE</span> 8000
+
+<span class="comment"># Comando padrão</span>
+<span class="keyword">CMD</span> ["python", "app.py"]
+</code></pre>
+
+                    <h4>Dockerfile para ML</h4>
+                    <pre><code><span class="comment"># Dockerfile para projeto de ML</span>
+<span class="keyword">FROM</span> python:3.11-slim
+
+<span class="keyword">WORKDIR</span> /app
+
+<span class="comment"># Dependências de sistema (se necessário)</span>
+<span class="keyword">RUN</span> apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+<span class="comment"># Requirements primeiro (melhor cache)</span>
+<span class="keyword">COPY</span> requirements.txt .
+<span class="keyword">RUN</span> pip install --no-cache-dir -r requirements.txt
+
+<span class="comment"># Copiar modelo treinado</span>
+<span class="keyword">COPY</span> models/ ./models/
+
+<span class="comment"># Copiar código da API</span>
+<span class="keyword">COPY</span> src/ ./src/
+
+<span class="comment"># Usuário não-root (segurança)</span>
+<span class="keyword">RUN</span> useradd -m appuser
+<span class="keyword">USER</span> appuser
+
+<span class="keyword">EXPOSE</span> 8000
+
+<span class="comment"># FastAPI com uvicorn</span>
+<span class="keyword">CMD</span> ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000"]
+</code></pre>
+
+                    <h4>Build e Run</h4>
+                    <pre><code><span class="comment"># Build da imagem</span>
+<span class="command">docker build -t minha-api:v1 .</span>
+
+<span class="comment"># Build com nome do Dockerfile diferente</span>
+<span class="command">docker build -t minha-api:v1 -f Dockerfile.prod .</span>
+
+<span class="comment"># Rodar</span>
+<span class="command">docker run -d -p 8000:8000 --name api minha-api:v1</span>
+
+<span class="comment"># Testar</span>
+<span class="command">curl http://localhost:8000/health</span>
+
+<span class="comment"># Ver logs</span>
+<span class="command">docker logs -f api</span>
+</code></pre>
+
+                    <h4>Multi-Stage Build (Imagens Menores)</h4>
+                    <pre><code><span class="comment"># Dockerfile multi-stage</span>
+<span class="comment"># Stage 1: Build</span>
+<span class="keyword">FROM</span> python:3.11 <span class="keyword">AS</span> builder
+
+<span class="keyword">WORKDIR</span> /app
+
+<span class="keyword">COPY</span> requirements.txt .
+<span class="keyword">RUN</span> pip install --user --no-cache-dir -r requirements.txt
+
+<span class="comment"># Stage 2: Runtime (imagem menor)</span>
+<span class="keyword">FROM</span> python:3.11-slim
+
+<span class="keyword">WORKDIR</span> /app
+
+<span class="comment"># Copiar apenas o necessário do builder</span>
+<span class="keyword">COPY</span> --from=builder /root/.local /root/.local
+<span class="keyword">ENV</span> PATH=/root/.local/bin:$PATH
+
+<span class="keyword">COPY</span> src/ ./src/
+<span class="keyword">COPY</span> models/ ./models/
+
+<span class="keyword">EXPOSE</span> 8000
+<span class="keyword">CMD</span> ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000"]
+</code></pre>
+
+                    <div class="warning">
+                        <strong>⚠️ Boas Práticas Dockerfile:</strong><br>
+                        • Use imagens <code>-slim</code> ou <code>-alpine</code> (menores)<br>
+                        • Copie requirements.txt antes do código (cache)<br>
+                        • Use <code>--no-cache-dir</code> no pip<br>
+                        • Não rode como root em produção<br>
+                        • Use <code>.dockerignore</code> para excluir arquivos
+                    </div>
+
+                    <pre><code><span class="comment"># .dockerignore</span>
+__pycache__
+*.pyc
+.git
+.env
+data/
+notebooks/
+*.md
+.pytest_cache
+.mypy_cache
+</code></pre>
+
+                    <!-- EXERCÍCIO 9 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 9</span>
+                            <span class="exercise-title">Dockerizar API de Predição</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Crie uma API FastAPI que carrega um modelo e retorna predições, dockerizada.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="comment"># requirements.txt</span>
+fastapi
+uvicorn
+scikit-learn
+pandas
+joblib
+</code></pre>
+
+                                <pre><code><span class="comment"># src/train.py - Treinar e salvar modelo</span>
+<span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">import</span> joblib
+<span class="keyword">import</span> os
+
+os.<span class="function">makedirs</span>(<span class="string">'models'</span>, exist_ok=<span class="keyword">True</span>)
+
+iris = <span class="function">load_iris</span>()
+model = <span class="function">RandomForestClassifier</span>(n_estimators=<span class="number">100</span>)
+model.<span class="function">fit</span>(iris.data, iris.target)
+
+joblib.<span class="function">dump</span>(model, <span class="string">'models/model.joblib'</span>)
+joblib.<span class="function">dump</span>(iris.feature_names, <span class="string">'models/features.joblib'</span>)
+<span class="function">print</span>(<span class="string">'Modelo salvo!'</span>)
+</code></pre>
+
+                                <pre><code><span class="comment"># src/api.py - API FastAPI</span>
+<span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI
+<span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel
+<span class="keyword">import</span> joblib
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+app = <span class="function">FastAPI</span>(title=<span class="string">'ML Prediction API'</span>)
+
+<span class="comment"># Carregar modelo na inicialização</span>
+model = joblib.<span class="function">load</span>(<span class="string">'models/model.joblib'</span>)
+features = joblib.<span class="function">load</span>(<span class="string">'models/features.joblib'</span>)
+
+<span class="keyword">class</span> <span class="function">PredictionRequest</span>(BaseModel):
+    sepal_length: float
+    sepal_width: float
+    petal_length: float
+    petal_width: float
+
+<span class="keyword">class</span> <span class="function">PredictionResponse</span>(BaseModel):
+    prediction: int
+    class_name: str
+    probabilities: list
+
+<span class="decorator">@app.get</span>(<span class="string">'/health'</span>)
+<span class="keyword">def</span> <span class="function">health</span>():
+    <span class="keyword">return</span> {<span class="string">'status'</span>: <span class="string">'healthy'</span>}
+
+<span class="decorator">@app.post</span>(<span class="string">'/predict'</span>, response_model=PredictionResponse)
+<span class="keyword">def</span> <span class="function">predict</span>(request: PredictionRequest):
+    X = np.<span class="function">array</span>([[
+        request.sepal_length,
+        request.sepal_width,
+        request.petal_length,
+        request.petal_width
+    ]])
+    
+    pred = model.<span class="function">predict</span>(X)[<span class="number">0</span>]
+    proba = model.<span class="function">predict_proba</span>(X)[<span class="number">0</span>].<span class="function">tolist</span>()
+    
+    classes = [<span class="string">'setosa'</span>, <span class="string">'versicolor'</span>, <span class="string">'virginica'</span>]
+    
+    <span class="keyword">return</span> <span class="function">PredictionResponse</span>(
+        prediction=<span class="function">int</span>(pred),
+        class_name=classes[pred],
+        probabilities=proba
+    )
+</code></pre>
+
+                                <pre><code><span class="comment"># Dockerfile</span>
+<span class="keyword">FROM</span> python:3.11-slim
+
+<span class="keyword">WORKDIR</span> /app
+
+<span class="keyword">COPY</span> requirements.txt .
+<span class="keyword">RUN</span> pip install --no-cache-dir -r requirements.txt
+
+<span class="keyword">COPY</span> models/ ./models/
+<span class="keyword">COPY</span> src/api.py ./src/
+
+<span class="keyword">EXPOSE</span> 8000
+
+<span class="keyword">CMD</span> ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000"]
+</code></pre>
+
+                                <pre><code><span class="comment"># Comandos</span>
+<span class="command">python src/train.py</span>              <span class="comment"># Treinar modelo</span>
+<span class="command">docker build -t ml-api:v1 .</span>     <span class="comment"># Build</span>
+<span class="command">docker run -d -p 8000:8000 ml-api:v1</span>
+
+<span class="comment"># Testar</span>
+<span class="command">curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"sepal_length": 5.1, "sepal_width": 3.5, "petal_length": 1.4, "petal_width": 0.2}'</span>
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3.3 DOCKER COMPOSE -->
+                <div class="section">
+                    <h3>3.3 Docker Compose</h3>
+
+                    <p>Docker Compose orquestra múltiplos containers. Perfeito para apps com API + Banco + Cache.</p>
+
+                    <h4>docker-compose.yml Básico</h4>
+                    <pre><code><span class="comment"># docker-compose.yml</span>
+<span class="keyword">version</span>: <span class="string">'3.8'</span>
+
+<span class="keyword">services</span>:
+  <span class="keyword">api</span>:
+    <span class="keyword">build</span>: .
+    <span class="keyword">ports</span>:
+      - <span class="string">"8000:8000"</span>
+    <span class="keyword">environment</span>:
+      - DATABASE_URL=postgresql://user:pass@db:5432/mydb
+    <span class="keyword">depends_on</span>:
+      - db
+    <span class="keyword">volumes</span>:
+      - ./models:/app/models  <span class="comment"># Modelos atualizados sem rebuild</span>
+
+  <span class="keyword">db</span>:
+    <span class="keyword">image</span>: postgres:15
+    <span class="keyword">environment</span>:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=mydb
+    <span class="keyword">volumes</span>:
+      - postgres_data:/var/lib/postgresql/data
+    <span class="keyword">ports</span>:
+      - <span class="string">"5432:5432"</span>
+
+<span class="keyword">volumes</span>:
+  postgres_data:
+</code></pre>
+
+                    <h4>Compose para ML: API + Redis + Monitoramento</h4>
+                    <pre><code><span class="comment"># docker-compose.yml completo</span>
+<span class="keyword">version</span>: <span class="string">'3.8'</span>
+
+<span class="keyword">services</span>:
+  <span class="comment"># API de Predição</span>
+  <span class="keyword">api</span>:
+    <span class="keyword">build</span>:
+      <span class="keyword">context</span>: .
+      <span class="keyword">dockerfile</span>: Dockerfile
+    <span class="keyword">ports</span>:
+      - <span class="string">"8000:8000"</span>
+    <span class="keyword">environment</span>:
+      - REDIS_URL=redis://redis:6379
+      - MODEL_PATH=/app/models/model.joblib
+    <span class="keyword">depends_on</span>:
+      - redis
+    <span class="keyword">volumes</span>:
+      - ./models:/app/models:ro  <span class="comment"># Read-only</span>
+    <span class="keyword">healthcheck</span>:
+      <span class="keyword">test</span>: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      <span class="keyword">interval</span>: 30s
+      <span class="keyword">timeout</span>: 10s
+      <span class="keyword">retries</span>: 3
+    <span class="keyword">restart</span>: unless-stopped
+
+  <span class="comment"># Cache Redis</span>
+  <span class="keyword">redis</span>:
+    <span class="keyword">image</span>: redis:7-alpine
+    <span class="keyword">ports</span>:
+      - <span class="string">"6379:6379"</span>
+    <span class="keyword">volumes</span>:
+      - redis_data:/data
+    <span class="keyword">restart</span>: unless-stopped
+
+  <span class="comment"># Prometheus (métricas)</span>
+  <span class="keyword">prometheus</span>:
+    <span class="keyword">image</span>: prom/prometheus
+    <span class="keyword">ports</span>:
+      - <span class="string">"9090:9090"</span>
+    <span class="keyword">volumes</span>:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    <span class="keyword">restart</span>: unless-stopped
+
+  <span class="comment"># Grafana (dashboards)</span>
+  <span class="keyword">grafana</span>:
+    <span class="keyword">image</span>: grafana/grafana
+    <span class="keyword">ports</span>:
+      - <span class="string">"3000:3000"</span>
+    <span class="keyword">environment</span>:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    <span class="keyword">volumes</span>:
+      - grafana_data:/var/lib/grafana
+    <span class="keyword">depends_on</span>:
+      - prometheus
+    <span class="keyword">restart</span>: unless-stopped
+
+<span class="keyword">volumes</span>:
+  redis_data:
+  grafana_data:
+
+<span class="keyword">networks</span>:
+  <span class="keyword">default</span>:
+    <span class="keyword">name</span>: ml-network
+</code></pre>
+
+                    <h4>Comandos Docker Compose</h4>
+                    <pre><code><span class="comment"># Iniciar todos os serviços</span>
+<span class="command">docker-compose up</span>
+
+<span class="comment"># Em background</span>
+<span class="command">docker-compose up -d</span>
+
+<span class="comment"># Rebuild e iniciar</span>
+<span class="command">docker-compose up --build</span>
+
+<span class="comment"># Ver logs</span>
+<span class="command">docker-compose logs -f</span>
+<span class="command">docker-compose logs -f api</span>  <span class="comment"># Só um serviço</span>
+
+<span class="comment"># Parar</span>
+<span class="command">docker-compose stop</span>
+
+<span class="comment"># Parar e remover containers</span>
+<span class="command">docker-compose down</span>
+
+<span class="comment"># Remover tudo (incluindo volumes)</span>
+<span class="command">docker-compose down -v</span>
+
+<span class="comment"># Escalar serviço (múltiplas instâncias)</span>
+<span class="command">docker-compose up -d --scale api=3</span>
+
+<span class="comment"># Executar comando em serviço</span>
+<span class="command">docker-compose exec api bash</span>
+</code></pre>
+
+                    <!-- EXERCÍCIO 10 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 10</span>
+                            <span class="exercise-title">Stack ML Completa</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Crie um docker-compose com API de ML + PostgreSQL + Redis para caching de predições.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="comment"># docker-compose.yml</span>
+<span class="keyword">version</span>: <span class="string">'3.8'</span>
+
+<span class="keyword">services</span>:
+  <span class="keyword">api</span>:
+    <span class="keyword">build</span>: .
+    <span class="keyword">ports</span>:
+      - <span class="string">"8000:8000"</span>
+    <span class="keyword">environment</span>:
+      - DATABASE_URL=postgresql://mluser:mlpass@db:5432/mldb
+      - REDIS_URL=redis://redis:6379
+    <span class="keyword">depends_on</span>:
+      db:
+        <span class="keyword">condition</span>: service_healthy
+      redis:
+        <span class="keyword">condition</span>: service_started
+    <span class="keyword">volumes</span>:
+      - ./models:/app/models:ro
+
+  <span class="keyword">db</span>:
+    <span class="keyword">image</span>: postgres:15-alpine
+    <span class="keyword">environment</span>:
+      - POSTGRES_USER=mluser
+      - POSTGRES_PASSWORD=mlpass
+      - POSTGRES_DB=mldb
+    <span class="keyword">volumes</span>:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    <span class="keyword">healthcheck</span>:
+      <span class="keyword">test</span>: ["CMD-SHELL", "pg_isready -U mluser -d mldb"]
+      <span class="keyword">interval</span>: 5s
+      <span class="keyword">timeout</span>: 5s
+      <span class="keyword">retries</span>: 5
+
+  <span class="keyword">redis</span>:
+    <span class="keyword">image</span>: redis:7-alpine
+    <span class="keyword">command</span>: redis-server --appendonly yes
+    <span class="keyword">volumes</span>:
+      - redisdata:/data
+
+<span class="keyword">volumes</span>:
+  pgdata:
+  redisdata:
+</code></pre>
+
+                                <pre><code><span class="comment"># src/api_with_cache.py</span>
+<span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI
+<span class="keyword">import</span> redis
+<span class="keyword">import</span> json
+<span class="keyword">import</span> hashlib
+<span class="keyword">import</span> os
+
+app = <span class="function">FastAPI</span>()
+
+<span class="comment"># Conexões</span>
+redis_client = redis.<span class="function">from_url</span>(os.<span class="function">getenv</span>(<span class="string">'REDIS_URL'</span>, <span class="string">'redis://localhost:6379'</span>))
+model = joblib.<span class="function">load</span>(<span class="string">'models/model.joblib'</span>)
+
+<span class="keyword">def</span> <span class="function">get_cache_key</span>(data: dict) -> str:
+    <span class="string">"""Gera chave única para os inputs"""</span>
+    data_str = json.<span class="function">dumps</span>(data, sort_keys=<span class="keyword">True</span>)
+    <span class="keyword">return</span> hashlib.<span class="function">md5</span>(data_str.<span class="function">encode</span>()).<span class="function">hexdigest</span>()
+
+<span class="decorator">@app.post</span>(<span class="string">'/predict'</span>)
+<span class="keyword">async def</span> <span class="function">predict</span>(request: PredictionRequest):
+    <span class="comment"># 1. Verificar cache</span>
+    cache_key = <span class="function">get_cache_key</span>(request.<span class="function">dict</span>())
+    cached = redis_client.<span class="function">get</span>(cache_key)
+    
+    <span class="keyword">if</span> cached:
+        <span class="keyword">return</span> json.<span class="function">loads</span>(cached)
+    
+    <span class="comment"># 2. Predição</span>
+    X = np.<span class="function">array</span>([[
+        request.sepal_length,
+        request.sepal_width,
+        request.petal_length,
+        request.petal_width
+    ]])
+    
+    pred = model.<span class="function">predict</span>(X)[<span class="number">0</span>]
+    result = {<span class="string">'prediction'</span>: <span class="function">int</span>(pred), <span class="string">'cached'</span>: <span class="keyword">False</span>}
+    
+    <span class="comment"># 3. Salvar no cache (expira em 1 hora)</span>
+    redis_client.<span class="function">setex</span>(cache_key, <span class="number">3600</span>, json.<span class="function">dumps</span>(result))
+    
+    <span class="keyword">return</span> result
+</code></pre>
+
+                                <pre><code><span class="comment"># init.sql - Criar tabela de logs</span>
+<span class="keyword">CREATE TABLE</span> prediction_logs (
+    id <span class="keyword">SERIAL PRIMARY KEY</span>,
+    input_data JSONB,
+    prediction INTEGER,
+    created_at TIMESTAMP <span class="keyword">DEFAULT</span> CURRENT_TIMESTAMP
+);
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3.4 KUBERNETES INTRO -->
+                <div class="section">
+                    <h3>3.4 Introdução ao Kubernetes</h3>
+
+                    <p>Kubernetes (K8s) orquestra containers em escala. Para Data Science, é essencial entender os
+                        conceitos básicos.</p>
+
+                    <div class="note">
+                        <strong>📝 Quando usar K8s:</strong><br>
+                        • Múltiplas instâncias de API (escala horizontal)<br>
+                        • Auto-scaling baseado em carga<br>
+                        • Alta disponibilidade (self-healing)<br>
+                        Para projetos simples, Docker Compose é suficiente!
+                    </div>
+
+                    <h4>Conceitos Básicos</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Conceito</th>
+                            <th>Descrição</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Pod</strong></td>
+                            <td>Menor unidade, 1+ containers</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Deployment</strong></td>
+                            <td>Gerencia pods (replicas, updates)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Service</strong></td>
+                            <td>Expõe pods (load balancer)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ConfigMap/Secret</strong></td>
+                            <td>Configurações e credenciais</td>
+                        </tr>
+                    </table>
+
+                    <h4>Manifesto de Deployment</h4>
+                    <pre><code><span class="comment"># k8s/deployment.yaml</span>
+<span class="keyword">apiVersion</span>: apps/v1
+<span class="keyword">kind</span>: Deployment
+<span class="keyword">metadata</span>:
+  <span class="keyword">name</span>: ml-api
+  <span class="keyword">labels</span>:
+    <span class="keyword">app</span>: ml-api
+<span class="keyword">spec</span>:
+  <span class="keyword">replicas</span>: <span class="number">3</span>  <span class="comment"># 3 instâncias</span>
+  <span class="keyword">selector</span>:
+    <span class="keyword">matchLabels</span>:
+      <span class="keyword">app</span>: ml-api
+  <span class="keyword">template</span>:
+    <span class="keyword">metadata</span>:
+      <span class="keyword">labels</span>:
+        <span class="keyword">app</span>: ml-api
+    <span class="keyword">spec</span>:
+      <span class="keyword">containers</span>:
+      - <span class="keyword">name</span>: ml-api
+        <span class="keyword">image</span>: minha-api:v1
+        <span class="keyword">ports</span>:
+        - <span class="keyword">containerPort</span>: <span class="number">8000</span>
+        <span class="keyword">resources</span>:
+          <span class="keyword">requests</span>:
+            <span class="keyword">memory</span>: <span class="string">"256Mi"</span>
+            <span class="keyword">cpu</span>: <span class="string">"250m"</span>
+          <span class="keyword">limits</span>:
+            <span class="keyword">memory</span>: <span class="string">"512Mi"</span>
+            <span class="keyword">cpu</span>: <span class="string">"500m"</span>
+        <span class="keyword">livenessProbe</span>:
+          <span class="keyword">httpGet</span>:
+            <span class="keyword">path</span>: /health
+            <span class="keyword">port</span>: <span class="number">8000</span>
+          <span class="keyword">initialDelaySeconds</span>: <span class="number">30</span>
+          <span class="keyword">periodSeconds</span>: <span class="number">10</span>
+</code></pre>
+
+                    <h4>Service (Load Balancer)</h4>
+                    <pre><code><span class="comment"># k8s/service.yaml</span>
+<span class="keyword">apiVersion</span>: v1
+<span class="keyword">kind</span>: Service
+<span class="keyword">metadata</span>:
+  <span class="keyword">name</span>: ml-api-service
+<span class="keyword">spec</span>:
+  <span class="keyword">type</span>: LoadBalancer
+  <span class="keyword">ports</span>:
+  - <span class="keyword">port</span>: <span class="number">80</span>
+    <span class="keyword">targetPort</span>: <span class="number">8000</span>
+  <span class="keyword">selector</span>:
+    <span class="keyword">app</span>: ml-api
+</code></pre>
+
+                    <h4>Comandos kubectl</h4>
+                    <pre><code><span class="comment"># Aplicar manifesto</span>
+<span class="command">kubectl apply -f k8s/deployment.yaml</span>
+<span class="command">kubectl apply -f k8s/service.yaml</span>
+
+<span class="comment"># Ver pods</span>
+<span class="command">kubectl get pods</span>
+<span class="command">kubectl get pods -w</span>  <span class="comment"># Watch</span>
+
+<span class="comment"># Ver logs</span>
+<span class="command">kubectl logs pod-name</span>
+<span class="command">kubectl logs -f pod-name</span>
+
+<span class="comment"># Escalar</span>
+<span class="command">kubectl scale deployment ml-api --replicas=5</span>
+
+<span class="comment"># Port forward (debug local)</span>
+<span class="command">kubectl port-forward svc/ml-api-service 8000:80</span>
+
+<span class="comment"># Deletar</span>
+<span class="command">kubectl delete -f k8s/</span>
+</code></pre>
+
+                    <div class="tip">
+                        <strong>💡 Para Aprender K8s:</strong><br>
+                        • <strong>Minikube:</strong> K8s local para estudo<br>
+                        • <strong>Kind:</strong> K8s em containers Docker<br>
+                        • <strong>Managed:</strong> GKE (GCP), EKS (AWS) em produção
+                    </div>
+
+                    <!-- EXERCÍCIO 11 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 11</span>
+                            <span class="exercise-title">Deploy Local com Minikube</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Configure Minikube e faça deploy da sua API de ML.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="comment"># 1. Instalar Minikube</span>
+<span class="comment"># https://minikube.sigs.k8s.io/docs/start/</span>
+
+<span class="comment"># 2. Iniciar cluster</span>
+<span class="command">minikube start</span>
+
+<span class="comment"># 3. Usar Docker do Minikube</span>
+<span class="command">eval $(minikube docker-env)</span>
+
+<span class="comment"># 4. Build da imagem DENTRO do Minikube</span>
+<span class="command">docker build -t ml-api:v1 .</span>
+
+<span class="comment"># 5. Aplicar manifestos</span>
+<span class="command">kubectl apply -f k8s/deployment.yaml</span>
+<span class="command">kubectl apply -f k8s/service.yaml</span>
+
+<span class="comment"># 6. Verificar</span>
+<span class="command">kubectl get pods</span>
+<span class="command">kubectl get services</span>
+
+<span class="comment"># 7. Acessar (Minikube cria tunnel)</span>
+<span class="command">minikube service ml-api-service</span>
+
+<span class="comment"># 8. OU port-forward</span>
+<span class="command">kubectl port-forward svc/ml-api-service 8000:80</span>
+<span class="command">curl http://localhost:8000/health</span>
+
+<span class="comment"># 9. Ver dashboard</span>
+<span class="command">minikube dashboard</span>
+
+<span class="comment"># 10. Limpar</span>
+<span class="command">minikube stop</span>
+<span class="command">minikube delete</span>
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- MÓDULO 4: MLOPS -->
+        <div class="module" id="modulo4">
+            <div class="module-header">
+                <h2>🚀 Módulo 4: MLOps na Prática</h2>
+            </div>
+            <div class="module-content">
+                <!-- 4.1 CI/CD PARA ML -->
+                <div class="section">
+                    <h3>4.1 CI/CD para Machine Learning</h3>
+
+                    <p>Continuous Integration e Continuous Deployment automatizam testes, validação de modelos e deploy.
+                    </p>
+
+                    <h4>ML Pipeline vs Software Pipeline</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Software Tradicional</th>
+                            <th>Machine Learning</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Artefato</strong></td>
+                            <td>Código compilado</td>
+                            <td>Código + Modelo + Dados</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Testes</strong></td>
+                            <td>Unit/Integration</td>
+                            <td>+ Data validation + Model metrics</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Versão</strong></td>
+                            <td>Git (código)</td>
+                            <td>Git + DVC (dados) + Model Registry</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Deploy Trigger</strong></td>
+                            <td>Push/Merge</td>
+                            <td>+ Model performance threshold</td>
+                        </tr>
+                    </table>
+
+                    <h4>GitHub Actions para ML</h4>
+                    <pre><code><span class="comment"># .github/workflows/ml-pipeline.yml</span>
+<span class="keyword">name</span>: ML Pipeline
+
+<span class="keyword">on</span>:
+  <span class="keyword">push</span>:
+    <span class="keyword">branches</span>: [main, develop]
+  <span class="keyword">pull_request</span>:
+    <span class="keyword">branches</span>: [main]
+
+<span class="keyword">jobs</span>:
+  <span class="keyword">test</span>:
+    <span class="keyword">runs-on</span>: ubuntu-latest
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: actions/checkout@v4
+      
+      - <span class="keyword">name</span>: Setup Python
+        <span class="keyword">uses</span>: actions/setup-python@v4
+        <span class="keyword">with</span>:
+          <span class="keyword">python-version</span>: <span class="string">'3.11'</span>
+          <span class="keyword">cache</span>: <span class="string">'pip'</span>
+      
+      - <span class="keyword">name</span>: Install dependencies
+        <span class="keyword">run</span>: |
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
+      
+      - <span class="keyword">name</span>: Run tests
+        <span class="keyword">run</span>: pytest tests/ -v --cov=src/
+
+      - <span class="keyword">name</span>: Lint code
+        <span class="keyword">run</span>: |
+          pip install ruff
+          ruff check src/
+
+  <span class="keyword">train</span>:
+    <span class="keyword">needs</span>: test
+    <span class="keyword">runs-on</span>: ubuntu-latest
+    <span class="keyword">if</span>: github.ref == 'refs/heads/main'
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: actions/checkout@v4
+      
+      - <span class="keyword">name</span>: Setup Python
+        <span class="keyword">uses</span>: actions/setup-python@v4
+        <span class="keyword">with</span>:
+          <span class="keyword">python-version</span>: <span class="string">'3.11'</span>
+      
+      - <span class="keyword">name</span>: Install dependencies
+        <span class="keyword">run</span>: pip install -r requirements.txt
+      
+      - <span class="keyword">name</span>: Train model
+        <span class="keyword">env</span>:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_URI }}
+        <span class="keyword">run</span>: python src/train.py
+      
+      - <span class="keyword">name</span>: Upload model artifact
+        <span class="keyword">uses</span>: actions/upload-artifact@v4
+        <span class="keyword">with</span>:
+          <span class="keyword">name</span>: trained-model
+          <span class="keyword">path</span>: models/
+
+  <span class="keyword">deploy</span>:
+    <span class="keyword">needs</span>: train
+    <span class="keyword">runs-on</span>: ubuntu-latest
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: actions/checkout@v4
+      
+      - <span class="keyword">name</span>: Download model artifact
+        <span class="keyword">uses</span>: actions/download-artifact@v4
+        <span class="keyword">with</span>:
+          <span class="keyword">name</span>: trained-model
+          <span class="keyword">path</span>: models/
+      
+      - <span class="keyword">name</span>: Build Docker image
+        <span class="keyword">run</span>: docker build -t ml-api:${{ github.sha }} .
+      
+      - <span class="keyword">name</span>: Push to registry
+        <span class="keyword">run</span>: |
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker push ml-api:${{ github.sha }}
+</code></pre>
+
+                    <h4>Testes para ML</h4>
+                    <pre><code><span class="comment"># tests/test_model.py</span>
+<span class="keyword">import</span> pytest
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> src.model <span class="keyword">import</span> ModelTrainer
+<span class="keyword">from</span> src.data <span class="keyword">import</span> DataValidator
+
+<span class="keyword">class</span> <span class="function">TestDataValidation</span>:
+    <span class="string">"""Testes de qualidade de dados"""</span>
+    
+    <span class="keyword">def</span> <span class="function">test_no_missing_values</span>(self, sample_data):
+        validator = <span class="function">DataValidator</span>()
+        result = validator.<span class="function">check_missing</span>(sample_data)
+        <span class="keyword">assert</span> result.missing_pct < <span class="number">0.05</span>, <span class="string">"Mais de 5% missing"</span>
+    
+    <span class="keyword">def</span> <span class="function">test_feature_ranges</span>(self, sample_data):
+        <span class="string">"""Features devem estar em ranges esperados"""</span>
+        <span class="keyword">assert</span> sample_data[<span class="string">'age'</span>].<span class="function">between</span>(<span class="number">0</span>, <span class="number">120</span>).<span class="function">all</span>()
+        <span class="keyword">assert</span> sample_data[<span class="string">'income'</span>].<span class="function">min</span>() >= <span class="number">0</span>
+    
+    <span class="keyword">def</span> <span class="function">test_no_data_leakage</span>(self, train_data, test_data):
+        <span class="string">"""IDs de treino não podem estar no teste"""</span>
+        train_ids = <span class="function">set</span>(train_data[<span class="string">'id'</span>])
+        test_ids = <span class="function">set</span>(test_data[<span class="string">'id'</span>])
+        <span class="keyword">assert</span> <span class="function">len</span>(train_ids & test_ids) == <span class="number">0</span>
+
+<span class="keyword">class</span> <span class="function">TestModelPerformance</span>:
+    <span class="string">"""Testes de performance do modelo"""</span>
+    
+    <span class="keyword">def</span> <span class="function">test_model_accuracy_threshold</span>(self, trained_model, test_data):
+        <span class="string">"""Modelo deve ter accuracy mínima"""</span>
+        X_test, y_test = test_data
+        accuracy = trained_model.<span class="function">score</span>(X_test, y_test)
+        <span class="keyword">assert</span> accuracy >= <span class="number">0.85</span>, <span class="string">f"Accuracy {accuracy} abaixo do threshold"</span>
+    
+    <span class="keyword">def</span> <span class="function">test_model_inference_time</span>(self, trained_model):
+        <span class="string">"""Inferência deve ser rápida"""</span>
+        <span class="keyword">import</span> time
+        X = np.<span class="function">random.randn</span>(<span class="number">1</span>, <span class="number">10</span>)
+        
+        start = time.<span class="function">time</span>()
+        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="function">range</span>(<span class="number">100</span>):
+            trained_model.<span class="function">predict</span>(X)
+        elapsed = time.<span class="function">time</span>() - start
+        
+        <span class="keyword">assert</span> elapsed < <span class="number">1.0</span>, <span class="string">"Inferência muito lenta"</span>
+    
+    <span class="keyword">def</span> <span class="function">test_model_deterministic</span>(self, trained_model):
+        <span class="string">"""Mesmo input = mesmo output"""</span>
+        X = np.<span class="function">array</span>([[<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>]])
+        pred1 = trained_model.<span class="function">predict</span>(X)
+        pred2 = trained_model.<span class="function">predict</span>(X)
+        np.testing.<span class="function">assert_array_equal</span>(pred1, pred2)
+
+<span class="comment"># Fixtures pytest</span>
+<span class="decorator">@pytest.fixture</span>
+<span class="keyword">def</span> <span class="function">sample_data</span>():
+    <span class="keyword">return</span> pd.<span class="function">read_csv</span>(<span class="string">'tests/fixtures/sample.csv'</span>)
+
+<span class="decorator">@pytest.fixture</span>
+<span class="keyword">def</span> <span class="function">trained_model</span>():
+    <span class="keyword">import</span> joblib
+    <span class="keyword">return</span> joblib.<span class="function">load</span>(<span class="string">'models/model.joblib'</span>)
+</code></pre>
+
+                    <!-- EXERCÍCIO 12 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 12</span>
+                            <span class="exercise-title">Pipeline CI/CD Completo</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Configure um workflow GitHub Actions que roda testes, treina modelo e faz push da imagem
+                            Docker.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="comment"># .github/workflows/complete-ml-pipeline.yml</span>
+<span class="keyword">name</span>: Complete ML Pipeline
+
+<span class="keyword">on</span>:
+  <span class="keyword">push</span>:
+    <span class="keyword">branches</span>: [main]
+  <span class="keyword">workflow_dispatch</span>:  <span class="comment"># Manual trigger</span>
+
+<span class="keyword">env</span>:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+<span class="keyword">jobs</span>:
+  <span class="keyword">test-and-validate</span>:
+    <span class="keyword">runs-on</span>: ubuntu-latest
+    <span class="keyword">outputs</span>:
+      <span class="keyword">model-version</span>: ${{ steps.version.outputs.version }}
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: actions/checkout@v4
+      
+      - <span class="keyword">name</span>: Setup Python
+        <span class="keyword">uses</span>: actions/setup-python@v4
+        <span class="keyword">with</span>:
+          <span class="keyword">python-version</span>: <span class="string">'3.11'</span>
+      
+      - <span class="keyword">name</span>: Install dependencies
+        <span class="keyword">run</span>: pip install -r requirements.txt pytest
+      
+      - <span class="keyword">name</span>: Run data validation tests
+        <span class="keyword">run</span>: pytest tests/test_data.py -v
+      
+      - <span class="keyword">name</span>: Run model tests
+        <span class="keyword">run</span>: pytest tests/test_model.py -v
+      
+      - <span class="keyword">name</span>: Generate version
+        <span class="keyword">id</span>: version
+        <span class="keyword">run</span>: echo "version=$(date +%Y%m%d)-${{ github.run_number }}" >> $GITHUB_OUTPUT
+
+  <span class="keyword">train-model</span>:
+    <span class="keyword">needs</span>: test-and-validate
+    <span class="keyword">runs-on</span>: ubuntu-latest
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: actions/checkout@v4
+      
+      - <span class="keyword">name</span>: Train model
+        <span class="keyword">run</span>: |
+          pip install -r requirements.txt
+          python src/train.py --version ${{ needs.test-and-validate.outputs.model-version }}
+      
+      - <span class="keyword">name</span>: Upload model
+        <span class="keyword">uses</span>: actions/upload-artifact@v4
+        <span class="keyword">with</span>:
+          <span class="keyword">name</span>: model-${{ needs.test-and-validate.outputs.model-version }}
+          <span class="keyword">path</span>: models/
+
+  <span class="keyword">build-and-push</span>:
+    <span class="keyword">needs</span>: [test-and-validate, train-model]
+    <span class="keyword">runs-on</span>: ubuntu-latest
+    <span class="keyword">permissions</span>:
+      <span class="keyword">contents</span>: read
+      <span class="keyword">packages</span>: write
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: actions/checkout@v4
+      
+      - <span class="keyword">name</span>: Download model
+        <span class="keyword">uses</span>: actions/download-artifact@v4
+        <span class="keyword">with</span>:
+          <span class="keyword">name</span>: model-${{ needs.test-and-validate.outputs.model-version }}
+          <span class="keyword">path</span>: models/
+      
+      - <span class="keyword">name</span>: Login to Registry
+        <span class="keyword">uses</span>: docker/login-action@v3
+        <span class="keyword">with</span>:
+          <span class="keyword">registry</span>: ${{ env.REGISTRY }}
+          <span class="keyword">username</span>: ${{ github.actor }}
+          <span class="keyword">password</span>: ${{ secrets.GITHUB_TOKEN }}
+      
+      - <span class="keyword">name</span>: Build and push
+        <span class="keyword">uses</span>: docker/build-push-action@v5
+        <span class="keyword">with</span>:
+          <span class="keyword">context</span>: .
+          <span class="keyword">push</span>: true
+          <span class="keyword">tags</span>: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.test-and-validate.outputs.model-version }}
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4.2 MODEL REGISTRY COM MLFLOW -->
+                <div class="section">
+                    <h3>4.2 Model Registry com MLflow</h3>
+
+                    <p>MLflow rastreia experimentos, versiona modelos e gerencia o ciclo de vida em produção.</p>
+
+                    <h4>Tracking de Experimentos</h4>
+                    <pre><code><span class="comment"># src/train_with_mlflow.py</span>
+<span class="keyword">import</span> mlflow
+<span class="keyword">import</span> mlflow.sklearn
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score, f1_score
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># Configurar tracking URI</span>
+mlflow.<span class="function">set_tracking_uri</span>(<span class="string">"http://localhost:5000"</span>)
+mlflow.<span class="function">set_experiment</span>(<span class="string">"churn-prediction"</span>)
+
+<span class="comment"># Carregar dados</span>
+df = pd.<span class="function">read_csv</span>(<span class="string">'data/processed/churn.csv'</span>)
+X = df.<span class="function">drop</span>(<span class="string">'churn'</span>, axis=<span class="number">1</span>)
+y = df[<span class="string">'churn'</span>]
+X_train, X_test, y_train, y_test = <span class="function">train_test_split</span>(X, y, test_size=<span class="number">0.2</span>)
+
+<span class="comment"># Hiperparâmetros para experimentar</span>
+params = {
+    <span class="string">'n_estimators'</span>: <span class="number">100</span>,
+    <span class="string">'max_depth'</span>: <span class="number">10</span>,
+    <span class="string">'min_samples_split'</span>: <span class="number">5</span>,
+    <span class="string">'random_state'</span>: <span class="number">42</span>
+}
+
+<span class="comment"># Iniciar run do MLflow</span>
+<span class="keyword">with</span> mlflow.<span class="function">start_run</span>(run_name=<span class="string">"rf-experiment-1"</span>):
+    <span class="comment"># 1. Logar parâmetros</span>
+    mlflow.<span class="function">log_params</span>(params)
+    
+    <span class="comment"># 2. Treinar modelo</span>
+    model = <span class="function">RandomForestClassifier</span>(**params)
+    model.<span class="function">fit</span>(X_train, y_train)
+    
+    <span class="comment"># 3. Avaliar</span>
+    y_pred = model.<span class="function">predict</span>(X_test)
+    accuracy = <span class="function">accuracy_score</span>(y_test, y_pred)
+    f1 = <span class="function">f1_score</span>(y_test, y_pred)
+    
+    <span class="comment"># 4. Logar métricas</span>
+    mlflow.<span class="function">log_metrics</span>({
+        <span class="string">'accuracy'</span>: accuracy,
+        <span class="string">'f1_score'</span>: f1
+    })
+    
+    <span class="comment"># 5. Logar feature importance</span>
+    <span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+    fig, ax = plt.<span class="function">subplots</span>()
+    ax.<span class="function">barh</span>(X.columns, model.feature_importances_)
+    plt.<span class="function">tight_layout</span>()
+    mlflow.<span class="function">log_figure</span>(fig, <span class="string">"feature_importance.png"</span>)
+    
+    <span class="comment"># 6. Logar modelo</span>
+    mlflow.sklearn.<span class="function">log_model</span>(
+        model,
+        <span class="string">"model"</span>,
+        registered_model_name=<span class="string">"churn-classifier"</span>
+    )
+    
+    <span class="function">print</span>(<span class="string">f"Run ID: {mlflow.active_run().info.run_id}"</span>)
+    <span class="function">print</span>(<span class="string">f"Accuracy: {accuracy:.4f}"</span>)
+</code></pre>
+
+                    <h4>Model Registry: Lifecycle</h4>
+                    <pre><code><span class="comment"># Registrar modelo</span>
+<span class="keyword">from</span> mlflow.tracking <span class="keyword">import</span> MlflowClient
+
+client = <span class="function">MlflowClient</span>()
+
+<span class="comment"># Promover modelo para Staging</span>
+client.<span class="function">transition_model_version_stage</span>(
+    name=<span class="string">"churn-classifier"</span>,
+    version=<span class="number">1</span>,
+    stage=<span class="string">"Staging"</span>
+)
+
+<span class="comment"># Promover para Production após validação</span>
+client.<span class="function">transition_model_version_stage</span>(
+    name=<span class="string">"churn-classifier"</span>,
+    version=<span class="number">1</span>,
+    stage=<span class="string">"Production"</span>
+)
+
+<span class="comment"># Carregar modelo por stage</span>
+model = mlflow.sklearn.<span class="function">load_model</span>(
+    <span class="string">"models:/churn-classifier/Production"</span>
+)
+
+<span class="comment"># Ou por versão específica</span>
+model_v2 = mlflow.sklearn.<span class="function">load_model</span>(
+    <span class="string">"models:/churn-classifier/2"</span>
+)
+</code></pre>
+
+                    <h4>Deploy do MLflow Model</h4>
+                    <pre><code><span class="comment"># Servir modelo via REST API</span>
+<span class="command">mlflow models serve -m "models:/churn-classifier/Production" -p 5001</span>
+
+<span class="comment"># Testar</span>
+<span class="command">curl http://localhost:5001/invocations \
+  -H "Content-Type: application/json" \
+  -d '{"instances": [[1.0, 2.0, 3.0, 4.0]]}'</span>
+
+<span class="comment"># Build Docker do modelo</span>
+<span class="command">mlflow models build-docker -m "models:/churn-classifier/1" -n churn-model</span>
+<span class="command">docker run -p 5001:8080 churn-model</span>
+</code></pre>
+
+                    <div class="tip">
+                        <strong>💡 Alternativas ao MLflow:</strong><br>
+                        • <strong>Weights & Biases:</strong> Mais features de visualização<br>
+                        • <strong>Neptune.ai:</strong> Foco em colaboração<br>
+                        • <strong>DVC:</strong> Versionamento de dados (integra com MLflow)
+                    </div>
+
+                    <!-- EXERCÍCIO 13 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 13</span>
+                            <span class="exercise-title">Experiment Tracking Completo</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Configure MLflow para rastrear experimentos de hyperparameter tuning com GridSearch.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="comment"># src/hyperparameter_search.py</span>
+<span class="keyword">import</span> mlflow
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+mlflow.<span class="function">set_experiment</span>(<span class="string">"churn-hyperparameter-search"</span>)
+
+<span class="comment"># Dados</span>
+df = pd.<span class="function">read_csv</span>(<span class="string">'data/churn.csv'</span>)
+X, y = df.<span class="function">drop</span>(<span class="string">'churn'</span>, axis=<span class="number">1</span>), df[<span class="string">'churn'</span>]
+
+<span class="comment"># Grid de parâmetros</span>
+param_grid = {
+    <span class="string">'n_estimators'</span>: [<span class="number">50</span>, <span class="number">100</span>, <span class="number">200</span>],
+    <span class="string">'max_depth'</span>: [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>],
+    <span class="string">'min_samples_split'</span>: [<span class="number">2</span>, <span class="number">5</span>, <span class="number">10</span>]
+}
+
+<span class="comment"># Parent run para agrupar</span>
+<span class="keyword">with</span> mlflow.<span class="function">start_run</span>(run_name=<span class="string">"GridSearch-Parent"</span>) <span class="keyword">as</span> parent:
+    <span class="comment"># GridSearch</span>
+    grid = <span class="function">GridSearchCV</span>(
+        <span class="function">RandomForestClassifier</span>(random_state=<span class="number">42</span>),
+        param_grid,
+        cv=<span class="number">5</span>,
+        scoring=<span class="string">'f1'</span>,
+        n_jobs=-<span class="number">1</span>
+    )
+    grid.<span class="function">fit</span>(X, y)
+    
+    <span class="comment"># Logar cada combinação como nested run</span>
+    <span class="keyword">for</span> i, params <span class="keyword">in</span> <span class="function">enumerate</span>(grid.cv_results_[<span class="string">'params'</span>]):
+        <span class="keyword">with</span> mlflow.<span class="function">start_run</span>(run_name=<span class="string">f"config-{i}"</span>, nested=<span class="keyword">True</span>):
+            mlflow.<span class="function">log_params</span>(params)
+            mlflow.<span class="function">log_metric</span>(<span class="string">'mean_f1'</span>, grid.cv_results_[<span class="string">'mean_test_score'</span>][i])
+            mlflow.<span class="function">log_metric</span>(<span class="string">'std_f1'</span>, grid.cv_results_[<span class="string">'std_test_score'</span>][i])
+    
+    <span class="comment"># Logar melhor modelo</span>
+    mlflow.<span class="function">log_params</span>({<span class="string">f"best_{k}"</span>: v <span class="keyword">for</span> k, v <span class="keyword">in</span> grid.best_params_.<span class="function">items</span>()})
+    mlflow.<span class="function">log_metric</span>(<span class="string">'best_f1'</span>, grid.best_score_)
+    
+    mlflow.sklearn.<span class="function">log_model</span>(
+        grid.best_estimator_,
+        <span class="string">"best_model"</span>,
+        registered_model_name=<span class="string">"churn-classifier-tuned"</span>
+    )
+    
+    <span class="function">print</span>(<span class="string">f"Best params: {grid.best_params_}"</span>)
+    <span class="function">print</span>(<span class="string">f"Best F1: {grid.best_score_:.4f}"</span>)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4.3 MONITORAMENTO DE MODELOS -->
+                <div class="section">
+                    <h3>4.3 Monitoramento de Modelos em Produção</h3>
+
+                    <p>Depois do deploy, é crucial monitorar drift de dados, performance e métricas de negócio.</p>
+
+                    <h4>Tipos de Drift</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Tipo</th>
+                            <th>O que muda</th>
+                            <th>Detecção</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Data Drift</strong></td>
+                            <td>Distribuição das features</td>
+                            <td>KS test, PSI</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Concept Drift</strong></td>
+                            <td>Relação X → Y</td>
+                            <td>Monitorar métricas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Label Drift</strong></td>
+                            <td>Distribuição do target</td>
+                            <td>Chi-squared test</td>
+                        </tr>
+                    </table>
+
+                    <h4>Detectando Data Drift com Evidently</h4>
+                    <pre><code><span class="comment"># pip install evidently</span>
+<span class="keyword">from</span> evidently <span class="keyword">import</span> ColumnMapping
+<span class="keyword">from</span> evidently.report <span class="keyword">import</span> Report
+<span class="keyword">from</span> evidently.metric_preset <span class="keyword">import</span> DataDriftPreset, TargetDriftPreset
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># Dados de referência (treino) e atuais (produção)</span>
+reference_data = pd.<span class="function">read_csv</span>(<span class="string">'data/train.csv'</span>)
+current_data = pd.<span class="function">read_csv</span>(<span class="string">'data/production_last_week.csv'</span>)
+
+<span class="comment"># Mapear colunas</span>
+column_mapping = <span class="function">ColumnMapping</span>(
+    target=<span class="string">'churn'</span>,
+    prediction=<span class="string">'prediction'</span>,
+    numerical_features=[<span class="string">'age'</span>, <span class="string">'income'</span>, <span class="string">'tenure'</span>],
+    categorical_features=[<span class="string">'plan_type'</span>, <span class="string">'region'</span>]
+)
+
+<span class="comment"># Gerar relatório de drift</span>
+report = <span class="function">Report</span>(metrics=[
+    <span class="function">DataDriftPreset</span>(),
+    <span class="function">TargetDriftPreset</span>()
+])
+
+report.<span class="function">run</span>(
+    reference_data=reference_data,
+    current_data=current_data,
+    column_mapping=column_mapping
+)
+
+<span class="comment"># Salvar HTML</span>
+report.<span class="function">save_html</span>(<span class="string">'reports/drift_report.html'</span>)
+
+<span class="comment"># Ou obter como dict para alertas</span>
+result = report.<span class="function">as_dict</span>()
+drift_detected = result[<span class="string">'metrics'</span>][<span class="number">0</span>][<span class="string">'result'</span>][<span class="string">'dataset_drift'</span>]
+
+<span class="keyword">if</span> drift_detected:
+    <span class="function">print</span>(<span class="string">"⚠️ ALERTA: Data drift detectado!"</span>)
+    <span class="comment"># Enviar alerta (Slack, email, etc)</span>
+</code></pre>
+
+                    <h4>Métricas com Prometheus + Grafana</h4>
+                    <pre><code><span class="comment"># src/api_with_metrics.py</span>
+<span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI
+<span class="keyword">from</span> prometheus_client <span class="keyword">import</span> Counter, Histogram, generate_latest
+<span class="keyword">from</span> starlette.responses <span class="keyword">import</span> Response
+<span class="keyword">import</span> time
+
+app = <span class="function">FastAPI</span>()
+
+<span class="comment"># Métricas</span>
+PREDICTIONS = <span class="function">Counter</span>(
+    <span class="string">'ml_predictions_total'</span>,
+    <span class="string">'Total de predições'</span>,
+    [<span class="string">'model_version'</span>, <span class="string">'predicted_class'</span>]
+)
+
+LATENCY = <span class="function">Histogram</span>(
+    <span class="string">'ml_prediction_latency_seconds'</span>,
+    <span class="string">'Latência das predições'</span>,
+    buckets=[<span class="number">0.01</span>, <span class="number">0.05</span>, <span class="number">0.1</span>, <span class="number">0.5</span>, <span class="number">1.0</span>]
+)
+
+CONFIDENCE = <span class="function">Histogram</span>(
+    <span class="string">'ml_prediction_confidence'</span>,
+    <span class="string">'Distribuição de confiança'</span>,
+    buckets=[<span class="number">0.5</span>, <span class="number">0.6</span>, <span class="number">0.7</span>, <span class="number">0.8</span>, <span class="number">0.9</span>, <span class="number">0.95</span>, <span class="number">0.99</span>]
+)
+
+<span class="decorator">@app.post</span>(<span class="string">'/predict'</span>)
+<span class="keyword">async def</span> <span class="function">predict</span>(request: PredictionRequest):
+    start = time.<span class="function">time</span>()
+    
+    <span class="comment"># Predição</span>
+    pred = model.<span class="function">predict</span>([request.features])[<span class="number">0</span>]
+    proba = model.<span class="function">predict_proba</span>([request.features])[<span class="number">0</span>].<span class="function">max</span>()
+    
+    <span class="comment"># Registrar métricas</span>
+    latency = time.<span class="function">time</span>() - start
+    PREDICTIONS.<span class="function">labels</span>(model_version=<span class="string">"v1.2"</span>, predicted_class=<span class="function">str</span>(pred)).<span class="function">inc</span>()
+    LATENCY.<span class="function">observe</span>(latency)
+    CONFIDENCE.<span class="function">observe</span>(proba)
+    
+    <span class="keyword">return</span> {<span class="string">'prediction'</span>: pred, <span class="string">'confidence'</span>: proba}
+
+<span class="decorator">@app.get</span>(<span class="string">'/metrics'</span>)
+<span class="keyword">async def</span> <span class="function">metrics</span>():
+    <span class="keyword">return</span> <span class="function">Response</span>(
+        <span class="function">generate_latest</span>(),
+        media_type=<span class="string">"text/plain"</span>
+    )
+</code></pre>
+
+                    <pre><code><span class="comment"># prometheus.yml</span>
+<span class="keyword">global</span>:
+  <span class="keyword">scrape_interval</span>: 15s
+
+<span class="keyword">scrape_configs</span>:
+  - <span class="keyword">job_name</span>: <span class="string">'ml-api'</span>
+    <span class="keyword">static_configs</span>:
+      - <span class="keyword">targets</span>: [<span class="string">'api:8000'</span>]
+</code></pre>
+
+                    <!-- EXERCÍCIO 14 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 14</span>
+                            <span class="exercise-title">Sistema de Alertas de Drift</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Crie um sistema que detecta drift diariamente e envia alertas.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="comment"># src/monitoring/drift_detector.py</span>
+<span class="keyword">from</span> evidently.report <span class="keyword">import</span> Report
+<span class="keyword">from</span> evidently.metric_preset <span class="keyword">import</span> DataDriftPreset
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> requests
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime, timedelta
+
+<span class="keyword">class</span> <span class="function">DriftMonitor</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, reference_path: str, slack_webhook: str):
+        self.reference = pd.<span class="function">read_csv</span>(reference_path)
+        self.slack_webhook = slack_webhook
+    
+    <span class="keyword">def</span> <span class="function">check_drift</span>(self, current_data: pd.DataFrame) -> dict:
+        <span class="string">"""Verifica drift entre referência e dados atuais"""</span>
+        report = <span class="function">Report</span>(metrics=[<span class="function">DataDriftPreset</span>()])
+        report.<span class="function">run</span>(
+            reference_data=self.reference,
+            current_data=current_data
+        )
+        
+        result = report.<span class="function">as_dict</span>()
+        drift_info = result[<span class="string">'metrics'</span>][<span class="number">0</span>][<span class="string">'result'</span>]
+        
+        <span class="keyword">return</span> {
+            <span class="string">'dataset_drift'</span>: drift_info[<span class="string">'dataset_drift'</span>],
+            <span class="string">'drift_share'</span>: drift_info[<span class="string">'share_of_drifted_columns'</span>],
+            <span class="string">'drifted_columns'</span>: [
+                col <span class="keyword">for</span> col, info <span class="keyword">in</span> drift_info[<span class="string">'drift_by_columns'</span>].<span class="function">items</span>()
+                <span class="keyword">if</span> info[<span class="string">'drift_detected'</span>]
+            ]
+        }
+    
+    <span class="keyword">def</span> <span class="function">send_alert</span>(self, drift_result: dict):
+        <span class="string">"""Envia alerta para Slack"""</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> drift_result[<span class="string">'dataset_drift'</span>]:
+            <span class="keyword">return</span>
+        
+        message = {
+            <span class="string">"blocks"</span>: [
+                {
+                    <span class="string">"type"</span>: <span class="string">"header"</span>,
+                    <span class="string">"text"</span>: {
+                        <span class="string">"type"</span>: <span class="string">"plain_text"</span>,
+                        <span class="string">"text"</span>: <span class="string">"⚠️ Data Drift Detectado!"</span>
+                    }
+                },
+                {
+                    <span class="string">"type"</span>: <span class="string">"section"</span>,
+                    <span class="string">"text"</span>: {
+                        <span class="string">"type"</span>: <span class="string">"mrkdwn"</span>,
+                        <span class="string">"text"</span>: <span class="string">f"""
+*Drift Share:* {drift_result['drift_share']:.1%}
+*Colunas afetadas:* {', '.join(drift_result['drifted_columns'])}
+*Timestamp:* {datetime.now().isoformat()}
+"""</span>
+                    }
+                }
+            ]
+        }
+        
+        requests.<span class="function">post</span>(self.slack_webhook, json=message)
+    
+    <span class="keyword">def</span> <span class="function">run_daily_check</span>(self, db_connection):
+        <span class="string">"""Job diário de verificação"""</span>
+        <span class="comment"># Buscar últimas 24h de dados</span>
+        query = <span class="string">"""
+            SELECT * FROM predictions 
+            WHERE created_at >= NOW() - INTERVAL '1 day'
+        """</span>
+        current_data = pd.<span class="function">read_sql</span>(query, db_connection)
+        
+        <span class="keyword">if</span> <span class="function">len</span>(current_data) < <span class="number">100</span>:
+            <span class="function">print</span>(<span class="string">"Poucos dados para análise"</span>)
+            <span class="keyword">return</span>
+        
+        drift_result = self.<span class="function">check_drift</span>(current_data)
+        self.<span class="function">send_alert</span>(drift_result)
+        
+        <span class="keyword">return</span> drift_result
+
+<span class="comment"># Uso com scheduler (APScheduler ou cron)</span>
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    monitor = <span class="function">DriftMonitor</span>(
+        reference_path=<span class="string">'data/training_data.csv'</span>,
+        slack_webhook=<span class="string">'https://hooks.slack.com/...'</span>
+    )
+    
+    <span class="comment"># Simular check</span>
+    current = pd.<span class="function">read_csv</span>(<span class="string">'data/production_sample.csv'</span>)
+    result = monitor.<span class="function">check_drift</span>(current)
+    <span class="function">print</span>(result)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4.4 ESTRUTURA DE PROJETO MLOPS -->
+                <div class="section">
+                    <h3>4.4 Estrutura de Projeto MLOps</h3>
+
+                    <p>Organize seu projeto para facilitar colaboração, CI/CD e manutenção.</p>
+
+                    <h4>Estrutura Recomendada</h4>
+                    <pre><code><span class="comment"># Estrutura de diretórios</span>
+ml-project/
+├── .github/
+│   └── workflows/
+│       └── ml-pipeline.yml      <span class="comment"># CI/CD</span>
+├── data/
+│   ├── raw/                     <span class="comment"># Dados originais (não versionados)</span>
+│   └── processed/               <span class="comment"># Dados processados</span>
+├── models/
+│   └── model.joblib             <span class="comment"># Modelo serializado</span>
+├── notebooks/                   <span class="comment"># Exploração (não vai pra prod)</span>
+│   └── 01_eda.ipynb
+├── src/
+│   ├── __init__.py
+│   ├── data/
+│   │   ├── __init__.py
+│   │   ├── ingestion.py         <span class="comment"># Carga de dados</span>
+│   │   └── validation.py        <span class="comment"># Validação</span>
+│   ├── features/
+│   │   ├── __init__.py
+│   │   └── engineering.py       <span class="comment"># Feature engineering</span>
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── train.py            <span class="comment"># Treinamento</span>
+│   │   └── predict.py          <span class="comment"># Inferência</span>
+│   └── api/
+│       ├── __init__.py
+│       └── main.py             <span class="comment"># FastAPI app</span>
+├── tests/
+│   ├── test_data.py
+│   ├── test_features.py
+│   └── test_model.py
+├── k8s/                        <span class="comment"># Manifestos Kubernetes</span>
+│   ├── deployment.yaml
+│   └── service.yaml
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── pyproject.toml              <span class="comment"># Config projeto Python</span>
+├── .env.example
+├── .dockerignore
+└── README.md
+</code></pre>
+
+                    <h4>Checklist MLOps</h4>
+                    <div class="note">
+                        <strong>📋 Antes de ir para Produção:</strong><br><br>
+
+                        <strong>Código:</strong><br>
+                        ☐ Testes automatizados (pytest)<br>
+                        ☐ Linting (ruff/flake8)<br>
+                        ☐ Type hints<br>
+                        ☐ Documentação<br><br>
+
+                        <strong>Dados:</strong><br>
+                        ☐ Validação de schema<br>
+                        ☐ Verificação de missing values<br>
+                        ☐ Detecção de outliers<br><br>
+
+                        <strong>Modelo:</strong><br>
+                        ☐ Métricas de threshold<br>
+                        ☐ Teste de inferência<br>
+                        ☐ Benchmark de latência<br>
+                        ☐ Versionamento (MLflow)<br><br>
+
+                        <strong>Infra:</strong><br>
+                        ☐ Docker funcionando<br>
+                        ☐ Health check endpoint<br>
+                        ☐ Métricas exportadas<br>
+                        ☐ Logs estruturados<br>
+                        ☐ Alertas configurados
+                    </div>
+
+                    <!-- EXERCÍCIO 15 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 15</span>
+                            <span class="exercise-title">Projeto MLOps End-to-End</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Monte a estrutura completa de um projeto MLOps com todos os componentes.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="comment"># 1. Inicializar projeto</span>
+<span class="command">mkdir ml-churn-prediction && cd ml-churn-prediction</span>
+<span class="command">git init</span>
+
+<span class="comment"># 2. Criar estrutura</span>
+<span class="command">mkdir -p src/{data,features,models,api}</span>
+<span class="command">mkdir -p tests data/{raw,processed} models notebooks k8s .github/workflows</span>
+<span class="command">touch src/__init__.py src/data/__init__.py src/features/__init__.py</span>
+<span class="command">touch src/models/__init__.py src/api/__init__.py</span>
+</code></pre>
+
+                                <pre><code><span class="comment"># pyproject.toml</span>
+[project]
+name = <span class="string">"ml-churn-prediction"</span>
+version = <span class="string">"0.1.0"</span>
+requires-python = <span class="string">">=3.11"</span>
+
+[project.optional-dependencies]
+dev = [<span class="string">"pytest"</span>, <span class="string">"ruff"</span>, <span class="string">"mypy"</span>]
+
+[tool.ruff]
+line-length = <span class="number">100</span>
+select = [<span class="string">"E"</span>, <span class="string">"F"</span>, <span class="string">"I"</span>]
+
+[tool.pytest.ini_options]
+testpaths = [<span class="string">"tests"</span>]
+</code></pre>
+
+                                <pre><code><span class="comment"># Makefile para automação</span>
+.PHONY: install test lint train serve docker-build
+
+<span class="keyword">install</span>:
+	pip install -r requirements.txt
+	pip install -e .
+
+<span class="keyword">test</span>:
+	pytest tests/ -v --cov=src/
+
+<span class="keyword">lint</span>:
+	ruff check src/ tests/
+
+<span class="keyword">train</span>:
+	python -m src.models.train
+
+<span class="keyword">serve</span>:
+	uvicorn src.api.main:app --reload
+
+<span class="keyword">docker-build</span>:
+	docker build -t ml-churn:latest .
+
+<span class="keyword">docker-run</span>:
+	docker run -p 8000:8000 ml-churn:latest
+
+<span class="keyword">all</span>: lint test train docker-build
+</code></pre>
+
+                                <pre><code><span class="comment"># src/api/main.py - API completa</span>
+<span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI, HTTPException
+<span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel
+<span class="keyword">from</span> prometheus_client <span class="keyword">import</span> Counter, Histogram, generate_latest
+<span class="keyword">from</span> starlette.responses <span class="keyword">import</span> Response
+<span class="keyword">import</span> joblib
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> time
+<span class="keyword">import</span> logging
+
+<span class="comment"># Logging estruturado</span>
+logging.<span class="function">basicConfig</span>(
+    level=logging.INFO,
+    format=<span class="string">'%(asctime)s - %(name)s - %(levelname)s - %(message)s'</span>
+)
+logger = logging.<span class="function">getLogger</span>(__name__)
+
+app = <span class="function">FastAPI</span>(
+    title=<span class="string">"Churn Prediction API"</span>,
+    version=<span class="string">"1.0.0"</span>
+)
+
+<span class="comment"># Carregar modelo</span>
+model = joblib.<span class="function">load</span>(<span class="string">'models/model.joblib'</span>)
+
+<span class="comment"># Métricas</span>
+PREDICTIONS = <span class="function">Counter</span>(<span class="string">'predictions_total'</span>, <span class="string">'Total predictions'</span>, [<span class="string">'result'</span>])
+LATENCY = <span class="function">Histogram</span>(<span class="string">'prediction_latency_seconds'</span>, <span class="string">'Prediction latency'</span>)
+
+<span class="keyword">class</span> <span class="function">ChurnRequest</span>(BaseModel):
+    tenure: float
+    monthly_charges: float
+    total_charges: float
+    contract_type: int
+    payment_method: int
+
+<span class="keyword">class</span> <span class="function">ChurnResponse</span>(BaseModel):
+    churn_probability: float
+    will_churn: bool
+    model_version: str
+
+<span class="decorator">@app.get</span>(<span class="string">'/health'</span>)
+<span class="keyword">def</span> <span class="function">health</span>():
+    <span class="keyword">return</span> {<span class="string">'status'</span>: <span class="string">'healthy'</span>, <span class="string">'model_loaded'</span>: model <span class="keyword">is not</span> <span class="keyword">None</span>}
+
+<span class="decorator">@app.post</span>(<span class="string">'/predict'</span>, response_model=ChurnResponse)
+<span class="keyword">def</span> <span class="function">predict</span>(request: ChurnRequest):
+    start = time.<span class="function">time</span>()
+    
+    <span class="keyword">try</span>:
+        features = np.<span class="function">array</span>([[
+            request.tenure,
+            request.monthly_charges,
+            request.total_charges,
+            request.contract_type,
+            request.payment_method
+        ]])
+        
+        proba = model.<span class="function">predict_proba</span>(features)[<span class="number">0</span>][<span class="number">1</span>]
+        will_churn = proba > <span class="number">0.5</span>
+        
+        <span class="comment"># Métricas</span>
+        PREDICTIONS.<span class="function">labels</span>(result=<span class="string">'churn'</span> <span class="keyword">if</span> will_churn <span class="keyword">else</span> <span class="string">'no_churn'</span>).<span class="function">inc</span>()
+        LATENCY.<span class="function">observe</span>(time.<span class="function">time</span>() - start)
+        
+        logger.<span class="function">info</span>(<span class="string">f"Prediction: churn={will_churn}, proba={proba:.4f}"</span>)
+        
+        <span class="keyword">return</span> <span class="function">ChurnResponse</span>(
+            churn_probability=<span class="function">float</span>(proba),
+            will_churn=will_churn,
+            model_version=<span class="string">"v1.0.0"</span>
+        )
+    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+        logger.<span class="function">error</span>(<span class="string">f"Prediction error: {e}"</span>)
+        <span class="keyword">raise</span> <span class="function">HTTPException</span>(<span class="number">500</span>, <span class="function">str</span>(e))
+
+<span class="decorator">@app.get</span>(<span class="string">'/metrics'</span>)
+<span class="keyword">def</span> <span class="function">metrics</span>():
+    <span class="keyword">return</span> <span class="function">Response</span>(<span class="function">generate_latest</span>(), media_type=<span class="string">"text/plain"</span>)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Infraestrutura e MLOps - Fase 3 | Do Notebook para Produção</p>
+    </footer>
+
+    <script>
+        function toggleSolution(button) {
+            const content = button.nextElementSibling;
+            content.classList.toggle('show');
+            button.textContent = content.classList.contains('show') ? '🔒 Ocultar Solução' : '🔓 Ver Solução';
+        }
+    </script>
+</body>
+
+</html>
