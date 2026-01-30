@@ -1,0 +1,2788 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning Aplicado - Fase 2</title>
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f97316;
+            --danger: #ef4444;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-code: #0d1117;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-dark) 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        header .subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        header .badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        nav a:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Modules */
+        .module {
+            background: var(--bg-card);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .module-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 1.5rem 2rem;
+        }
+
+        .module-header h2 {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .module-content {
+            padding: 2rem;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section h3 {
+            color: var(--secondary);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section h4 {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        /* Code blocks */
+        pre {
+            background: var(--bg-code);
+            border-radius: 8px;
+            padding: 1.25rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+        }
+
+        code {
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .keyword {
+            color: #c678dd;
+        }
+
+        .string {
+            color: #98c379;
+        }
+
+        .number {
+            color: #d19a66;
+        }
+
+        .function {
+            color: #61afef;
+        }
+
+        .comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+
+        .decorator {
+            color: #e5c07b;
+        }
+
+        /* Exercises */
+        .exercise {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .exercise-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .exercise-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .difficulty {
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .difficulty.easy {
+            background: var(--success);
+            color: white;
+        }
+
+        .difficulty.medium {
+            background: var(--accent);
+            color: black;
+        }
+
+        .difficulty.hard {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Solutions */
+        .solution {
+            margin-top: 1rem;
+        }
+
+        .solution-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .solution-toggle:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .solution-content {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg-code);
+            border-radius: 8px;
+            border: 1px solid var(--success);
+        }
+
+        .solution-content.show {
+            display: block;
+        }
+
+        /* Tips and Notes */
+        .tip,
+        .note,
+        .warning {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .tip {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success);
+        }
+
+        .note {
+            background: rgba(6, 182, 212, 0.1);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .warning {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th,
+        td {
+            padding: 0.75rem;
+            text-align: left;
+            border: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-code);
+            color: var(--secondary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🤖 Machine Learning Aplicado</h1>
+        <p class="subtitle">Fase 2: Da Teoria à Produção</p>
+        <span class="badge">Production-Ready ML</span>
+    </header>
+
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="#modulo1">📊 Scikit-learn</a></li>
+                <li><a href="#modulo2">🌳 Árvores</a></li>
+                <li><a href="#modulo3">📈 Séries Temporais</a></li>
+                <li><a href="#modulo4">🚀 Projeto Integrador</a></li>
+            </ul>
+        </nav>
+
+        <!-- MÓDULO 1: SCIKIT-LEARN -->
+        <div class="module" id="modulo1">
+            <div class="module-header">
+                <h2>📊 Módulo 1: ML Clássico com Scikit-learn</h2>
+            </div>
+            <div class="module-content">
+                <!-- 1.1 PIPELINE COMPLETO -->
+                <div class="section">
+                    <h3>1.1 Pipeline Completo</h3>
+
+                    <p>Um pipeline production-ready vai de feature engineering até deploy, evitando data leakage e
+                        garantindo reprodutibilidade.</p>
+
+                    <h4>Estrutura do Pipeline</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline
+<span class="keyword">from</span> sklearn.compose <span class="keyword">import</span> ColumnTransformer
+<span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler, OneHotEncoder
+<span class="keyword">from</span> sklearn.impute <span class="keyword">import</span> SimpleImputer
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+
+<span class="comment"># Definir colunas</span>
+num_cols = [<span class="string">'idade'</span>, <span class="string">'renda'</span>, <span class="string">'tempo_emprego'</span>]
+cat_cols = [<span class="string">'estado_civil'</span>, <span class="string">'escolaridade'</span>]
+
+<span class="comment"># Sub-pipelines por tipo de dado</span>
+num_transformer = <span class="function">Pipeline</span>([
+    (<span class="string">'imputer'</span>, <span class="function">SimpleImputer</span>(strategy=<span class="string">'median'</span>)),
+    (<span class="string">'scaler'</span>, <span class="function">StandardScaler</span>())
+])
+
+cat_transformer = <span class="function">Pipeline</span>([
+    (<span class="string">'imputer'</span>, <span class="function">SimpleImputer</span>(strategy=<span class="string">'most_frequent'</span>)),
+    (<span class="string">'encoder'</span>, <span class="function">OneHotEncoder</span>(handle_unknown=<span class="string">'ignore'</span>, sparse_output=<span class="keyword">False</span>))
+])
+
+<span class="comment"># Combinar transformações</span>
+preprocessor = <span class="function">ColumnTransformer</span>([
+    (<span class="string">'num'</span>, num_transformer, num_cols),
+    (<span class="string">'cat'</span>, cat_transformer, cat_cols)
+], remainder=<span class="string">'drop'</span>)
+
+<span class="comment"># Pipeline completo</span>
+pipeline = <span class="function">Pipeline</span>([
+    (<span class="string">'preprocessor'</span>, preprocessor),
+    (<span class="string">'classifier'</span>, <span class="function">RandomForestClassifier</span>(random_state=<span class="number">42</span>))
+])
+</code></pre>
+
+                    <h4>Feature Engineering no Pipeline</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.base <span class="keyword">import</span> BaseEstimator, TransformerMixin
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="keyword">class</span> <span class="function">FeatureEngineer</span>(BaseEstimator, TransformerMixin):
+    <span class="string">"""Transformador customizado para criar features"""</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, create_ratios=<span class="keyword">True</span>):
+        self.create_ratios = create_ratios
+    
+    <span class="keyword">def</span> <span class="function">fit</span>(self, X, y=<span class="keyword">None</span>):
+        <span class="keyword">return</span> self
+    
+    <span class="keyword">def</span> <span class="function">transform</span>(self, X):
+        X = X.<span class="function">copy</span>()
+        
+        <span class="keyword">if</span> self.create_ratios:
+            <span class="comment"># Exemplo: renda per capita</span>
+            X[<span class="string">'renda_per_capita'</span>] = X[<span class="string">'renda'</span>] / (X[<span class="string">'dependentes'</span>] + <span class="number">1</span>)
+            
+            <span class="comment"># Exemplo: tempo no emprego / idade</span>
+            X[<span class="string">'estabilidade'</span>] = X[<span class="string">'tempo_emprego'</span>] / X[<span class="string">'idade'</span>]
+        
+        <span class="keyword">return</span> X
+
+<span class="comment"># Integrar no pipeline</span>
+pipeline = <span class="function">Pipeline</span>([
+    (<span class="string">'feature_eng'</span>, <span class="function">FeatureEngineer</span>()),
+    (<span class="string">'preprocessor'</span>, preprocessor),
+    (<span class="string">'classifier'</span>, <span class="function">RandomForestClassifier</span>())
+])
+</code></pre>
+
+                    <div class="warning">
+                        <strong>⚠️ Data Leakage:</strong> Todo pré-processamento deve ser feito DENTRO do pipeline.
+                        Nunca faça <code>fit_transform</code> antes do split!
+                    </div>
+
+                    <!-- EXERCÍCIO 1 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 1</span>
+                            <span class="exercise-title">Pipeline End-to-End</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Crie um pipeline completo para prever default de crédito usando o dataset abaixo.</p>
+                        <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_classification
+
+<span class="comment"># Simular dados de crédito</span>
+X, y = <span class="function">make_classification</span>(n_samples=<span class="number">1000</span>, n_features=<span class="number">10</span>, 
+                            n_informative=<span class="number">6</span>, random_state=<span class="number">42</span>)
+df = pd.<span class="function">DataFrame</span>(X, columns=[<span class="string">f'feature_{i}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">10</span>)])
+df[<span class="string">'target'</span>] = y
+
+<span class="comment"># Adicionar alguns NaN e colunas categóricas</span>
+df.<span class="function">loc</span>[:<span class="number">50</span>, <span class="string">'feature_0'</span>] = <span class="keyword">None</span>
+df[<span class="string">'categoria'</span>] = np.random.<span class="function">choice</span>([<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>], <span class="number">1000</span>)
+</code></pre>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline
+<span class="keyword">from</span> sklearn.compose <span class="keyword">import</span> ColumnTransformer
+<span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler, OneHotEncoder
+<span class="keyword">from</span> sklearn.impute <span class="keyword">import</span> SimpleImputer
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report
+
+<span class="comment"># Criar dados</span>
+<span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_classification
+X, y = <span class="function">make_classification</span>(n_samples=<span class="number">1000</span>, n_features=<span class="number">10</span>, 
+                            n_informative=<span class="number">6</span>, random_state=<span class="number">42</span>)
+df = pd.<span class="function">DataFrame</span>(X, columns=[<span class="string">f'feature_{i}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">10</span>)])
+df[<span class="string">'target'</span>] = y
+df.<span class="function">loc</span>[:<span class="number">50</span>, <span class="string">'feature_0'</span>] = <span class="keyword">None</span>
+df[<span class="string">'categoria'</span>] = np.random.<span class="function">choice</span>([<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>], <span class="number">1000</span>)
+
+<span class="comment"># Separar features e target</span>
+X = df.<span class="function">drop</span>(<span class="string">'target'</span>, axis=<span class="number">1</span>)
+y = df[<span class="string">'target'</span>]
+
+<span class="comment"># Definir colunas</span>
+num_cols = [<span class="string">f'feature_{i}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">10</span>)]
+cat_cols = [<span class="string">'categoria'</span>]
+
+<span class="comment"># Transformadores</span>
+num_transformer = <span class="function">Pipeline</span>([
+    (<span class="string">'imputer'</span>, <span class="function">SimpleImputer</span>(strategy=<span class="string">'median'</span>)),
+    (<span class="string">'scaler'</span>, <span class="function">StandardScaler</span>())
+])
+
+cat_transformer = <span class="function">Pipeline</span>([
+    (<span class="string">'imputer'</span>, <span class="function">SimpleImputer</span>(strategy=<span class="string">'most_frequent'</span>)),
+    (<span class="string">'encoder'</span>, <span class="function">OneHotEncoder</span>(handle_unknown=<span class="string">'ignore'</span>))
+])
+
+preprocessor = <span class="function">ColumnTransformer</span>([
+    (<span class="string">'num'</span>, num_transformer, num_cols),
+    (<span class="string">'cat'</span>, cat_transformer, cat_cols)
+])
+
+<span class="comment"># Pipeline completo</span>
+pipeline = <span class="function">Pipeline</span>([
+    (<span class="string">'preprocessor'</span>, preprocessor),
+    (<span class="string">'classifier'</span>, <span class="function">RandomForestClassifier</span>(n_estimators=<span class="number">100</span>, random_state=<span class="number">42</span>))
+])
+
+<span class="comment"># Treinar e avaliar</span>
+X_train, X_test, y_train, y_test = <span class="function">train_test_split</span>(X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)
+pipeline.<span class="function">fit</span>(X_train, y_train)
+y_pred = pipeline.<span class="function">predict</span>(X_test)
+
+<span class="function">print</span>(<span class="function">classification_report</span>(y_test, y_pred))
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.2 CROSS-VALIDATION -->
+                <div class="section">
+                    <h3>1.2 Cross-Validation</h3>
+
+                    <p>Validação cruzada é essencial para estimar a performance real do modelo e evitar overfitting.</p>
+
+                    <h4>Tipos de Cross-Validation</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> (
+    KFold, StratifiedKFold, GroupKFold, 
+    TimeSeriesSplit, cross_val_score, cross_validate
+)
+
+<span class="comment"># K-Fold básico (para regressão ou dados balanceados)</span>
+kfold = <span class="function">KFold</span>(n_splits=<span class="number">5</span>, shuffle=<span class="keyword">True</span>, random_state=<span class="number">42</span>)
+
+<span class="comment"># Stratified K-Fold (mantém proporção das classes)</span>
+skfold = <span class="function">StratifiedKFold</span>(n_splits=<span class="number">5</span>, shuffle=<span class="keyword">True</span>, random_state=<span class="number">42</span>)
+
+<span class="comment"># Group K-Fold (dados agrupados - ex: múltiplos registros por cliente)</span>
+gkfold = <span class="function">GroupKFold</span>(n_splits=<span class="number">5</span>)
+
+<span class="comment"># Time Series Split (dados temporais - nunca usar futuro!)</span>
+tscv = <span class="function">TimeSeriesSplit</span>(n_splits=<span class="number">5</span>)
+</code></pre>
+
+                    <h4>Executando Cross-Validation</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score, cross_validate
+
+<span class="comment"># Método simples - uma métrica</span>
+scores = <span class="function">cross_val_score</span>(pipeline, X, y, cv=<span class="number">5</span>, scoring=<span class="string">'accuracy'</span>)
+<span class="function">print</span>(<span class="string">f'Accuracy: {scores.mean():.3f} (+/- {scores.std():.3f})'</span>)
+
+<span class="comment"># Método completo - múltiplas métricas</span>
+scoring = {
+    <span class="string">'accuracy'</span>: <span class="string">'accuracy'</span>,
+    <span class="string">'precision'</span>: <span class="string">'precision'</span>,
+    <span class="string">'recall'</span>: <span class="string">'recall'</span>,
+    <span class="string">'f1'</span>: <span class="string">'f1'</span>,
+    <span class="string">'roc_auc'</span>: <span class="string">'roc_auc'</span>
+}
+
+cv_results = <span class="function">cross_validate</span>(
+    pipeline, X, y, 
+    cv=<span class="function">StratifiedKFold</span>(n_splits=<span class="number">5</span>, shuffle=<span class="keyword">True</span>, random_state=<span class="number">42</span>),
+    scoring=scoring,
+    return_train_score=<span class="keyword">True</span>,
+    n_jobs=-<span class="number">1</span>
+)
+
+<span class="comment"># Resultado formatado</span>
+<span class="keyword">for</span> metric <span class="keyword">in</span> scoring.<span class="function">keys</span>():
+    train = cv_results[<span class="string">f'train_{metric}'</span>].<span class="function">mean</span>()
+    test = cv_results[<span class="string">f'test_{metric}'</span>].<span class="function">mean</span>()
+    <span class="function">print</span>(<span class="string">f'{metric:12} | Train: {train:.3f} | Test: {test:.3f}'</span>)
+</code></pre>
+
+                    <div class="note">
+                        <strong>💡 Quando usar qual CV?</strong><br>
+                        • <strong>StratifiedKFold:</strong> Classificação desbalanceada<br>
+                        • <strong>GroupKFold:</strong> Dados com grupos (ex: pacientes, clientes)<br>
+                        • <strong>TimeSeriesSplit:</strong> Dados temporais
+                    </div>
+
+                    <!-- EXERCÍCIO 2 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 2</span>
+                            <span class="exercise-title">CV com Dados Desbalanceados</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Compare os resultados de KFold vs StratifiedKFold em um dataset desbalanceado.</p>
+                        <pre><code><span class="comment"># Dataset desbalanceado (10% positivos)</span>
+X, y = <span class="function">make_classification</span>(n_samples=<span class="number">1000</span>, weights=[<span class="number">0.9</span>, <span class="number">0.1</span>], random_state=<span class="number">42</span>)
+</code></pre>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_classification
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> KFold, StratifiedKFold, cross_val_score
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># Dados desbalanceados</span>
+X, y = <span class="function">make_classification</span>(n_samples=<span class="number">1000</span>, weights=[<span class="number">0.9</span>, <span class="number">0.1</span>], random_state=<span class="number">42</span>)
+<span class="function">print</span>(<span class="string">f'Proporção classes: {np.bincount(y) / len(y)}'</span>)
+
+model = <span class="function">RandomForestClassifier</span>(random_state=<span class="number">42</span>)
+
+<span class="comment"># KFold padrão</span>
+kfold = <span class="function">KFold</span>(n_splits=<span class="number">5</span>, shuffle=<span class="keyword">True</span>, random_state=<span class="number">42</span>)
+scores_kfold = <span class="function">cross_val_score</span>(model, X, y, cv=kfold, scoring=<span class="string">'f1'</span>)
+
+<span class="comment"># Stratified KFold</span>
+skfold = <span class="function">StratifiedKFold</span>(n_splits=<span class="number">5</span>, shuffle=<span class="keyword">True</span>, random_state=<span class="number">42</span>)
+scores_skfold = <span class="function">cross_val_score</span>(model, X, y, cv=skfold, scoring=<span class="string">'f1'</span>)
+
+<span class="function">print</span>(<span class="string">f'\nKFold F1:     {scores_kfold.mean():.3f} (+/- {scores_kfold.std():.3f})'</span>)
+<span class="function">print</span>(<span class="string">f'Stratified F1: {scores_skfold.mean():.3f} (+/- {scores_skfold.std():.3f})'</span>)
+
+<span class="comment"># Verificar proporções em cada fold</span>
+<span class="function">print</span>(<span class="string">'\nProporções por fold (Stratified):'</span>)
+<span class="keyword">for</span> i, (train_idx, val_idx) <span class="keyword">in</span> <span class="function">enumerate</span>(skfold.<span class="function">split</span>(X, y)):
+    prop = y[val_idx].<span class="function">mean</span>()
+    <span class="function">print</span>(<span class="string">f'Fold {i+1}: {prop:.2%} positivos'</span>)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.3 HYPERPARAMETER TUNING -->
+                <div class="section">
+                    <h3>1.3 Hyperparameter Tuning</h3>
+
+                    <p>Encontrar os melhores hiperparâmetros é crucial para a performance do modelo.</p>
+
+                    <h4>GridSearchCV</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV
+
+<span class="comment"># Definir grid de parâmetros</span>
+param_grid = {
+    <span class="string">'classifier__n_estimators'</span>: [<span class="number">50</span>, <span class="number">100</span>, <span class="number">200</span>],
+    <span class="string">'classifier__max_depth'</span>: [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>, <span class="keyword">None</span>],
+    <span class="string">'classifier__min_samples_split'</span>: [<span class="number">2</span>, <span class="number">5</span>, <span class="number">10</span>]
+}
+
+grid_search = <span class="function">GridSearchCV</span>(
+    pipeline,
+    param_grid,
+    cv=<span class="number">5</span>,
+    scoring=<span class="string">'roc_auc'</span>,
+    n_jobs=-<span class="number">1</span>,
+    verbose=<span class="number">1</span>,
+    return_train_score=<span class="keyword">True</span>
+)
+
+grid_search.<span class="function">fit</span>(X_train, y_train)
+
+<span class="function">print</span>(<span class="string">f'Melhores parâmetros: {grid_search.best_params_}'</span>)
+<span class="function">print</span>(<span class="string">f'Melhor score CV: {grid_search.best_score_:.4f}'</span>)
+</code></pre>
+
+                    <h4>RandomizedSearchCV (Mais Eficiente)</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> RandomizedSearchCV
+<span class="keyword">from</span> scipy.stats <span class="keyword">import</span> randint, uniform
+
+<span class="comment"># Distribuições de parâmetros</span>
+param_distributions = {
+    <span class="string">'classifier__n_estimators'</span>: <span class="function">randint</span>(<span class="number">50</span>, <span class="number">500</span>),
+    <span class="string">'classifier__max_depth'</span>: <span class="function">randint</span>(<span class="number">3</span>, <span class="number">30</span>),
+    <span class="string">'classifier__min_samples_split'</span>: <span class="function">randint</span>(<span class="number">2</span>, <span class="number">20</span>),
+    <span class="string">'classifier__min_samples_leaf'</span>: <span class="function">randint</span>(<span class="number">1</span>, <span class="number">10</span>)
+}
+
+random_search = <span class="function">RandomizedSearchCV</span>(
+    pipeline,
+    param_distributions,
+    n_iter=<span class="number">50</span>,  <span class="comment"># Número de combinações a testar</span>
+    cv=<span class="number">5</span>,
+    scoring=<span class="string">'roc_auc'</span>,
+    n_jobs=-<span class="number">1</span>,
+    random_state=<span class="number">42</span>
+)
+
+random_search.<span class="function">fit</span>(X_train, y_train)
+</code></pre>
+
+                    <h4>Optuna (State of the Art)</h4>
+                    <pre><code><span class="keyword">import</span> optuna
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score
+
+<span class="keyword">def</span> <span class="function">objective</span>(trial):
+    <span class="comment"># Sugerir hiperparâmetros</span>
+    n_estimators = trial.<span class="function">suggest_int</span>(<span class="string">'n_estimators'</span>, <span class="number">50</span>, <span class="number">500</span>)
+    max_depth = trial.<span class="function">suggest_int</span>(<span class="string">'max_depth'</span>, <span class="number">3</span>, <span class="number">30</span>)
+    min_samples_split = trial.<span class="function">suggest_int</span>(<span class="string">'min_samples_split'</span>, <span class="number">2</span>, <span class="number">20</span>)
+    
+    model = <span class="function">RandomForestClassifier</span>(
+        n_estimators=n_estimators,
+        max_depth=max_depth,
+        min_samples_split=min_samples_split,
+        random_state=<span class="number">42</span>,
+        n_jobs=-<span class="number">1</span>
+    )
+    
+    <span class="comment"># Cross-validation</span>
+    scores = <span class="function">cross_val_score</span>(model, X_train, y_train, cv=<span class="number">5</span>, scoring=<span class="string">'roc_auc'</span>)
+    <span class="keyword">return</span> scores.<span class="function">mean</span>()
+
+<span class="comment"># Otimização</span>
+study = optuna.<span class="function">create_study</span>(direction=<span class="string">'maximize'</span>)
+study.<span class="function">optimize</span>(objective, n_trials=<span class="number">100</span>, show_progress_bar=<span class="keyword">True</span>)
+
+<span class="function">print</span>(<span class="string">f'Melhores parâmetros: {study.best_params}'</span>)
+<span class="function">print</span>(<span class="string">f'Melhor score: {study.best_value:.4f}'</span>)
+</code></pre>
+
+                    <div class="tip">
+                        <strong>💡 Dica:</strong> Use <code>RandomizedSearchCV</code> para exploração inicial e
+                        <code>GridSearchCV</code> para refinamento. Para projetos sérios, use <code>Optuna</code>.
+                    </div>
+
+                    <!-- EXERCÍCIO 3 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 3</span>
+                            <span class="exercise-title">Tuning com Optuna</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Use Optuna para otimizar um RandomForestClassifier, incluindo early stopping baseado em
+                            pruning.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> optuna
+<span class="keyword">from</span> optuna.samplers <span class="keyword">import</span> TPESampler
+<span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_classification
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score, train_test_split
+
+<span class="comment"># Dados</span>
+X, y = <span class="function">make_classification</span>(n_samples=<span class="number">2000</span>, n_features=<span class="number">20</span>, random_state=<span class="number">42</span>)
+X_train, X_test, y_train, y_test = <span class="function">train_test_split</span>(X, y, test_size=<span class="number">0.2</span>)
+
+<span class="keyword">def</span> <span class="function">objective</span>(trial):
+    <span class="comment"># Hiperparâmetros</span>
+    params = {
+        <span class="string">'n_estimators'</span>: trial.<span class="function">suggest_int</span>(<span class="string">'n_estimators'</span>, <span class="number">50</span>, <span class="number">300</span>),
+        <span class="string">'max_depth'</span>: trial.<span class="function">suggest_int</span>(<span class="string">'max_depth'</span>, <span class="number">3</span>, <span class="number">20</span>),
+        <span class="string">'min_samples_split'</span>: trial.<span class="function">suggest_int</span>(<span class="string">'min_samples_split'</span>, <span class="number">2</span>, <span class="number">20</span>),
+        <span class="string">'min_samples_leaf'</span>: trial.<span class="function">suggest_int</span>(<span class="string">'min_samples_leaf'</span>, <span class="number">1</span>, <span class="number">10</span>),
+        <span class="string">'max_features'</span>: trial.<span class="function">suggest_categorical</span>(<span class="string">'max_features'</span>, [<span class="string">'sqrt'</span>, <span class="string">'log2'</span>, <span class="keyword">None</span>])
+    }
+    
+    model = <span class="function">RandomForestClassifier</span>(**params, random_state=<span class="number">42</span>, n_jobs=-<span class="number">1</span>)
+    
+    <span class="comment"># CV com pruning</span>
+    scores = <span class="function">cross_val_score</span>(model, X_train, y_train, cv=<span class="number">5</span>, scoring=<span class="string">'roc_auc'</span>)
+    
+    <span class="comment"># Reportar valor intermediário para pruning</span>
+    <span class="keyword">for</span> i, score <span class="keyword">in</span> <span class="function">enumerate</span>(scores):
+        trial.<span class="function">report</span>(score, i)
+        <span class="keyword">if</span> trial.<span class="function">should_prune</span>():
+            <span class="keyword">raise</span> optuna.TrialPruned()
+    
+    <span class="keyword">return</span> scores.<span class="function">mean</span>()
+
+<span class="comment"># Estudo com pruning</span>
+sampler = <span class="function">TPESampler</span>(seed=<span class="number">42</span>)
+study = optuna.<span class="function">create_study</span>(
+    direction=<span class="string">'maximize'</span>,
+    sampler=sampler,
+    pruner=optuna.pruners.<span class="function">MedianPruner</span>()
+)
+
+study.<span class="function">optimize</span>(objective, n_trials=<span class="number">50</span>, show_progress_bar=<span class="keyword">True</span>)
+
+<span class="comment"># Resultados</span>
+<span class="function">print</span>(<span class="string">f'Melhores params: {study.best_params}'</span>)
+<span class="function">print</span>(<span class="string">f'Melhor AUC: {study.best_value:.4f}'</span>)
+
+<span class="comment"># Treinar modelo final</span>
+best_model = <span class="function">RandomForestClassifier</span>(**study.best_params, random_state=<span class="number">42</span>)
+best_model.<span class="function">fit</span>(X_train, y_train)
+<span class="function">print</span>(<span class="string">f'Test AUC: {best_model.score(X_test, y_test):.4f}'</span>)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.4 MÉTRICAS AVANÇADAS -->
+                <div class="section">
+                    <h3>1.4 Métricas Avançadas</h3>
+
+                    <p>Escolher a métrica certa é tão importante quanto escolher o modelo.</p>
+
+                    <h4>Métricas por Tipo de Problema</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Problema</th>
+                                <th>Métricas</th>
+                                <th>Quando Usar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Classificação Binária</td>
+                                <td>ROC-AUC, F1, Precision, Recall</td>
+                                <td>Fraude, Churn, Default</td>
+                            </tr>
+                            <tr>
+                                <td>Classificação Desbalanceada</td>
+                                <td>PR-AUC, F1, Recall</td>
+                                <td>Classe rara (<5%)< /td>
+                            </tr>
+                            <tr>
+                                <td>Multiclasse</td>
+                                <td>Macro/Weighted F1, Accuracy</td>
+                                <td>Categorias múltiplas</td>
+                            </tr>
+                            <tr>
+                                <td>Regressão</td>
+                                <td>RMSE, MAE, MAPE, R²</td>
+                                <td>Previsão de valores</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Threshold Tuning</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> precision_recall_curve, roc_curve
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Probabilidades previstas</span>
+y_proba = model.<span class="function">predict_proba</span>(X_test)[:, <span class="number">1</span>]
+
+<span class="comment"># Encontrar threshold ótimo para F1</span>
+precision, recall, thresholds = <span class="function">precision_recall_curve</span>(y_test, y_proba)
+f1_scores = <span class="number">2</span> * (precision * recall) / (precision + recall + <span class="number">1e-10</span>)
+optimal_idx = f1_scores.<span class="function">argmax</span>()
+optimal_threshold = thresholds[optimal_idx]
+
+<span class="function">print</span>(<span class="string">f'Threshold ótimo: {optimal_threshold:.3f}'</span>)
+<span class="function">print</span>(<span class="string">f'F1 máximo: {f1_scores[optimal_idx]:.3f}'</span>)
+
+<span class="comment"># Aplicar threshold customizado</span>
+y_pred_custom = (y_proba >= optimal_threshold).<span class="function">astype</span>(<span class="function">int</span>)
+</code></pre>
+
+                    <h4>Métricas de Negócio</h4>
+                    <pre><code><span class="keyword">def</span> <span class="function">calculate_business_value</span>(y_true, y_pred, cost_fp=<span class="number">10</span>, cost_fn=<span class="number">100</span>):
+    <span class="string">"""
+    Calcula valor de negócio considerando custos assimétricos.
+    FP = Falso Positivo (custo de verificação desnecessária)
+    FN = Falso Negativo (custo de fraude não detectada)
+    """</span>
+    fp = ((y_pred == <span class="number">1</span>) & (y_true == <span class="number">0</span>)).<span class="function">sum</span>()
+    fn = ((y_pred == <span class="number">0</span>) & (y_true == <span class="number">1</span>)).<span class="function">sum</span>()
+    
+    total_cost = fp * cost_fp + fn * cost_fn
+    <span class="keyword">return</span> -total_cost  <span class="comment"># Negativo porque queremos minimizar custo</span>
+
+<span class="comment"># Encontrar threshold que maximiza valor de negócio</span>
+thresholds = np.<span class="function">linspace</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">100</span>)
+values = []
+
+<span class="keyword">for</span> t <span class="keyword">in</span> thresholds:
+    y_pred = (y_proba >= t).<span class="function">astype</span>(<span class="function">int</span>)
+    value = <span class="function">calculate_business_value</span>(y_test, y_pred)
+    values.<span class="function">append</span>(value)
+
+best_threshold = thresholds[np.<span class="function">argmax</span>(values)]
+<span class="function">print</span>(<span class="string">f'Threshold para maximizar valor: {best_threshold:.3f}'</span>)
+</code></pre>
+
+                    <!-- EXERCÍCIO 4 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 4</span>
+                            <span class="exercise-title">Threshold para Fraude</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Em detecção de fraude, um FN (fraude não detectada) custa R$1000 e um FP (alerta falso) custa
+                            R$50. Encontre o threshold ótimo.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_classification
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Simular dados de fraude (5% fraudes)</span>
+X, y = <span class="function">make_classification</span>(n_samples=<span class="number">5000</span>, weights=[<span class="number">0.95</span>, <span class="number">0.05</span>], random_state=<span class="number">42</span>)
+X_train, X_test, y_train, y_test = <span class="function">train_test_split</span>(X, y, test_size=<span class="number">0.2</span>)
+
+<span class="comment"># Treinar modelo</span>
+model = <span class="function">RandomForestClassifier</span>(n_estimators=<span class="number">100</span>, random_state=<span class="number">42</span>)
+model.<span class="function">fit</span>(X_train, y_train)
+y_proba = model.<span class="function">predict_proba</span>(X_test)[:, <span class="number">1</span>]
+
+<span class="comment"># Custos</span>
+COST_FN = <span class="number">1000</span>  <span class="comment"># Fraude não detectada</span>
+COST_FP = <span class="number">50</span>    <span class="comment"># Alerta falso</span>
+
+<span class="comment"># Buscar threshold ótimo</span>
+thresholds = np.<span class="function">linspace</span>(<span class="number">0.01</span>, <span class="number">0.99</span>, <span class="number">100</span>)
+costs = []
+
+<span class="keyword">for</span> t <span class="keyword">in</span> thresholds:
+    y_pred = (y_proba >= t).<span class="function">astype</span>(<span class="function">int</span>)
+    fp = ((y_pred == <span class="number">1</span>) & (y_test == <span class="number">0</span>)).<span class="function">sum</span>()
+    fn = ((y_pred == <span class="number">0</span>) & (y_test == <span class="number">1</span>)).<span class="function">sum</span>()
+    total_cost = fp * COST_FP + fn * COST_FN
+    costs.<span class="function">append</span>(total_cost)
+
+<span class="comment"># Encontrar mínimo</span>
+best_idx = np.<span class="function">argmin</span>(costs)
+best_threshold = thresholds[best_idx]
+best_cost = costs[best_idx]
+
+<span class="function">print</span>(<span class="string">f'Threshold ótimo: {best_threshold:.3f}'</span>)
+<span class="function">print</span>(<span class="string">f'Custo mínimo: R${best_cost:,.2f}'</span>)
+
+<span class="comment"># Comparar com threshold padrão (0.5)</span>
+y_pred_default = (y_proba >= <span class="number">0.5</span>).<span class="function">astype</span>(<span class="function">int</span>)
+fp_default = ((y_pred_default == <span class="number">1</span>) & (y_test == <span class="number">0</span>)).<span class="function">sum</span>()
+fn_default = ((y_pred_default == <span class="number">0</span>) & (y_test == <span class="number">1</span>)).<span class="function">sum</span>()
+cost_default = fp_default * COST_FP + fn_default * COST_FN
+
+<span class="function">print</span>(<span class="string">f'\nComparação:'</span>)
+<span class="function">print</span>(<span class="string">f'Threshold 0.5: R${cost_default:,.2f}'</span>)
+<span class="function">print</span>(<span class="string">f'Threshold {best_threshold:.3f}: R${best_cost:,.2f}'</span>)
+<span class="function">print</span>(<span class="string">f'Economia: R${cost_default - best_cost:,.2f}'</span>)
+
+<span class="comment"># Visualizar</span>
+plt.<span class="function">figure</span>(figsize=(<span class="number">10</span>, <span class="number">4</span>))
+plt.<span class="function">plot</span>(thresholds, costs)
+plt.<span class="function">axvline</span>(best_threshold, color=<span class="string">'r'</span>, linestyle=<span class="string">'--'</span>, label=<span class="string">f'Ótimo: {best_threshold:.2f}'</span>)
+plt.<span class="function">xlabel</span>(<span class="string">'Threshold'</span>)
+plt.<span class="function">ylabel</span>(<span class="string">'Custo Total (R$)'</span>)
+plt.<span class="function">title</span>(<span class="string">'Custo por Threshold'</span>)
+plt.<span class="function">legend</span>()
+plt.<span class="function">show</span>()
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 2: MODELOS DE ÁRVORE -->
+        <div class="module" id="modulo2">
+            <div class="module-header">
+                <h2>🌳 Módulo 2: Modelos de Árvore</h2>
+            </div>
+            <div class="module-content">
+                <!-- 2.1 DECISION TREES -->
+                <div class="section">
+                    <h3>2.1 Decision Trees</h3>
+
+                    <p>Árvores de decisão são a base para entender todos os modelos ensemble. Alta interpretabilidade!
+                    </p>
+
+                    <h4>Classificador com Visualização</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier, plot_tree
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Criar e treinar</span>
+tree = <span class="function">DecisionTreeClassifier</span>(
+    max_depth=<span class="number">5</span>,           <span class="comment"># Limitar profundidade (evitar overfit)</span>
+    min_samples_split=<span class="number">10</span>,  <span class="comment"># Mínimo de amostras para dividir</span>
+    min_samples_leaf=<span class="number">5</span>,    <span class="comment"># Mínimo de amostras na folha</span>
+    random_state=<span class="number">42</span>
+)
+tree.<span class="function">fit</span>(X_train, y_train)
+
+<span class="comment"># Visualizar árvore</span>
+plt.<span class="function">figure</span>(figsize=(<span class="number">20</span>, <span class="number">10</span>))
+<span class="function">plot_tree</span>(tree, feature_names=feature_names, class_names=[<span class="string">'0'</span>, <span class="string">'1'</span>], 
+          filled=<span class="keyword">True</span>, rounded=<span class="keyword">True</span>, fontsize=<span class="number">10</span>)
+plt.<span class="function">tight_layout</span>()
+plt.<span class="function">show</span>()
+</code></pre>
+
+                    <h4>Feature Importance</h4>
+                    <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># Extrair importâncias</span>
+importances = pd.<span class="function">DataFrame</span>({
+    <span class="string">'feature'</span>: feature_names,
+    <span class="string">'importance'</span>: tree.feature_importances_
+}).<span class="function">sort_values</span>(<span class="string">'importance'</span>, ascending=<span class="keyword">False</span>)
+
+<span class="comment"># Visualizar</span>
+importances.<span class="function">head</span>(<span class="number">10</span>).<span class="function">plot</span>(kind=<span class="string">'barh'</span>, x=<span class="string">'feature'</span>, y=<span class="string">'importance'</span>)
+plt.<span class="function">title</span>(<span class="string">'Feature Importance'</span>)
+plt.<span class="function">show</span>()
+</code></pre>
+
+                    <h4>Pruning (Evitar Overfitting)</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># Testar diferentes profundidades</span>
+depths = <span class="function">range</span>(<span class="number">1</span>, <span class="number">20</span>)
+train_scores = []
+test_scores = []
+
+<span class="keyword">for</span> depth <span class="keyword">in</span> depths:
+    tree = <span class="function">DecisionTreeClassifier</span>(max_depth=depth, random_state=<span class="number">42</span>)
+    
+    <span class="comment"># Score no treino</span>
+    tree.<span class="function">fit</span>(X_train, y_train)
+    train_scores.<span class="function">append</span>(tree.<span class="function">score</span>(X_train, y_train))
+    
+    <span class="comment"># Score no teste (CV)</span>
+    cv_scores = <span class="function">cross_val_score</span>(tree, X_train, y_train, cv=<span class="number">5</span>)
+    test_scores.<span class="function">append</span>(cv_scores.<span class="function">mean</span>())
+
+<span class="comment"># Encontrar profundidade ótima</span>
+best_depth = depths[np.<span class="function">argmax</span>(test_scores)]
+<span class="function">print</span>(<span class="string">f'Profundidade ótima: {best_depth}'</span>)
+
+<span class="comment"># Visualizar overfitting</span>
+plt.<span class="function">plot</span>(depths, train_scores, label=<span class="string">'Train'</span>)
+plt.<span class="function">plot</span>(depths, test_scores, label=<span class="string">'Test (CV)'</span>)
+plt.<span class="function">xlabel</span>(<span class="string">'Profundidade'</span>)
+plt.<span class="function">ylabel</span>(<span class="string">'Accuracy'</span>)
+plt.<span class="function">legend</span>()
+plt.<span class="function">title</span>(<span class="string">'Overfitting vs Underfitting'</span>)
+plt.<span class="function">show</span>()
+</code></pre>
+
+                    <div class="note">
+                        <strong>💡 Interpretabilidade:</strong> Árvores são ótimas para explicar decisões para
+                        stakeholders não-técnicos.
+                    </div>
+
+                    <!-- EXERCÍCIO 5 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 5</span>
+                            <span class="exercise-title">Árvore Interpretável</span>
+                            <span class="difficulty easy">Fácil</span>
+                        </div>
+                        <p>Treine uma árvore de decisão e extraia as regras de decisão em texto.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier, export_text
+<span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris
+
+<span class="comment"># Dados</span>
+iris = <span class="function">load_iris</span>()
+X, y = iris.data, iris.target
+
+<span class="comment"># Treinar árvore limitada</span>
+tree = <span class="function">DecisionTreeClassifier</span>(max_depth=<span class="number">3</span>, random_state=<span class="number">42</span>)
+tree.<span class="function">fit</span>(X, y)
+
+<span class="comment"># Exportar regras em texto</span>
+rules = <span class="function">export_text</span>(tree, feature_names=iris.feature_names)
+<span class="function">print</span>(rules)
+
+<span class="comment"># Saída:</span>
+<span class="comment"># |--- petal width (cm) <= 0.80</span>
+<span class="comment"># |   |--- class: 0 (setosa)</span>
+<span class="comment"># |--- petal width (cm) > 0.80</span>
+<span class="comment"># |   |--- petal width (cm) <= 1.75</span>
+<span class="comment"># |   |   |--- class: 1 (versicolor)</span>
+<span class="comment"># |   |--- petal width (cm) > 1.75</span>
+<span class="comment"># |   |   |--- class: 2 (virginica)</span>
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.2 RANDOM FOREST -->
+                <div class="section">
+                    <h3>2.2 Random Forest</h3>
+
+                    <p>Ensemble de árvores com bagging. Robusto, paralelo, e difícil de dar errado.</p>
+
+                    <h4>Configuração Típica</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+
+rf = <span class="function">RandomForestClassifier</span>(
+    n_estimators=<span class="number">100</span>,        <span class="comment"># Número de árvores (mais = melhor, até certo ponto)</span>
+    max_depth=<span class="keyword">None</span>,          <span class="comment"># Deixar crescer totalmente</span>
+    min_samples_split=<span class="number">2</span>,     <span class="comment"># Padrão</span>
+    max_features=<span class="string">'sqrt'</span>,     <span class="comment"># Número de features por árvore</span>
+    n_jobs=-<span class="number">1</span>,               <span class="comment"># Usar todos os cores</span>
+    random_state=<span class="number">42</span>,
+    oob_score=<span class="keyword">True</span>           <span class="comment"># Out-of-bag score (validação grátis!)</span>
+)
+
+rf.<span class="function">fit</span>(X_train, y_train)
+
+<span class="comment"># OOB Score (similar ao CV, mas grátis!)</span>
+<span class="function">print</span>(<span class="string">f'OOB Score: {rf.oob_score_:.4f}'</span>)
+<span class="function">print</span>(<span class="string">f'Test Score: {rf.score(X_test, y_test):.4f}'</span>)
+</code></pre>
+
+                    <h4>Permutation Importance (Mais Confiável)</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.inspection <span class="keyword">import</span> permutation_importance
+
+<span class="comment"># Calcular importância por permutação</span>
+perm_importance = <span class="function">permutation_importance</span>(
+    rf, X_test, y_test, 
+    n_repeats=<span class="number">10</span>, 
+    random_state=<span class="number">42</span>,
+    n_jobs=-<span class="number">1</span>
+)
+
+<span class="comment"># Ordenar e visualizar</span>
+sorted_idx = perm_importance.importances_mean.<span class="function">argsort</span>()[::-<span class="number">1</span>]
+
+plt.<span class="function">figure</span>(figsize=(<span class="number">10</span>, <span class="number">6</span>))
+plt.<span class="function">boxplot</span>(perm_importance.importances[sorted_idx[:<span class="number">10</span>]].T,
+           vert=<span class="keyword">False</span>, labels=np.<span class="function">array</span>(feature_names)[sorted_idx[:<span class="number">10</span>]])
+plt.<span class="function">title</span>(<span class="string">'Permutation Importance'</span>)
+plt.<span class="function">show</span>()
+</code></pre>
+
+                    <div class="tip">
+                        <strong>💡 OOB Score:</strong> Cada árvore é treinada em ~63% dos dados (bootstrap). Os 37%
+                        restantes são usados para validação. É como CV grátis!
+                    </div>
+
+                    <!-- EXERCÍCIO 6 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 6</span>
+                            <span class="exercise-title">RF com Análise de Erro</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Treine um Random Forest e analise os erros de classificação. Quais amostras são mais
+                            difíceis?</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_classification
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+
+<span class="comment"># Dados</span>
+X, y = <span class="function">make_classification</span>(n_samples=<span class="number">1000</span>, n_features=<span class="number">10</span>, 
+                            n_informative=<span class="number">5</span>, random_state=<span class="number">42</span>)
+X_train, X_test, y_train, y_test = <span class="function">train_test_split</span>(X, y, test_size=<span class="number">0.2</span>)
+
+<span class="comment"># Treinar</span>
+rf = <span class="function">RandomForestClassifier</span>(n_estimators=<span class="number">100</span>, random_state=<span class="number">42</span>)
+rf.<span class="function">fit</span>(X_train, y_train)
+
+<span class="comment"># Probabilidades e predições</span>
+y_proba = rf.<span class="function">predict_proba</span>(X_test)
+y_pred = rf.<span class="function">predict</span>(X_test)
+
+<span class="comment"># Confiança do modelo</span>
+confidence = y_proba.<span class="function">max</span>(axis=<span class="number">1</span>)
+
+<span class="comment"># Identificar erros</span>
+errors = y_pred != y_test
+error_confidence = confidence[errors]
+
+<span class="function">print</span>(<span class="string">f'Total de erros: {errors.sum()}'</span>)
+<span class="function">print</span>(<span class="string">f'Confiança média nos erros: {error_confidence.mean():.3f}'</span>)
+<span class="function">print</span>(<span class="string">f'Confiança média nos acertos: {confidence[~errors].mean():.3f}'</span>)
+
+<span class="comment"># Amostras mais incertas</span>
+uncertain_idx = np.<span class="function">argsort</span>(confidence)[:<span class="number">10</span>]
+<span class="function">print</span>(<span class="string">f'\nAmostras mais incertas:'</span>)
+<span class="keyword">for</span> idx <span class="keyword">in</span> uncertain_idx:
+    <span class="function">print</span>(<span class="string">f'Idx {idx}: Conf={confidence[idx]:.2f}, Pred={y_pred[idx]}, Real={y_test[idx]}'</span>)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.3 XGBOOST -->
+                <div class="section">
+                    <h3>2.3 XGBoost</h3>
+
+                    <p>O rei das competições Kaggle. Gradient Boosting otimizado com regularização.</p>
+
+                    <h4>Instalação e Uso Básico</h4>
+                    <pre><code><span class="comment"># pip install xgboost</span>
+<span class="keyword">import</span> xgboost <span class="keyword">as</span> xgb
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+
+<span class="comment"># Classificador</span>
+xgb_clf = xgb.<span class="function">XGBClassifier</span>(
+    n_estimators=<span class="number">100</span>,        <span class="comment"># Número de boosting rounds</span>
+    max_depth=<span class="number">6</span>,             <span class="comment"># Profundidade máxima</span>
+    learning_rate=<span class="number">0.1</span>,       <span class="comment"># Taxa de aprendizado (shrinkage)</span>
+    subsample=<span class="number">0.8</span>,           <span class="comment"># % de amostras por árvore</span>
+    colsample_bytree=<span class="number">0.8</span>,    <span class="comment"># % de features por árvore</span>
+    reg_alpha=<span class="number">0</span>,             <span class="comment"># L1 regularization</span>
+    reg_lambda=<span class="number">1</span>,            <span class="comment"># L2 regularization</span>
+    random_state=<span class="number">42</span>,
+    n_jobs=-<span class="number">1</span>
+)
+
+xgb_clf.<span class="function">fit</span>(X_train, y_train)
+<span class="function">print</span>(<span class="string">f'Accuracy: {xgb_clf.score(X_test, y_test):.4f}'</span>)
+</code></pre>
+
+                    <h4>Early Stopping</h4>
+                    <pre><code><span class="comment"># Dividir em treino e validação</span>
+X_train_, X_val, y_train_, y_val = <span class="function">train_test_split</span>(
+    X_train, y_train, test_size=<span class="number">0.2</span>
+)
+
+<span class="comment"># Treinar com early stopping</span>
+xgb_clf = xgb.<span class="function">XGBClassifier</span>(
+    n_estimators=<span class="number">1000</span>,
+    learning_rate=<span class="number">0.1</span>,
+    max_depth=<span class="number">6</span>,
+    early_stopping_rounds=<span class="number">50</span>,  <span class="comment"># Parar se não melhorar em 50 rounds</span>
+    random_state=<span class="number">42</span>
+)
+
+xgb_clf.<span class="function">fit</span>(
+    X_train_, y_train_,
+    eval_set=[(X_val, y_val)],
+    verbose=<span class="keyword">False</span>
+)
+
+<span class="function">print</span>(<span class="string">f'Melhor iteração: {xgb_clf.best_iteration}'</span>)
+<span class="function">print</span>(<span class="string">f'Melhor score: {xgb_clf.best_score:.4f}'</span>)
+</code></pre>
+
+                    <h4>Tuning de Hiperparâmetros</h4>
+                    <pre><code><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> RandomizedSearchCV
+<span class="keyword">from</span> scipy.stats <span class="keyword">import</span> randint, uniform
+
+param_dist = {
+    <span class="string">'n_estimators'</span>: <span class="function">randint</span>(<span class="number">100</span>, <span class="number">500</span>),
+    <span class="string">'max_depth'</span>: <span class="function">randint</span>(<span class="number">3</span>, <span class="number">10</span>),
+    <span class="string">'learning_rate'</span>: <span class="function">uniform</span>(<span class="number">0.01</span>, <span class="number">0.3</span>),
+    <span class="string">'subsample'</span>: <span class="function">uniform</span>(<span class="number">0.6</span>, <span class="number">0.4</span>),
+    <span class="string">'colsample_bytree'</span>: <span class="function">uniform</span>(<span class="number">0.6</span>, <span class="number">0.4</span>),
+    <span class="string">'reg_alpha'</span>: <span class="function">uniform</span>(<span class="number">0</span>, <span class="number">1</span>),
+    <span class="string">'reg_lambda'</span>: <span class="function">uniform</span>(<span class="number">0</span>, <span class="number">1</span>)
+}
+
+search = <span class="function">RandomizedSearchCV</span>(
+    xgb.<span class="function">XGBClassifier</span>(random_state=<span class="number">42</span>),
+    param_dist,
+    n_iter=<span class="number">50</span>,
+    cv=<span class="number">5</span>,
+    scoring=<span class="string">'roc_auc'</span>,
+    n_jobs=-<span class="number">1</span>,
+    random_state=<span class="number">42</span>
+)
+
+search.<span class="function">fit</span>(X_train, y_train)
+<span class="function">print</span>(<span class="string">f'Melhores params: {search.best_params_}'</span>)
+</code></pre>
+
+                    <div class="warning">
+                        <strong>⚠️ Cuidado com Overfitting:</strong> XGBoost é poderoso mas pode overfitar. Use sempre
+                        early stopping e regularização!
+                    </div>
+
+                    <!-- EXERCÍCIO 7 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 7</span>
+                            <span class="exercise-title">XGBoost Otimizado</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Treine um XGBoost com early stopping e compare a performance com diferentes learning rates.
+                        </p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> xgboost <span class="keyword">as</span> xgb
+<span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_classification
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Dados</span>
+X, y = <span class="function">make_classification</span>(n_samples=<span class="number">5000</span>, n_features=<span class="number">20</span>, random_state=<span class="number">42</span>)
+X_train, X_test, y_train, y_test = <span class="function">train_test_split</span>(X, y, test_size=<span class="number">0.2</span>)
+X_train_, X_val, y_train_, y_val = <span class="function">train_test_split</span>(X_train, y_train, test_size=<span class="number">0.2</span>)
+
+<span class="comment"># Testar diferentes learning rates</span>
+learning_rates = [<span class="number">0.01</span>, <span class="number">0.05</span>, <span class="number">0.1</span>, <span class="number">0.2</span>]
+results = {}
+
+<span class="keyword">for</span> lr <span class="keyword">in</span> learning_rates:
+    model = xgb.<span class="function">XGBClassifier</span>(
+        n_estimators=<span class="number">1000</span>,
+        learning_rate=lr,
+        max_depth=<span class="number">6</span>,
+        early_stopping_rounds=<span class="number">50</span>,
+        random_state=<span class="number">42</span>,
+        eval_metric=<span class="string">'auc'</span>
+    )
+    
+    model.<span class="function">fit</span>(
+        X_train_, y_train_,
+        eval_set=[(X_val, y_val)],
+        verbose=<span class="keyword">False</span>
+    )
+    
+    test_score = model.<span class="function">score</span>(X_test, y_test)
+    results[lr] = {
+        <span class="string">'best_iteration'</span>: model.best_iteration,
+        <span class="string">'test_score'</span>: test_score
+    }
+    
+    <span class="function">print</span>(<span class="string">f'LR={lr}: Iterations={model.best_iteration}, Test={test_score:.4f}'</span>)
+
+<span class="comment"># Visualizar</span>
+fig, ax = plt.<span class="function">subplots</span>(figsize=(<span class="number">10</span>, <span class="number">4</span>))
+lrs = <span class="function">list</span>(results.<span class="function">keys</span>())
+scores = [results[lr][<span class="string">'test_score'</span>] <span class="keyword">for</span> lr <span class="keyword">in</span> lrs]
+iterations = [results[lr][<span class="string">'best_iteration'</span>] <span class="keyword">for</span> lr <span class="keyword">in</span> lrs]
+
+ax.<span class="function">bar</span>(<span class="function">range</span>(<span class="function">len</span>(lrs)), scores, color=<span class="string">'steelblue'</span>)
+ax.<span class="function">set_xticks</span>(<span class="function">range</span>(<span class="function">len</span>(lrs)))
+ax.<span class="function">set_xticklabels</span>([<span class="string">f'LR={lr}\n({iterations[i]} iter)'</span> <span class="keyword">for</span> i, lr <span class="keyword">in</span> <span class="function">enumerate</span>(lrs)])
+ax.<span class="function">set_ylabel</span>(<span class="string">'Test Score'</span>)
+ax.<span class="function">set_title</span>(<span class="string">'XGBoost: Learning Rate vs Performance'</span>)
+plt.<span class="function">show</span>()
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.4 LIGHTGBM -->
+                <div class="section">
+                    <h3>2.4 LightGBM</h3>
+
+                    <p>Mais rápido que XGBoost, ótimo para datasets grandes. Usa histogram-based splitting.</p>
+
+                    <h4>Instalação e Uso Básico</h4>
+                    <pre><code><span class="comment"># pip install lightgbm</span>
+<span class="keyword">import</span> lightgbm <span class="keyword">as</span> lgb
+
+lgb_clf = lgb.<span class="function">LGBMClassifier</span>(
+    n_estimators=<span class="number">100</span>,
+    max_depth=-<span class="number">1</span>,            <span class="comment"># -1 significa sem limite</span>
+    num_leaves=<span class="number">31</span>,           <span class="comment"># Número de folhas (default)</span>
+    learning_rate=<span class="number">0.1</span>,
+    subsample=<span class="number">0.8</span>,
+    colsample_bytree=<span class="number">0.8</span>,
+    random_state=<span class="number">42</span>,
+    n_jobs=-<span class="number">1</span>,
+    verbose=-<span class="number">1</span>
+)
+
+lgb_clf.<span class="function">fit</span>(X_train, y_train)
+<span class="function">print</span>(<span class="string">f'Accuracy: {lgb_clf.score(X_test, y_test):.4f}'</span>)
+</code></pre>
+
+                    <h4>LightGBM vs XGBoost</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aspecto</th>
+                                <th>XGBoost</th>
+                                <th>LightGBM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Velocidade</td>
+                                <td>Rápido</td>
+                                <td>Muito mais rápido</td>
+                            </tr>
+                            <tr>
+                                <td>Memória</td>
+                                <td>Maior consumo</td>
+                                <td>Menor consumo</td>
+                            </tr>
+                            <tr>
+                                <td>Datasets Grandes</td>
+                                <td>OK</td>
+                                <td>Excelente</td>
+                            </tr>
+                            <tr>
+                                <td>Categoricals</td>
+                                <td>Precisa encoding</td>
+                                <td>Suporte nativo</td>
+                            </tr>
+                            <tr>
+                                <td>Overfitting</td>
+                                <td>Menos propenso</td>
+                                <td>Mais propenso (menos dados)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Benchmark Comparativo</h4>
+                    <pre><code><span class="keyword">import</span> time
+<span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_classification
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">import</span> xgboost <span class="keyword">as</span> xgb
+<span class="keyword">import</span> lightgbm <span class="keyword">as</span> lgb
+
+<span class="comment"># Dataset grande</span>
+X, y = <span class="function">make_classification</span>(n_samples=<span class="number">100000</span>, n_features=<span class="number">50</span>, random_state=<span class="number">42</span>)
+
+models = {
+    <span class="string">'RandomForest'</span>: <span class="function">RandomForestClassifier</span>(n_estimators=<span class="number">100</span>, n_jobs=-<span class="number">1</span>),
+    <span class="string">'XGBoost'</span>: xgb.<span class="function">XGBClassifier</span>(n_estimators=<span class="number">100</span>, n_jobs=-<span class="number">1</span>),
+    <span class="string">'LightGBM'</span>: lgb.<span class="function">LGBMClassifier</span>(n_estimators=<span class="number">100</span>, n_jobs=-<span class="number">1</span>, verbose=-<span class="number">1</span>)
+}
+
+<span class="keyword">for</span> name, model <span class="keyword">in</span> models.<span class="function">items</span>():
+    start = time.<span class="function">time</span>()
+    model.<span class="function">fit</span>(X, y)
+    elapsed = time.<span class="function">time</span>() - start
+    <span class="function">print</span>(<span class="string">f'{name:15}: {elapsed:.2f}s'</span>)
+</code></pre>
+
+                    <!-- EXERCÍCIO 8 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 8</span>
+                            <span class="exercise-title">LightGBM com Categoricals</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Use o suporte nativo do LightGBM para variáveis categóricas (sem OneHotEncoding).</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> lightgbm <span class="keyword">as</span> lgb
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+
+<span class="comment"># Criar dados com categoricals</span>
+np.random.<span class="function">seed</span>(<span class="number">42</span>)
+n = <span class="number">10000</span>
+
+df = pd.<span class="function">DataFrame</span>({
+    <span class="string">'idade'</span>: np.random.<span class="function">randint</span>(<span class="number">18</span>, <span class="number">70</span>, n),
+    <span class="string">'renda'</span>: np.random.<span class="function">uniform</span>(<span class="number">2000</span>, <span class="number">20000</span>, n),
+    <span class="string">'estado'</span>: np.random.<span class="function">choice</span>([<span class="string">'SP'</span>, <span class="string">'RJ'</span>, <span class="string">'MG'</span>, <span class="string">'RS'</span>, <span class="string">'BA'</span>], n),
+    <span class="string">'escolaridade'</span>: np.random.<span class="function">choice</span>([<span class="string">'Fundamental'</span>, <span class="string">'Medio'</span>, <span class="string">'Superior'</span>, <span class="string">'Pos'</span>], n),
+    <span class="string">'target'</span>: np.random.<span class="function">binomial</span>(<span class="number">1</span>, <span class="number">0.3</span>, n)
+})
+
+<span class="comment"># Converter para category (IMPORTANTE!)</span>
+df[<span class="string">'estado'</span>] = df[<span class="string">'estado'</span>].<span class="function">astype</span>(<span class="string">'category'</span>)
+df[<span class="string">'escolaridade'</span>] = df[<span class="string">'escolaridade'</span>].<span class="function">astype</span>(<span class="string">'category'</span>)
+
+<span class="comment"># Split</span>
+X = df.<span class="function">drop</span>(<span class="string">'target'</span>, axis=<span class="number">1</span>)
+y = df[<span class="string">'target'</span>]
+X_train, X_test, y_train, y_test = <span class="function">train_test_split</span>(X, y, test_size=<span class="number">0.2</span>)
+
+<span class="comment"># LightGBM com categorical_feature='auto'</span>
+lgb_clf = lgb.<span class="function">LGBMClassifier</span>(
+    n_estimators=<span class="number">100</span>,
+    random_state=<span class="number">42</span>,
+    verbose=-<span class="number">1</span>
+)
+
+<span class="comment"># Identificar colunas categóricas automaticamente</span>
+lgb_clf.<span class="function">fit</span>(X_train, y_train)
+
+<span class="function">print</span>(<span class="string">f'Accuracy: {lgb_clf.score(X_test, y_test):.4f}'</span>)
+
+<span class="comment"># Feature importance</span>
+importance = pd.<span class="function">DataFrame</span>({
+    <span class="string">'feature'</span>: X.columns,
+    <span class="string">'importance'</span>: lgb_clf.feature_importances_
+}).<span class="function">sort_values</span>(<span class="string">'importance'</span>, ascending=<span class="keyword">False</span>)
+<span class="function">print</span>(<span class="string">'\nFeature Importance:'</span>)
+<span class="function">print</span>(importance)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 3: SÉRIES TEMPORAIS -->
+        <div class="module" id="modulo3">
+            <div class="module-header">
+                <h2>📈 Módulo 3: Séries Temporais</h2>
+            </div>
+            <div class="module-content">
+                <!-- 3.1 FUNDAMENTOS -->
+                <div class="section">
+                    <h3>3.1 Fundamentos de Séries Temporais</h3>
+
+                    <p>Séries temporais são dados indexados pelo tempo. Entender seus componentes é essencial para
+                        previsão.</p>
+
+                    <h4>Componentes de uma Série Temporal</h4>
+                    <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">from</span> statsmodels.tsa.seasonal <span class="keyword">import</span> seasonal_decompose
+
+<span class="comment"># Criar série temporal de vendas</span>
+np.random.<span class="function">seed</span>(<span class="number">42</span>)
+dates = pd.<span class="function">date_range</span>(<span class="string">'2020-01-01'</span>, periods=<span class="number">365</span>*<span class="number">2</span>, freq=<span class="string">'D'</span>)
+
+<span class="comment"># Componentes: tendência + sazonalidade + ruído</span>
+trend = np.<span class="function">linspace</span>(<span class="number">100</span>, <span class="number">200</span>, <span class="function">len</span>(dates))
+seasonal = <span class="number">20</span> * np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * np.<span class="function">arange</span>(<span class="function">len</span>(dates)) / <span class="number">365</span>)
+noise = np.random.<span class="function">randn</span>(<span class="function">len</span>(dates)) * <span class="number">10</span>
+
+sales = trend + seasonal + noise
+ts = pd.<span class="function">Series</span>(sales, index=dates)
+
+<span class="comment"># Decomposição</span>
+decomposition = <span class="function">seasonal_decompose</span>(ts, period=<span class="number">365</span>)
+decomposition.<span class="function">plot</span>()
+plt.<span class="function">tight_layout</span>()
+plt.<span class="function">show</span>()
+</code></pre>
+
+                    <h4>Testes de Estacionariedade</h4>
+                    <pre><code><span class="keyword">from</span> statsmodels.tsa.stattools <span class="keyword">import</span> adfuller, kpss
+
+<span class="keyword">def</span> <span class="function">test_stationarity</span>(series, name=<span class="string">''</span>):
+    <span class="string">"""Testa se a série é estacionária"""</span>
+    
+    <span class="comment"># Teste ADF (H0: não estacionária)</span>
+    adf_result = <span class="function">adfuller</span>(series.<span class="function">dropna</span>())
+    adf_stationary = adf_result[<span class="number">1</span>] < <span class="number">0.05</span>
+    
+    <span class="comment"># Teste KPSS (H0: estacionária)</span>
+    kpss_result = <span class="function">kpss</span>(series.<span class="function">dropna</span>(), regression=<span class="string">'c'</span>)
+    kpss_stationary = kpss_result[<span class="number">1</span>] > <span class="number">0.05</span>
+    
+    <span class="function">print</span>(<span class="string">f'=== {name} ==='</span>)
+    <span class="function">print</span>(<span class="string">f'ADF p-value: {adf_result[1]:.4f} → {"Estacionária" if adf_stationary else "Não estacionária"}'</span>)
+    <span class="function">print</span>(<span class="string">f'KPSS p-value: {kpss_result[1]:.4f} → {"Estacionária" if kpss_stationary else "Não estacionária"}'</span>)
+    
+    <span class="keyword">return</span> adf_stationary <span class="keyword">and</span> kpss_stationary
+
+<span class="comment"># Testar série original</span>
+<span class="function">test_stationarity</span>(ts, <span class="string">'Original'</span>)
+
+<span class="comment"># Testar com diferenciação</span>
+<span class="function">test_stationarity</span>(ts.<span class="function">diff</span>().<span class="function">dropna</span>(), <span class="string">'Primeira Diferença'</span>)
+</code></pre>
+
+                    <h4>ACF e PACF</h4>
+                    <pre><code><span class="keyword">from</span> statsmodels.graphics.tsaplots <span class="keyword">import</span> plot_acf, plot_pacf
+
+fig, axes = plt.<span class="function">subplots</span>(<span class="number">1</span>, <span class="number">2</span>, figsize=(<span class="number">12</span>, <span class="number">4</span>))
+
+<span class="comment"># ACF: identifica ordem q (MA)</span>
+<span class="function">plot_acf</span>(ts.<span class="function">diff</span>().<span class="function">dropna</span>(), ax=axes[<span class="number">0</span>], lags=<span class="number">40</span>)
+axes[<span class="number">0</span>].<span class="function">set_title</span>(<span class="string">'ACF - Autocorrelação'</span>)
+
+<span class="comment"># PACF: identifica ordem p (AR)</span>
+<span class="function">plot_pacf</span>(ts.<span class="function">diff</span>().<span class="function">dropna</span>(), ax=axes[<span class="number">1</span>], lags=<span class="number">40</span>)
+axes[<span class="number">1</span>].<span class="function">set_title</span>(<span class="string">'PACF - Autocorrelação Parcial'</span>)
+
+plt.<span class="function">tight_layout</span>()
+plt.<span class="function">show</span>()
+</code></pre>
+
+                    <div class="note">
+                        <strong>💡 Interpretação ACF/PACF:</strong><br>
+                        • <strong>PACF decai → AR(p):</strong> p = lag onde PACF corta<br>
+                        • <strong>ACF decai → MA(q):</strong> q = lag onde ACF corta<br>
+                        • <strong>Ambos decaem:</strong> ARMA(p,q)
+                    </div>
+
+                    <!-- EXERCÍCIO 9 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 9</span>
+                            <span class="exercise-title">Análise Exploratória de Série Temporal</span>
+                            <span class="difficulty easy">Fácil</span>
+                        </div>
+                        <p>Faça uma análise completa de estacionariedade e decomposição de uma série de vendas.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">from</span> statsmodels.tsa.seasonal <span class="keyword">import</span> seasonal_decompose
+<span class="keyword">from</span> statsmodels.tsa.stattools <span class="keyword">import</span> adfuller
+<span class="keyword">from</span> statsmodels.graphics.tsaplots <span class="keyword">import</span> plot_acf, plot_pacf
+
+<span class="comment"># Criar dados de vendas mensais</span>
+np.random.<span class="function">seed</span>(<span class="number">42</span>)
+dates = pd.<span class="function">date_range</span>(<span class="string">'2019-01-01'</span>, periods=<span class="number">48</span>, freq=<span class="string">'M'</span>)
+trend = np.<span class="function">linspace</span>(<span class="number">50000</span>, <span class="number">80000</span>, <span class="number">48</span>)
+seasonal = <span class="number">10000</span> * np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * np.<span class="function">arange</span>(<span class="number">48</span>) / <span class="number">12</span>)
+sales = trend + seasonal + np.random.<span class="function">randn</span>(<span class="number">48</span>) * <span class="number">3000</span>
+ts = pd.<span class="function">Series</span>(sales, index=dates, name=<span class="string">'Vendas'</span>)
+
+<span class="comment"># 1. Visualização inicial</span>
+fig, axes = plt.<span class="function">subplots</span>(<span class="number">2</span>, <span class="number">2</span>, figsize=(<span class="number">14</span>, <span class="number">8</span>))
+
+ts.<span class="function">plot</span>(ax=axes[<span class="number">0</span>, <span class="number">0</span>], title=<span class="string">'Série Original'</span>)
+
+<span class="comment"># 2. Decomposição</span>
+decomp = <span class="function">seasonal_decompose</span>(ts, period=<span class="number">12</span>)
+decomp.trend.<span class="function">plot</span>(ax=axes[<span class="number">0</span>, <span class="number">1</span>], title=<span class="string">'Tendência'</span>)
+decomp.seasonal.<span class="function">plot</span>(ax=axes[<span class="number">1</span>, <span class="number">0</span>], title=<span class="string">'Sazonalidade'</span>)
+decomp.resid.<span class="function">plot</span>(ax=axes[<span class="number">1</span>, <span class="number">1</span>], title=<span class="string">'Resíduos'</span>)
+
+plt.<span class="function">tight_layout</span>()
+plt.<span class="function">show</span>()
+
+<span class="comment"># 3. Teste de estacionariedade</span>
+adf_result = <span class="function">adfuller</span>(ts)
+<span class="function">print</span>(<span class="string">f'ADF Statistic: {adf_result[0]:.4f}'</span>)
+<span class="function">print</span>(<span class="string">f'p-value: {adf_result[1]:.4f}'</span>)
+<span class="function">print</span>(<span class="string">f'Estacionária: {"Sim" if adf_result[1] < 0.05 else "Não"}'</span>)
+
+<span class="comment"># 4. ACF/PACF</span>
+fig, axes = plt.<span class="function">subplots</span>(<span class="number">1</span>, <span class="number">2</span>, figsize=(<span class="number">12</span>, <span class="number">4</span>))
+<span class="function">plot_acf</span>(ts.<span class="function">diff</span>().<span class="function">dropna</span>(), ax=axes[<span class="number">0</span>])
+<span class="function">plot_pacf</span>(ts.<span class="function">diff</span>().<span class="function">dropna</span>(), ax=axes[<span class="number">1</span>])
+plt.<span class="function">show</span>()
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3.2 STATSMODELS -->
+                <div class="section">
+                    <h3>3.2 ARIMA/SARIMA com Statsmodels</h3>
+
+                    <p>Modelos clássicos de séries temporais: ARIMA para dados não sazonais e SARIMA para sazonais.</p>
+
+                    <h4>ARIMA: AutoRegressive Integrated Moving Average</h4>
+                    <pre><code><span class="keyword">from</span> statsmodels.tsa.arima.model <span class="keyword">import</span> ARIMA
+
+<span class="comment"># ARIMA(p, d, q)</span>
+<span class="comment"># p = ordem autoregressiva (AR)</span>
+<span class="comment"># d = diferenciação</span>
+<span class="comment"># q = ordem média móvel (MA)</span>
+
+model = <span class="function">ARIMA</span>(ts, order=(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>))
+fitted = model.<span class="function">fit</span>()
+
+<span class="function">print</span>(fitted.<span class="function">summary</span>())
+
+<span class="comment"># Forecast</span>
+forecast = fitted.<span class="function">forecast</span>(steps=<span class="number">30</span>)
+
+<span class="comment"># Visualizar</span>
+plt.<span class="function">figure</span>(figsize=(<span class="number">12</span>, <span class="number">5</span>))
+ts[-<span class="number">90</span>:].<span class="function">plot</span>(label=<span class="string">'Histórico'</span>)
+forecast.<span class="function">plot</span>(label=<span class="string">'Previsão'</span>, color=<span class="string">'red'</span>)
+plt.<span class="function">legend</span>()
+plt.<span class="function">title</span>(<span class="string">'ARIMA Forecast'</span>)
+plt.<span class="function">show</span>()
+</code></pre>
+
+                    <h4>SARIMA: Seasonal ARIMA</h4>
+                    <pre><code><span class="keyword">from</span> statsmodels.tsa.statespace.sarimax <span class="keyword">import</span> SARIMAX
+
+<span class="comment"># SARIMA(p,d,q)(P,D,Q,s)</span>
+<span class="comment"># (P,D,Q,s) = componentes sazonais</span>
+<span class="comment"># s = período sazonal (12 = mensal, 7 = diário)</span>
+
+model = <span class="function">SARIMAX</span>(
+    ts,
+    order=(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>),           <span class="comment"># (p, d, q)</span>
+    seasonal_order=(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">12</span>)  <span class="comment"># (P, D, Q, s)</span>
+)
+fitted = model.<span class="function">fit</span>(disp=<span class="keyword">False</span>)
+
+<span class="comment"># Previsão com intervalo de confiança</span>
+forecast = fitted.<span class="function">get_forecast</span>(steps=<span class="number">12</span>)
+mean = forecast.predicted_mean
+ci = forecast.<span class="function">conf_int</span>()
+
+<span class="comment"># Visualizar</span>
+plt.<span class="function">figure</span>(figsize=(<span class="number">12</span>, <span class="number">5</span>))
+ts[-<span class="number">24</span>:].<span class="function">plot</span>(label=<span class="string">'Histórico'</span>)
+mean.<span class="function">plot</span>(label=<span class="string">'Previsão'</span>, color=<span class="string">'red'</span>)
+plt.<span class="function">fill_between</span>(ci.index, ci.<span class="function">iloc</span>[:, <span class="number">0</span>], ci.<span class="function">iloc</span>[:, <span class="number">1</span>], alpha=<span class="number">0.3</span>, color=<span class="string">'red'</span>)
+plt.<span class="function">legend</span>()
+plt.<span class="function">title</span>(<span class="string">'SARIMA Forecast com IC 95%'</span>)
+plt.<span class="function">show</span>()
+</code></pre>
+
+                    <h4>Auto ARIMA com pmdarima</h4>
+                    <pre><code><span class="comment"># pip install pmdarima</span>
+<span class="keyword">import</span> pmdarima <span class="keyword">as</span> pm
+
+<span class="comment"># Auto-busca os melhores parâmetros</span>
+auto_model = pm.<span class="function">auto_arima</span>(
+    ts,
+    seasonal=<span class="keyword">True</span>,
+    m=<span class="number">12</span>,                    <span class="comment"># Período sazonal</span>
+    stepwise=<span class="keyword">True</span>,            <span class="comment"># Busca stepwise (mais rápido)</span>
+    suppress_warnings=<span class="keyword">True</span>,
+    trace=<span class="keyword">True</span>                <span class="comment"># Mostra progresso</span>
+)
+
+<span class="function">print</span>(auto_model.<span class="function">summary</span>())
+<span class="function">print</span>(<span class="string">f'\\nMelhor modelo: SARIMA{auto_model.order}x{auto_model.seasonal_order}'</span>)
+
+<span class="comment"># Forecast</span>
+forecast, ci = auto_model.<span class="function">predict</span>(n_periods=<span class="number">12</span>, return_conf_int=<span class="keyword">True</span>)
+</code></pre>
+
+                    <div class="tip">
+                        <strong>💡 Dica:</strong> Use <code>pmdarima.auto_arima()</code> para encontrar automaticamente
+                        os melhores parâmetros. É muito mais rápido que grid search manual!
+                    </div>
+
+                    <!-- EXERCÍCIO 10 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 10</span>
+                            <span class="exercise-title">Previsão de Vendas com SARIMA</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Use SARIMA para prever vendas mensais dos próximos 6 meses e calcule MAPE.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> statsmodels.tsa.statespace.sarimax <span class="keyword">import</span> SARIMAX
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_absolute_percentage_error
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Dados simulados</span>
+np.random.<span class="function">seed</span>(<span class="number">42</span>)
+dates = pd.<span class="function">date_range</span>(<span class="string">'2019-01-01'</span>, periods=<span class="number">48</span>, freq=<span class="string">'M'</span>)
+trend = np.<span class="function">linspace</span>(<span class="number">50000</span>, <span class="number">80000</span>, <span class="number">48</span>)
+seasonal = <span class="number">10000</span> * np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * np.<span class="function">arange</span>(<span class="number">48</span>) / <span class="number">12</span>)
+sales = trend + seasonal + np.random.<span class="function">randn</span>(<span class="number">48</span>) * <span class="number">3000</span>
+ts = pd.<span class="function">Series</span>(sales, index=dates)
+
+<span class="comment"># Split treino/teste</span>
+train = ts[:-<span class="number">6</span>]
+test = ts[-<span class="number">6</span>:]
+
+<span class="comment"># Treinar SARIMA</span>
+model = <span class="function">SARIMAX</span>(train, order=(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>), seasonal_order=(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">12</span>))
+fitted = model.<span class="function">fit</span>(disp=<span class="keyword">False</span>)
+
+<span class="comment"># Prever</span>
+forecast = fitted.<span class="function">get_forecast</span>(steps=<span class="number">6</span>)
+pred = forecast.predicted_mean
+ci = forecast.<span class="function">conf_int</span>()
+
+<span class="comment"># Calcular MAPE</span>
+mape = <span class="function">mean_absolute_percentage_error</span>(test, pred) * <span class="number">100</span>
+<span class="function">print</span>(<span class="string">f'MAPE: {mape:.2f}%'</span>)
+
+<span class="comment"># Visualizar</span>
+plt.<span class="function">figure</span>(figsize=(<span class="number">12</span>, <span class="number">5</span>))
+train[-<span class="number">12</span>:].<span class="function">plot</span>(label=<span class="string">'Treino'</span>)
+test.<span class="function">plot</span>(label=<span class="string">'Real'</span>, color=<span class="string">'blue'</span>)
+pred.<span class="function">plot</span>(label=<span class="string">'Previsão'</span>, color=<span class="string">'red'</span>, linestyle=<span class="string">'--'</span>)
+plt.<span class="function">fill_between</span>(ci.index, ci.<span class="function">iloc</span>[:, <span class="number">0</span>], ci.<span class="function">iloc</span>[:, <span class="number">1</span>], alpha=<span class="number">0.3</span>)
+plt.<span class="function">legend</span>()
+plt.<span class="function">title</span>(<span class="string">f'SARIMA Forecast | MAPE: {mape:.2f}%'</span>)
+plt.<span class="function">show</span>()
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3.3 PROPHET -->
+                <div class="section">
+                    <h3>3.3 Prophet (Meta)</h3>
+
+                    <p>Prophet é intuitivo, rápido e lida bem com feriados e mudanças de tendência.</p>
+
+                    <h4>Instalação e Uso Básico</h4>
+                    <pre><code><span class="comment"># pip install prophet</span>
+<span class="keyword">from</span> prophet <span class="keyword">import</span> Prophet
+
+<span class="comment"># Prophet requer colunas 'ds' (date) e 'y' (valor)</span>
+df = pd.<span class="function">DataFrame</span>({
+    <span class="string">'ds'</span>: ts.index,
+    <span class="string">'y'</span>: ts.values
+})
+
+<span class="comment"># Criar e treinar modelo</span>
+model = <span class="function">Prophet</span>(
+    yearly_seasonality=<span class="keyword">True</span>,
+    weekly_seasonality=<span class="keyword">False</span>,  <span class="comment"># Dados mensais</span>
+    daily_seasonality=<span class="keyword">False</span>
+)
+model.<span class="function">fit</span>(df)
+
+<span class="comment"># Criar dataframe de previsão</span>
+future = model.<span class="function">make_future_dataframe</span>(periods=<span class="number">12</span>, freq=<span class="string">'M'</span>)
+forecast = model.<span class="function">predict</span>(future)
+
+<span class="comment"># Visualizar</span>
+model.<span class="function">plot</span>(forecast)
+plt.<span class="function">title</span>(<span class="string">'Prophet Forecast'</span>)
+plt.<span class="function">show</span>()
+
+<span class="comment"># Visualizar componentes</span>
+model.<span class="function">plot_components</span>(forecast)
+plt.<span class="function">show</span>()
+</code></pre>
+
+                    <h4>Adicionando Feriados</h4>
+                    <pre><code><span class="comment"># Feriados brasileiros</span>
+feriados = pd.<span class="function">DataFrame</span>({
+    <span class="string">'holiday'</span>: <span class="string">'feriado'</span>,
+    <span class="string">'ds'</span>: pd.<span class="function">to_datetime</span>([
+        <span class="string">'2023-01-01'</span>, <span class="string">'2023-02-20'</span>, <span class="string">'2023-02-21'</span>,  <span class="comment"># Ano Novo, Carnaval</span>
+        <span class="string">'2023-04-07'</span>, <span class="string">'2023-04-21'</span>,  <span class="comment"># Sexta-feira Santa, Tiradentes</span>
+        <span class="string">'2023-05-01'</span>, <span class="string">'2023-09-07'</span>,  <span class="comment"># Trabalho, Independência</span>
+        <span class="string">'2023-10-12'</span>, <span class="string">'2023-11-02'</span>,  <span class="comment"># N.Sra. Aparecida, Finados</span>
+        <span class="string">'2023-11-15'</span>, <span class="string">'2023-12-25'</span>   <span class="comment"># Proclamação, Natal</span>
+    ]),
+    <span class="string">'lower_window'</span>: <span class="number">0</span>,
+    <span class="string">'upper_window'</span>: <span class="number">1</span>  <span class="comment"># Efeito dura até 1 dia depois</span>
+})
+
+<span class="comment"># Modelo com feriados</span>
+model = <span class="function">Prophet</span>(holidays=feriados)
+model.<span class="function">fit</span>(df)
+</code></pre>
+
+                    <h4>Changepoints (Mudanças de Tendência)</h4>
+                    <pre><code><span class="comment"># Detectar mudanças automáticas de tendência</span>
+model = <span class="function">Prophet</span>(
+    changepoint_prior_scale=<span class="number">0.05</span>,  <span class="comment"># Flexibilidade (maior = mais changepoints)</span>
+    n_changepoints=<span class="number">25</span>              <span class="comment"># Número máximo de changepoints</span>
+)
+model.<span class="function">fit</span>(df)
+
+<span class="comment"># Ver changepoints detectados</span>
+<span class="function">print</span>(<span class="string">'Changepoints detectados:'</span>)
+<span class="function">print</span>(model.changepoints)
+</code></pre>
+
+                    <!-- EXERCÍCIO 11 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 11</span>
+                            <span class="exercise-title">Prophet com Cross-Validation</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Use Prophet com validação cruzada temporal para avaliar a performance.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> prophet <span class="keyword">import</span> Prophet
+<span class="keyword">from</span> prophet.diagnostics <span class="keyword">import</span> cross_validation, performance_metrics
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Dados</span>
+np.random.<span class="function">seed</span>(<span class="number">42</span>)
+dates = pd.<span class="function">date_range</span>(<span class="string">'2019-01-01'</span>, periods=<span class="number">365</span>*<span class="number">3</span>, freq=<span class="string">'D'</span>)
+trend = np.<span class="function">linspace</span>(<span class="number">100</span>, <span class="number">200</span>, <span class="function">len</span>(dates))
+seasonal = <span class="number">20</span> * np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * np.<span class="function">arange</span>(<span class="function">len</span>(dates)) / <span class="number">365</span>)
+y = trend + seasonal + np.random.<span class="function">randn</span>(<span class="function">len</span>(dates)) * <span class="number">10</span>
+
+df = pd.<span class="function">DataFrame</span>({<span class="string">'ds'</span>: dates, <span class="string">'y'</span>: y})
+
+<span class="comment"># Treinar Prophet</span>
+model = <span class="function">Prophet</span>(yearly_seasonality=<span class="keyword">True</span>)
+model.<span class="function">fit</span>(df)
+
+<span class="comment"># Cross-validation temporal</span>
+<span class="comment"># initial: dados de treino inicial</span>
+<span class="comment"># period: intervalo entre cutoffs</span>
+<span class="comment"># horizon: horizonte de previsão</span>
+cv_results = <span class="function">cross_validation</span>(
+    model,
+    initial=<span class="string">'365 days'</span>,
+    period=<span class="string">'90 days'</span>,
+    horizon=<span class="string">'30 days'</span>
+)
+
+<span class="comment"># Métricas</span>
+metrics = <span class="function">performance_metrics</span>(cv_results)
+<span class="function">print</span>(metrics[[<span class="string">'horizon'</span>, <span class="string">'mape'</span>, <span class="string">'rmse'</span>, <span class="string">'mae'</span>]])
+
+<span class="comment"># MAPE médio</span>
+<span class="function">print</span>(<span class="string">f'\\nMAPE médio: {metrics["mape"].mean()*100:.2f}%'</span>)
+
+<span class="comment"># Visualizar performance por horizonte</span>
+<span class="keyword">from</span> prophet.plot <span class="keyword">import</span> plot_cross_validation_metric
+fig = <span class="function">plot_cross_validation_metric</span>(cv_results, metric=<span class="string">'mape'</span>)
+plt.<span class="function">show</span>()
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3.4 ML PARA SÉRIES TEMPORAIS -->
+                <div class="section">
+                    <h3>3.4 Machine Learning para Séries Temporais</h3>
+
+                    <p>Transforme séries temporais em problemas supervisionados com feature engineering temporal.</p>
+
+                    <h4>Feature Engineering Temporal</h4>
+                    <pre><code><span class="keyword">def</span> <span class="function">create_temporal_features</span>(df, date_col=<span class="string">'date'</span>):
+    <span class="string">"""Cria features temporais a partir de uma coluna de data"""</span>
+    df = df.<span class="function">copy</span>()
+    
+    <span class="comment"># Features de calendário</span>
+    df[<span class="string">'year'</span>] = df[date_col].dt.year
+    df[<span class="string">'month'</span>] = df[date_col].dt.month
+    df[<span class="string">'day'</span>] = df[date_col].dt.day
+    df[<span class="string">'day_of_week'</span>] = df[date_col].dt.dayofweek
+    df[<span class="string">'day_of_year'</span>] = df[date_col].dt.dayofyear
+    df[<span class="string">'week_of_year'</span>] = df[date_col].dt.isocalendar().week
+    df[<span class="string">'quarter'</span>] = df[date_col].dt.quarter
+    
+    <span class="comment"># Features cíclicas (melhores para ML)</span>
+    df[<span class="string">'month_sin'</span>] = np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * df[<span class="string">'month'</span>] / <span class="number">12</span>)
+    df[<span class="string">'month_cos'</span>] = np.<span class="function">cos</span>(<span class="number">2</span> * np.pi * df[<span class="string">'month'</span>] / <span class="number">12</span>)
+    df[<span class="string">'dow_sin'</span>] = np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * df[<span class="string">'day_of_week'</span>] / <span class="number">7</span>)
+    df[<span class="string">'dow_cos'</span>] = np.<span class="function">cos</span>(<span class="number">2</span> * np.pi * df[<span class="string">'day_of_week'</span>] / <span class="number">7</span>)
+    
+    <span class="comment"># Flags</span>
+    df[<span class="string">'is_weekend'</span>] = df[<span class="string">'day_of_week'</span>].<span class="function">isin</span>([<span class="number">5</span>, <span class="number">6</span>]).<span class="function">astype</span>(<span class="function">int</span>)
+    df[<span class="string">'is_month_start'</span>] = df[date_col].dt.is_month_start.<span class="function">astype</span>(<span class="function">int</span>)
+    df[<span class="string">'is_month_end'</span>] = df[date_col].dt.is_month_end.<span class="function">astype</span>(<span class="function">int</span>)
+    
+    <span class="keyword">return</span> df
+</code></pre>
+
+                    <h4>Lag Features</h4>
+                    <pre><code><span class="keyword">def</span> <span class="function">create_lag_features</span>(df, target_col, lags=[<span class="number">1</span>, <span class="number">7</span>, <span class="number">14</span>, <span class="number">30</span>]):
+    <span class="string">"""Cria features de lag (valores passados)"""</span>
+    df = df.<span class="function">copy</span>()
+    
+    <span class="keyword">for</span> lag <span class="keyword">in</span> lags:
+        df[<span class="string">f'lag_{lag}'</span>] = df[target_col].<span class="function">shift</span>(lag)
+    
+    <span class="keyword">return</span> df
+
+<span class="keyword">def</span> <span class="function">create_rolling_features</span>(df, target_col, windows=[<span class="number">7</span>, <span class="number">14</span>, <span class="number">30</span>]):
+    <span class="string">"""Cria features de janela móvel"""</span>
+    df = df.<span class="function">copy</span>()
+    
+    <span class="keyword">for</span> window <span class="keyword">in</span> windows:
+        df[<span class="string">f'rolling_mean_{window}'</span>] = df[target_col].<span class="function">shift</span>(<span class="number">1</span>).<span class="function">rolling</span>(window).<span class="function">mean</span>()
+        df[<span class="string">f'rolling_std_{window}'</span>] = df[target_col].<span class="function">shift</span>(<span class="number">1</span>).<span class="function">rolling</span>(window).<span class="function">std</span>()
+        df[<span class="string">f'rolling_min_{window}'</span>] = df[target_col].<span class="function">shift</span>(<span class="number">1</span>).<span class="function">rolling</span>(window).<span class="function">min</span>()
+        df[<span class="string">f'rolling_max_{window}'</span>] = df[target_col].<span class="function">shift</span>(<span class="number">1</span>).<span class="function">rolling</span>(window).<span class="function">max</span>()
+    
+    <span class="keyword">return</span> df
+</code></pre>
+
+                    <h4>Modelo Completo com LightGBM</h4>
+                    <pre><code><span class="keyword">import</span> lightgbm <span class="keyword">as</span> lgb
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> TimeSeriesSplit
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_absolute_error, mean_squared_error
+
+<span class="comment"># Preparar dados</span>
+df = pd.<span class="function">DataFrame</span>({<span class="string">'date'</span>: dates, <span class="string">'sales'</span>: ts.values})
+df = <span class="function">create_temporal_features</span>(df, <span class="string">'date'</span>)
+df = <span class="function">create_lag_features</span>(df, <span class="string">'sales'</span>, lags=[<span class="number">1</span>, <span class="number">7</span>, <span class="number">14</span>, <span class="number">30</span>])
+df = <span class="function">create_rolling_features</span>(df, <span class="string">'sales'</span>, windows=[<span class="number">7</span>, <span class="number">14</span>, <span class="number">30</span>])
+df = df.<span class="function">dropna</span>()
+
+<span class="comment"># Features e target</span>
+feature_cols = [c <span class="keyword">for</span> c <span class="keyword">in</span> df.columns <span class="keyword">if</span> c <span class="keyword">not in</span> [<span class="string">'date'</span>, <span class="string">'sales'</span>]]
+X = df[feature_cols]
+y = df[<span class="string">'sales'</span>]
+
+<span class="comment"># Time Series Split</span>
+tscv = <span class="function">TimeSeriesSplit</span>(n_splits=<span class="number">5</span>)
+
+scores = []
+<span class="keyword">for</span> train_idx, val_idx <span class="keyword">in</span> tscv.<span class="function">split</span>(X):
+    X_train, X_val = X.<span class="function">iloc</span>[train_idx], X.<span class="function">iloc</span>[val_idx]
+    y_train, y_val = y.<span class="function">iloc</span>[train_idx], y.<span class="function">iloc</span>[val_idx]
+    
+    model = lgb.<span class="function">LGBMRegressor</span>(n_estimators=<span class="number">100</span>, random_state=<span class="number">42</span>, verbose=-<span class="number">1</span>)
+    model.<span class="function">fit</span>(X_train, y_train)
+    
+    pred = model.<span class="function">predict</span>(X_val)
+    mae = <span class="function">mean_absolute_error</span>(y_val, pred)
+    scores.<span class="function">append</span>(mae)
+
+<span class="function">print</span>(<span class="string">f'MAE CV: {np.mean(scores):.2f} (+/- {np.std(scores):.2f})'</span>)
+</code></pre>
+
+                    <div class="warning">
+                        <strong>⚠️ Data Leakage em Séries Temporais:</strong><br>
+                        • NUNCA use dados futuros para criar features<br>
+                        • SEMPRE use TimeSeriesSplit (não random split!)<br>
+                        • Cuidado com rolling features sem shift
+                    </div>
+
+                    <!-- EXERCÍCIO 12 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 12</span>
+                            <span class="exercise-title">Modelo ML de Previsão</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Crie um modelo ML completo para previsão de demanda com feature engineering temporal.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> lightgbm <span class="keyword">as</span> lgb
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> TimeSeriesSplit
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_absolute_error, mean_absolute_percentage_error
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Criar dados de demanda</span>
+np.random.<span class="function">seed</span>(<span class="number">42</span>)
+dates = pd.<span class="function">date_range</span>(<span class="string">'2021-01-01'</span>, periods=<span class="number">365</span>*<span class="number">2</span>, freq=<span class="string">'D'</span>)
+base = <span class="number">1000</span>
+trend = np.<span class="function">linspace</span>(<span class="number">0</span>, <span class="number">200</span>, <span class="function">len</span>(dates))
+weekly = <span class="number">100</span> * np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * np.<span class="function">arange</span>(<span class="function">len</span>(dates)) / <span class="number">7</span>)
+yearly = <span class="number">150</span> * np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * np.<span class="function">arange</span>(<span class="function">len</span>(dates)) / <span class="number">365</span>)
+noise = np.random.<span class="function">randn</span>(<span class="function">len</span>(dates)) * <span class="number">50</span>
+demand = base + trend + weekly + yearly + noise
+
+df = pd.<span class="function">DataFrame</span>({<span class="string">'date'</span>: dates, <span class="string">'demand'</span>: demand})
+
+<span class="comment"># Feature Engineering</span>
+<span class="keyword">def</span> <span class="function">engineer_features</span>(df):
+    df = df.<span class="function">copy</span>()
+    
+    <span class="comment"># Calendário</span>
+    df[<span class="string">'dayofweek'</span>] = df[<span class="string">'date'</span>].dt.dayofweek
+    df[<span class="string">'month'</span>] = df[<span class="string">'date'</span>].dt.month
+    df[<span class="string">'day'</span>] = df[<span class="string">'date'</span>].dt.day
+    df[<span class="string">'is_weekend'</span>] = (df[<span class="string">'dayofweek'</span>] >= <span class="number">5</span>).<span class="function">astype</span>(<span class="function">int</span>)
+    
+    <span class="comment"># Cíclicas</span>
+    df[<span class="string">'dow_sin'</span>] = np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * df[<span class="string">'dayofweek'</span>] / <span class="number">7</span>)
+    df[<span class="string">'dow_cos'</span>] = np.<span class="function">cos</span>(<span class="number">2</span> * np.pi * df[<span class="string">'dayofweek'</span>] / <span class="number">7</span>)
+    df[<span class="string">'month_sin'</span>] = np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * df[<span class="string">'month'</span>] / <span class="number">12</span>)
+    df[<span class="string">'month_cos'</span>] = np.<span class="function">cos</span>(<span class="number">2</span> * np.pi * df[<span class="string">'month'</span>] / <span class="number">12</span>)
+    
+    <span class="comment"># Lags (cuidado com data leakage!)</span>
+    <span class="keyword">for</span> lag <span class="keyword">in</span> [<span class="number">1</span>, <span class="number">7</span>, <span class="number">14</span>, <span class="number">28</span>]:
+        df[<span class="string">f'lag_{lag}'</span>] = df[<span class="string">'demand'</span>].<span class="function">shift</span>(lag)
+    
+    <span class="comment"># Rolling (shift(1) para evitar leakage)</span>
+    <span class="keyword">for</span> window <span class="keyword">in</span> [<span class="number">7</span>, <span class="number">14</span>, <span class="number">28</span>]:
+        df[<span class="string">f'rolling_mean_{window}'</span>] = df[<span class="string">'demand'</span>].<span class="function">shift</span>(<span class="number">1</span>).<span class="function">rolling</span>(window).<span class="function">mean</span>()
+        df[<span class="string">f'rolling_std_{window}'</span>] = df[<span class="string">'demand'</span>].<span class="function">shift</span>(<span class="number">1</span>).<span class="function">rolling</span>(window).<span class="function">std</span>()
+    
+    <span class="keyword">return</span> df
+
+df = <span class="function">engineer_features</span>(df)
+df = df.<span class="function">dropna</span>()
+
+<span class="comment"># Train/Test split temporal</span>
+train = df[df[<span class="string">'date'</span>] < <span class="string">'2022-10-01'</span>]
+test = df[df[<span class="string">'date'</span>] >= <span class="string">'2022-10-01'</span>]
+
+feature_cols = [c <span class="keyword">for</span> c <span class="keyword">in</span> df.columns <span class="keyword">if</span> c <span class="keyword">not in</span> [<span class="string">'date'</span>, <span class="string">'demand'</span>]]
+
+<span class="comment"># Treinar LightGBM</span>
+model = lgb.<span class="function">LGBMRegressor</span>(
+    n_estimators=<span class="number">200</span>,
+    max_depth=<span class="number">7</span>,
+    learning_rate=<span class="number">0.05</span>,
+    random_state=<span class="number">42</span>,
+    verbose=-<span class="number">1</span>
+)
+model.<span class="function">fit</span>(train[feature_cols], train[<span class="string">'demand'</span>])
+
+<span class="comment"># Prever</span>
+pred = model.<span class="function">predict</span>(test[feature_cols])
+
+<span class="comment"># Avaliar</span>
+mae = <span class="function">mean_absolute_error</span>(test[<span class="string">'demand'</span>], pred)
+mape = <span class="function">mean_absolute_percentage_error</span>(test[<span class="string">'demand'</span>], pred) * <span class="number">100</span>
+<span class="function">print</span>(<span class="string">f'MAE: {mae:.2f}'</span>)
+<span class="function">print</span>(<span class="string">f'MAPE: {mape:.2f}%'</span>)
+
+<span class="comment"># Visualizar</span>
+plt.<span class="function">figure</span>(figsize=(<span class="number">14</span>, <span class="number">5</span>))
+plt.<span class="function">plot</span>(test[<span class="string">'date'</span>], test[<span class="string">'demand'</span>], label=<span class="string">'Real'</span>)
+plt.<span class="function">plot</span>(test[<span class="string">'date'</span>], pred, label=<span class="string">'Previsão'</span>, alpha=<span class="number">0.8</span>)
+plt.<span class="function">legend</span>()
+plt.<span class="function">title</span>(<span class="string">f'LightGBM Forecast | MAPE: {mape:.2f}%'</span>)
+plt.<span class="function">show</span>()
+
+<span class="comment"># Feature Importance</span>
+importance = pd.<span class="function">DataFrame</span>({
+    <span class="string">'feature'</span>: feature_cols,
+    <span class="string">'importance'</span>: model.feature_importances_
+}).<span class="function">sort_values</span>(<span class="string">'importance'</span>, ascending=<span class="keyword">False</span>)
+<span class="function">print</span>(<span class="string">'\\nTop 10 Features:'</span>)
+<span class="function">print</span>(importance.<span class="function">head</span>(<span class="number">10</span>))
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 4: PROJETO INTEGRADOR -->
+        <div class="module" id="modulo4">
+            <div class="module-header">
+                <h2>🚀 Módulo 4: Projeto Integrador</h2>
+            </div>
+            <div class="module-content">
+                <!-- 4.1 DEFINIÇÃO DO PROBLEMA -->
+                <div class="section">
+                    <h3>4.1 Definição do Problema de Negócio</h3>
+
+                    <p>Todo projeto de ML começa com um problema de negócio claro. Vamos criar um projeto end-to-end de
+                        <strong>Previsão de Demanda</strong>.</p>
+
+                    <h4>Contexto do Projeto</h4>
+                    <div class="note">
+                        <strong>🎯 Objetivo:</strong> Prever a demanda de produtos para os próximos 30 dias<br>
+                        <strong>📊 Métricas de Negócio:</strong> Reduzir ruptura de estoque e excesso de inventário<br>
+                        <strong>💰 Impacto:</strong> Economia estimada de 15% em custos de estoque
+                    </div>
+
+                    <h4>Estrutura do Projeto</h4>
+                    <pre><code>projeto_demanda/
+├── data/
+│   ├── raw/                    <span class="comment"># Dados brutos</span>
+│   ├── processed/              <span class="comment"># Dados processados</span>
+│   └── external/               <span class="comment"># Dados externos (feriados, etc)</span>
+├── notebooks/
+│   ├── 01_eda.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_modeling.ipynb
+│   └── 04_evaluation.ipynb
+├── src/
+│   ├── data/
+│   │   ├── load_data.py
+│   │   └── preprocess.py
+│   ├── features/
+│   │   └── build_features.py
+│   ├── models/
+│   │   ├── train.py
+│   │   └── predict.py
+│   └── visualization/
+│       └── plots.py
+├── models/                     <span class="comment"># Modelos salvos</span>
+├── reports/                    <span class="comment"># Relatórios e figuras</span>
+├── config.yaml                 <span class="comment"># Configurações</span>
+├── requirements.txt
+└── README.md
+</code></pre>
+
+                    <h4>Criando Dados Simulados</h4>
+                    <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="keyword">def</span> <span class="function">create_demand_dataset</span>(n_days=<span class="number">730</span>, n_products=<span class="number">5</span>):
+    <span class="string">"""Simula dados de demanda realistas"""</span>
+    np.random.<span class="function">seed</span>(<span class="number">42</span>)
+    
+    dates = pd.<span class="function">date_range</span>(<span class="string">'2022-01-01'</span>, periods=n_days, freq=<span class="string">'D'</span>)
+    products = [<span class="string">f'PROD_{i:03d}'</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(n_products)]
+    
+    data = []
+    <span class="keyword">for</span> product <span class="keyword">in</span> products:
+        base = np.random.<span class="function">randint</span>(<span class="number">50</span>, <span class="number">200</span>)  <span class="comment"># Demanda base por produto</span>
+        
+        <span class="keyword">for</span> i, date <span class="keyword">in</span> <span class="function">enumerate</span>(dates):
+            <span class="comment"># Tendência</span>
+            trend = i * <span class="number">0.02</span>
+            
+            <span class="comment"># Sazonalidade semanal (mais vendas no fim de semana)</span>
+            weekly = <span class="number">10</span> <span class="keyword">if</span> date.<span class="function">dayofweek</span> >= <span class="number">5</span> <span class="keyword">else</span> <span class="number">0</span>
+            
+            <span class="comment"># Sazonalidade mensal (pico no início/fim do mês)</span>
+            monthly = <span class="number">15</span> <span class="keyword">if</span> date.day < <span class="number">5</span> <span class="keyword">or</span> date.day > <span class="number">25</span> <span class="keyword">else</span> <span class="number">0</span>
+            
+            <span class="comment"># Sazonalidade anual (pico dezembro/janeiro)</span>
+            yearly = <span class="number">30</span> <span class="keyword">if</span> date.month <span class="keyword">in</span> [<span class="number">12</span>, <span class="number">1</span>] <span class="keyword">else</span> <span class="number">0</span>
+            
+            <span class="comment"># Ruído</span>
+            noise = np.random.<span class="function">randn</span>() * <span class="number">10</span>
+            
+            demand = <span class="function">max</span>(<span class="number">0</span>, <span class="function">int</span>(base + trend + weekly + monthly + yearly + noise))
+            
+            data.<span class="function">append</span>({
+                <span class="string">'date'</span>: date,
+                <span class="string">'product_id'</span>: product,
+                <span class="string">'demand'</span>: demand,
+                <span class="string">'price'</span>: np.random.<span class="function">uniform</span>(<span class="number">10</span>, <span class="number">100</span>),
+                <span class="string">'promotion'</span>: np.random.<span class="function">choice</span>([<span class="number">0</span>, <span class="number">1</span>], p=[<span class="number">0.9</span>, <span class="number">0.1</span>])
+            })
+    
+    <span class="keyword">return</span> pd.<span class="function">DataFrame</span>(data)
+
+<span class="comment"># Criar dataset</span>
+df = <span class="function">create_demand_dataset</span>()
+<span class="function">print</span>(df.<span class="function">shape</span>)
+df.<span class="function">head</span>()
+</code></pre>
+                </div>
+
+                <!-- 4.2 EDA PRODUTIVO -->
+                <div class="section">
+                    <h3>4.2 EDA Produtivo</h3>
+
+                    <p>EDA focado em insights acionáveis e decisões de modelagem.</p>
+
+                    <h4>Análise Rápida de Qualidade</h4>
+                    <pre><code><span class="keyword">def</span> <span class="function">quick_eda</span>(df):
+    <span class="string">"""EDA rápido para projetos de produção"""</span>
+    <span class="function">print</span>(<span class="string">'=== SHAPE ==='</span>)
+    <span class="function">print</span>(<span class="string">f'Linhas: {df.shape[0]:,} | Colunas: {df.shape[1]}'</span>)
+    
+    <span class="function">print</span>(<span class="string">'\\n=== TIPOS ==='</span>)
+    <span class="function">print</span>(df.dtypes)
+    
+    <span class="function">print</span>(<span class="string">'\\n=== MISSING ==='</span>)
+    missing = df.<span class="function">isnull</span>().<span class="function">sum</span>()
+    missing_pct = (missing / <span class="function">len</span>(df) * <span class="number">100</span>).<span class="function">round</span>(<span class="number">2</span>)
+    <span class="function">print</span>(pd.<span class="function">DataFrame</span>({<span class="string">'missing'</span>: missing, <span class="string">'pct'</span>: missing_pct}))
+    
+    <span class="function">print</span>(<span class="string">'\\n=== RANGE TEMPORAL ==='</span>)
+    <span class="function">print</span>(<span class="string">f'De: {df["date"].min()} até {df["date"].max()}'</span>)
+    
+    <span class="function">print</span>(<span class="string">'\\n=== TARGET (demand) ==='</span>)
+    <span class="function">print</span>(df[<span class="string">'demand'</span>].<span class="function">describe</span>())
+
+<span class="function">quick_eda</span>(df)
+</code></pre>
+
+                    <h4>Visualização de Padrões</h4>
+                    <pre><code><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+
+<span class="keyword">def</span> <span class="function">plot_demand_patterns</span>(df, product_id=<span class="keyword">None</span>):
+    <span class="string">"""Visualiza padrões de demanda"""</span>
+    <span class="keyword">if</span> product_id:
+        data = df[df[<span class="string">'product_id'</span>] == product_id]
+    <span class="keyword">else</span>:
+        data = df.<span class="function">groupby</span>(<span class="string">'date'</span>)[<span class="string">'demand'</span>].<span class="function">sum</span>().<span class="function">reset_index</span>()
+    
+    fig, axes = plt.<span class="function">subplots</span>(<span class="number">2</span>, <span class="number">2</span>, figsize=(<span class="number">14</span>, <span class="number">8</span>))
+    
+    <span class="comment"># Série temporal</span>
+    axes[<span class="number">0</span>, <span class="number">0</span>].<span class="function">plot</span>(data[<span class="string">'date'</span>], data[<span class="string">'demand'</span>])
+    axes[<span class="number">0</span>, <span class="number">0</span>].<span class="function">set_title</span>(<span class="string">'Demanda ao Longo do Tempo'</span>)
+    
+    <span class="comment"># Por dia da semana</span>
+    df[<span class="string">'dayofweek'</span>] = df[<span class="string">'date'</span>].dt.dayofweek
+    df.<span class="function">groupby</span>(<span class="string">'dayofweek'</span>)[<span class="string">'demand'</span>].<span class="function">mean</span>().<span class="function">plot</span>(kind=<span class="string">'bar'</span>, ax=axes[<span class="number">0</span>, <span class="number">1</span>])
+    axes[<span class="number">0</span>, <span class="number">1</span>].<span class="function">set_title</span>(<span class="string">'Média por Dia da Semana'</span>)
+    
+    <span class="comment"># Por mês</span>
+    df[<span class="string">'month'</span>] = df[<span class="string">'date'</span>].dt.month
+    df.<span class="function">groupby</span>(<span class="string">'month'</span>)[<span class="string">'demand'</span>].<span class="function">mean</span>().<span class="function">plot</span>(kind=<span class="string">'bar'</span>, ax=axes[<span class="number">1</span>, <span class="number">0</span>])
+    axes[<span class="number">1</span>, <span class="number">0</span>].<span class="function">set_title</span>(<span class="string">'Média por Mês'</span>)
+    
+    <span class="comment"># Distribuição</span>
+    df[<span class="string">'demand'</span>].<span class="function">hist</span>(bins=<span class="number">50</span>, ax=axes[<span class="number">1</span>, <span class="number">1</span>])
+    axes[<span class="number">1</span>, <span class="number">1</span>].<span class="function">set_title</span>(<span class="string">'Distribuição da Demanda'</span>)
+    
+    plt.<span class="function">tight_layout</span>()
+    plt.<span class="function">show</span>()
+
+<span class="function">plot_demand_patterns</span>(df)
+</code></pre>
+
+                    <!-- EXERCÍCIO 13 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 13</span>
+                            <span class="exercise-title">EDA Automatizado</span>
+                            <span class="difficulty medium">Médio</span>
+                        </div>
+                        <p>Crie uma função de relatório EDA que gera insights automáticos sobre a série temporal.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> statsmodels.tsa.stattools <span class="keyword">import</span> adfuller
+
+<span class="keyword">def</span> <span class="function">generate_eda_report</span>(df, date_col=<span class="string">'date'</span>, target_col=<span class="string">'demand'</span>):
+    <span class="string">"""Gera relatório EDA automático para séries temporais"""</span>
+    report = {<span class="string">'insights'</span>: [], <span class="string">'warnings'</span>: [], <span class="string">'recommendations'</span>: []}
+    
+    <span class="comment"># 1. Análise de missing</span>
+    missing_pct = df[target_col].<span class="function">isnull</span>().<span class="function">mean</span>() * <span class="number">100</span>
+    <span class="keyword">if</span> missing_pct > <span class="number">0</span>:
+        report[<span class="string">'warnings'</span>].<span class="function">append</span>(<span class="string">f'⚠️ {missing_pct:.1f}% missing no target'</span>)
+        report[<span class="string">'recommendations'</span>].<span class="function">append</span>(<span class="string">'→ Aplicar imputação (forward fill para séries)'</span>)
+    
+    <span class="comment"># 2. Outliers</span>
+    Q1, Q3 = df[target_col].<span class="function">quantile</span>([<span class="number">0.25</span>, <span class="number">0.75</span>])
+    IQR = Q3 - Q1
+    outliers = ((df[target_col] < Q1 - <span class="number">1.5</span>*IQR) | (df[target_col] > Q3 + <span class="number">1.5</span>*IQR)).<span class="function">sum</span>()
+    outlier_pct = outliers / <span class="function">len</span>(df) * <span class="number">100</span>
+    <span class="keyword">if</span> outlier_pct > <span class="number">5</span>:
+        report[<span class="string">'warnings'</span>].<span class="function">append</span>(<span class="string">f'⚠️ {outlier_pct:.1f}% de outliers detectados'</span>)
+    
+    <span class="comment"># 3. Estacionariedade</span>
+    ts = df.<span class="function">groupby</span>(date_col)[target_col].<span class="function">sum</span>()
+    adf = <span class="function">adfuller</span>(ts)
+    <span class="keyword">if</span> adf[<span class="number">1</span>] > <span class="number">0.05</span>:
+        report[<span class="string">'insights'</span>].<span class="function">append</span>(<span class="string">'📊 Série NÃO estacionária (p={:.3f})'.format(adf[1])</span>)
+        report[<span class="string">'recommendations'</span>].<span class="function">append</span>(<span class="string">'→ Considerar diferenciação ou SARIMA'</span>)
+    <span class="keyword">else</span>:
+        report[<span class="string">'insights'</span>].<span class="function">append</span>(<span class="string">'📊 Série estacionária (p={:.3f})'.format(adf[1])</span>)
+    
+    <span class="comment"># 4. Sazonalidade semanal</span>
+    df[<span class="string">'dow'</span>] = df[date_col].dt.dayofweek
+    dow_std = df.<span class="function">groupby</span>(<span class="string">'dow'</span>)[target_col].<span class="function">mean</span>().<span class="function">std</span>()
+    overall_mean = df[target_col].<span class="function">mean</span>()
+    <span class="keyword">if</span> dow_std / overall_mean > <span class="number">0.1</span>:
+        report[<span class="string">'insights'</span>].<span class="function">append</span>(<span class="string">'📅 Sazonalidade SEMANAL detectada'</span>)
+        report[<span class="string">'recommendations'</span>].<span class="function">append</span>(<span class="string">'→ Incluir features de dia da semana'</span>)
+    
+    <span class="comment"># 5. Tendência</span>
+    ts_values = ts.values
+    trend_corr = np.<span class="function">corrcoef</span>(ts_values, np.<span class="function">arange</span>(<span class="function">len</span>(ts_values)))[<span class="number">0</span>, <span class="number">1</span>]
+    <span class="keyword">if</span> <span class="function">abs</span>(trend_corr) > <span class="number">0.5</span>:
+        direction = <span class="string">'crescente'</span> <span class="keyword">if</span> trend_corr > <span class="number">0</span> <span class="keyword">else</span> <span class="string">'decrescente'</span>
+        report[<span class="string">'insights'</span>].<span class="function">append</span>(<span class="string">f'📈 Tendência {direction} (r={trend_corr:.2f})'</span>)
+    
+    <span class="comment"># Imprimir relatório</span>
+    <span class="function">print</span>(<span class="string">'=== RELATÓRIO EDA AUTOMÁTICO ==='</span>)
+    <span class="function">print</span>(<span class="string">'\\n📌 INSIGHTS:'</span>)
+    <span class="keyword">for</span> i <span class="keyword">in</span> report[<span class="string">'insights'</span>]: <span class="function">print</span>(<span class="string">f'  {i}'</span>)
+    <span class="function">print</span>(<span class="string">'\\n⚠️ WARNINGS:'</span>)
+    <span class="keyword">for</span> w <span class="keyword">in</span> report[<span class="string">'warnings'</span>]: <span class="function">print</span>(<span class="string">f'  {w}'</span>)
+    <span class="function">print</span>(<span class="string">'\\n💡 RECOMENDAÇÕES:'</span>)
+    <span class="keyword">for</span> r <span class="keyword">in</span> report[<span class="string">'recommendations'</span>]: <span class="function">print</span>(<span class="string">f'  {r}'</span>)
+    
+    <span class="keyword">return</span> report
+
+<span class="comment"># Usar</span>
+report = <span class="function">generate_eda_report</span>(df)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4.3 PIPELINE DE MODELAGEM -->
+                <div class="section">
+                    <h3>4.3 Pipeline de Modelagem</h3>
+
+                    <p>Pipeline completo e reproduzível para previsão de demanda.</p>
+
+                    <h4>Classe do Modelo</h4>
+                    <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> lightgbm <span class="keyword">as</span> lgb
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> TimeSeriesSplit
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_absolute_error, mean_absolute_percentage_error
+<span class="keyword">import</span> joblib
+
+<span class="keyword">class</span> <span class="function">DemandForecaster</span>:
+    <span class="string">"""Pipeline completo de previsão de demanda"""</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, forecast_horizon=<span class="number">30</span>):
+        self.forecast_horizon = forecast_horizon
+        self.model = <span class="keyword">None</span>
+        self.feature_cols = <span class="keyword">None</span>
+    
+    <span class="keyword">def</span> <span class="function">create_features</span>(self, df):
+        <span class="string">"""Feature engineering"""</span>
+        df = df.<span class="function">copy</span>()
+        
+        <span class="comment"># Calendário</span>
+        df[<span class="string">'dayofweek'</span>] = df[<span class="string">'date'</span>].dt.dayofweek
+        df[<span class="string">'month'</span>] = df[<span class="string">'date'</span>].dt.month
+        df[<span class="string">'day'</span>] = df[<span class="string">'date'</span>].dt.day
+        df[<span class="string">'is_weekend'</span>] = (df[<span class="string">'dayofweek'</span>] >= <span class="number">5</span>).<span class="function">astype</span>(<span class="function">int</span>)
+        df[<span class="string">'is_month_start'</span>] = (df[<span class="string">'day'</span>] <= <span class="number">5</span>).<span class="function">astype</span>(<span class="function">int</span>)
+        df[<span class="string">'is_month_end'</span>] = (df[<span class="string">'day'</span>] >= <span class="number">25</span>).<span class="function">astype</span>(<span class="function">int</span>)
+        
+        <span class="comment"># Cíclicas</span>
+        df[<span class="string">'dow_sin'</span>] = np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * df[<span class="string">'dayofweek'</span>] / <span class="number">7</span>)
+        df[<span class="string">'dow_cos'</span>] = np.<span class="function">cos</span>(<span class="number">2</span> * np.pi * df[<span class="string">'dayofweek'</span>] / <span class="number">7</span>)
+        df[<span class="string">'month_sin'</span>] = np.<span class="function">sin</span>(<span class="number">2</span> * np.pi * df[<span class="string">'month'</span>] / <span class="number">12</span>)
+        df[<span class="string">'month_cos'</span>] = np.<span class="function">cos</span>(<span class="number">2</span> * np.pi * df[<span class="string">'month'</span>] / <span class="number">12</span>)
+        
+        <span class="comment"># Lags</span>
+        <span class="keyword">for</span> lag <span class="keyword">in</span> [<span class="number">1</span>, <span class="number">7</span>, <span class="number">14</span>, <span class="number">28</span>]:
+            df[<span class="string">f'lag_{lag}'</span>] = df.<span class="function">groupby</span>(<span class="string">'product_id'</span>)[<span class="string">'demand'</span>].<span class="function">shift</span>(lag)
+        
+        <span class="comment"># Rolling</span>
+        <span class="keyword">for</span> window <span class="keyword">in</span> [<span class="number">7</span>, <span class="number">14</span>, <span class="number">28</span>]:
+            df[<span class="string">f'rolling_mean_{window}'</span>] = df.<span class="function">groupby</span>(<span class="string">'product_id'</span>)[<span class="string">'demand'</span>].<span class="function">transform</span>(
+                <span class="keyword">lambda</span> x: x.<span class="function">shift</span>(<span class="number">1</span>).<span class="function">rolling</span>(window).<span class="function">mean</span>()
+            )
+        
+        <span class="keyword">return</span> df
+    
+    <span class="keyword">def</span> <span class="function">fit</span>(self, df, verbose=<span class="keyword">True</span>):
+        <span class="string">"""Treina o modelo"""</span>
+        df = self.<span class="function">create_features</span>(df)
+        df = df.<span class="function">dropna</span>()
+        
+        self.feature_cols = [c <span class="keyword">for</span> c <span class="keyword">in</span> df.columns 
+                            <span class="keyword">if</span> c <span class="keyword">not in</span> [<span class="string">'date'</span>, <span class="string">'product_id'</span>, <span class="string">'demand'</span>]]
+        
+        X = df[self.feature_cols]
+        y = df[<span class="string">'demand'</span>]
+        
+        <span class="comment"># Time Series CV</span>
+        tscv = <span class="function">TimeSeriesSplit</span>(n_splits=<span class="number">5</span>)
+        scores = []
+        
+        <span class="keyword">for</span> train_idx, val_idx <span class="keyword">in</span> tscv.<span class="function">split</span>(X):
+            X_train, X_val = X.<span class="function">iloc</span>[train_idx], X.<span class="function">iloc</span>[val_idx]
+            y_train, y_val = y.<span class="function">iloc</span>[train_idx], y.<span class="function">iloc</span>[val_idx]
+            
+            model = lgb.<span class="function">LGBMRegressor</span>(n_estimators=<span class="number">100</span>, random_state=<span class="number">42</span>, verbose=-<span class="number">1</span>)
+            model.<span class="function">fit</span>(X_train, y_train)
+            
+            pred = model.<span class="function">predict</span>(X_val)
+            mape = <span class="function">mean_absolute_percentage_error</span>(y_val, pred) * <span class="number">100</span>
+            scores.<span class="function">append</span>(mape)
+        
+        <span class="keyword">if</span> verbose:
+            <span class="function">print</span>(<span class="string">f'CV MAPE: {np.mean(scores):.2f}% (+/- {np.std(scores):.2f}%)'</span>)
+        
+        <span class="comment"># Treinar no dataset completo</span>
+        self.model = lgb.<span class="function">LGBMRegressor</span>(n_estimators=<span class="number">100</span>, random_state=<span class="number">42</span>, verbose=-<span class="number">1</span>)
+        self.model.<span class="function">fit</span>(X, y)
+        
+        <span class="keyword">return</span> self
+    
+    <span class="keyword">def</span> <span class="function">predict</span>(self, df):
+        <span class="string">"""Faz previsões"""</span>
+        df = self.<span class="function">create_features</span>(df)
+        df = df.<span class="function">dropna</span>()
+        
+        X = df[self.feature_cols]
+        predictions = self.model.<span class="function">predict</span>(X)
+        
+        df[<span class="string">'predicted_demand'</span>] = predictions
+        <span class="keyword">return</span> df[[<span class="string">'date'</span>, <span class="string">'product_id'</span>, <span class="string">'predicted_demand'</span>]]
+    
+    <span class="keyword">def</span> <span class="function">save</span>(self, path):
+        <span class="string">"""Salva modelo"""</span>
+        joblib.<span class="function">dump</span>({<span class="string">'model'</span>: self.model, <span class="string">'feature_cols'</span>: self.feature_cols}, path)
+    
+    @<span class="function">classmethod</span>
+    <span class="keyword">def</span> <span class="function">load</span>(cls, path):
+        <span class="string">"""Carrega modelo"""</span>
+        data = joblib.<span class="function">load</span>(path)
+        obj = <span class="function">cls</span>()
+        obj.model = data[<span class="string">'model'</span>]
+        obj.feature_cols = data[<span class="string">'feature_cols'</span>]
+        <span class="keyword">return</span> obj
+
+<span class="comment"># Uso</span>
+forecaster = <span class="function">DemandForecaster</span>()
+forecaster.<span class="function">fit</span>(df)
+</code></pre>
+
+                    <!-- EXERCÍCIO 14 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 14</span>
+                            <span class="exercise-title">Pipeline Completo</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Adicione validação com métricas de negócio ao pipeline (custo de ruptura vs excesso).</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="keyword">def</span> <span class="function">calculate_business_metrics</span>(y_true, y_pred, cost_stockout=<span class="number">10</span>, cost_overstock=<span class="number">2</span>):
+    <span class="string">"""
+    Calcula métricas de negócio para previsão de demanda
+    cost_stockout: custo por unidade de ruptura (perda de venda)
+    cost_overstock: custo por unidade de excesso (armazenamento)
+    """</span>
+    y_true = np.<span class="function">array</span>(y_true)
+    y_pred = np.<span class="function">array</span>(y_pred)
+    
+    <span class="comment"># Erro</span>
+    error = y_pred - y_true
+    
+    <span class="comment"># Ruptura (sub-previsão)</span>
+    stockout = np.<span class="function">maximum</span>(-error, <span class="number">0</span>)
+    stockout_cost = stockout.<span class="function">sum</span>() * cost_stockout
+    
+    <span class="comment"># Excesso (super-previsão)</span>
+    overstock = np.<span class="function">maximum</span>(error, <span class="number">0</span>)
+    overstock_cost = overstock.<span class="function">sum</span>() * cost_overstock
+    
+    total_cost = stockout_cost + overstock_cost
+    
+    <span class="keyword">return</span> {
+        <span class="string">'stockout_units'</span>: stockout.<span class="function">sum</span>(),
+        <span class="string">'overstock_units'</span>: overstock.<span class="function">sum</span>(),
+        <span class="string">'stockout_cost'</span>: stockout_cost,
+        <span class="string">'overstock_cost'</span>: overstock_cost,
+        <span class="string">'total_cost'</span>: total_cost,
+        <span class="string">'mape'</span>: <span class="function">mean_absolute_percentage_error</span>(y_true, y_pred) * <span class="number">100</span>,
+        <span class="string">'mae'</span>: <span class="function">mean_absolute_error</span>(y_true, y_pred)
+    }
+
+<span class="comment"># Exemplo de uso com diferentes modelos</span>
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_absolute_error, mean_absolute_percentage_error
+
+<span class="comment"># Simular previsões</span>
+np.random.<span class="function">seed</span>(<span class="number">42</span>)
+y_true = np.random.<span class="function">randint</span>(<span class="number">50</span>, <span class="number">150</span>, <span class="number">100</span>)
+y_pred_conservative = y_true * <span class="number">1.1</span>  <span class="comment"># Super-estima 10%</span>
+y_pred_aggressive = y_true * <span class="number">0.9</span>    <span class="comment"># Sub-estima 10%</span>
+y_pred_balanced = y_true * <span class="number">1.0</span> + np.random.<span class="function">randn</span>(<span class="number">100</span>) * <span class="number">10</span>
+
+<span class="function">print</span>(<span class="string">'=== CONSERVADOR (super-estima) ==='</span>)
+metrics_cons = <span class="function">calculate_business_metrics</span>(y_true, y_pred_conservative)
+<span class="function">print</span>(<span class="string">f'MAPE: {metrics_cons["mape"]:.2f}%'</span>)
+<span class="function">print</span>(<span class="string">f'Custo Total: R${metrics_cons["total_cost"]:,.2f}'</span>)
+
+<span class="function">print</span>(<span class="string">'\\n=== AGRESSIVO (sub-estima) ==='</span>)
+metrics_agg = <span class="function">calculate_business_metrics</span>(y_true, y_pred_aggressive)
+<span class="function">print</span>(<span class="string">f'MAPE: {metrics_agg["mape"]:.2f}%'</span>)
+<span class="function">print</span>(<span class="string">f'Custo Total: R${metrics_agg["total_cost"]:,.2f}'</span>)
+
+<span class="function">print</span>(<span class="string">'\\n=== BALANCEADO ==='</span>)
+metrics_bal = <span class="function">calculate_business_metrics</span>(y_true, y_pred_balanced)
+<span class="function">print</span>(<span class="string">f'MAPE: {metrics_bal["mape"]:.2f}%'</span>)
+<span class="function">print</span>(<span class="string">f'Custo Total: R${metrics_bal["total_cost"]:,.2f}'</span>)
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4.4 DOCUMENTAÇÃO E DEPLOY -->
+                <div class="section">
+                    <h3>4.4 Documentação e Deploy</h3>
+
+                    <p>Um projeto só está pronto quando está documentado e em produção.</p>
+
+                    <h4>README.md Template</h4>
+                    <pre><code><span class="comment"># 📦 Projeto: Previsão de Demanda</span>
+
+<span class="comment">## 🎯 Objetivo</span>
+Prever demanda de produtos para otimização de estoque.
+
+<span class="comment">## 📊 Resultados</span>
+| Métrica | Valor |
+|---------|-------|
+| MAPE    | 8.5%  |
+| MAE     | 12.3  |
+| Economia Estimada | R$ 50,000/mês |
+
+<span class="comment">## 🚀 Como Usar</span>
+
+<span class="comment">### Instalação</span>
+```bash
+pip install -r requirements.txt
+```
+
+<span class="comment">### Treinamento</span>
+```python
+from src.models.train import DemandForecaster
+
+forecaster = DemandForecaster()
+forecaster.fit(df)
+forecaster.save('models/forecaster.pkl')
+```
+
+<span class="comment">### Previsão</span>
+```python
+forecaster = DemandForecaster.load('models/forecaster.pkl')
+predictions = forecaster.predict(new_data)
+```
+
+<span class="comment">## 📁 Estrutura</span>
+```
+├── data/          # Dados
+├── notebooks/     # Análises
+├── src/          # Código fonte
+└── models/       # Modelos salvos
+```
+
+<span class="comment">## 📈 Features Utilizadas</span>
+- Calendário: dia da semana, mês, feriados
+- Lags: 1, 7, 14, 28 dias
+- Rolling: média móvel 7, 14, 28 dias
+
+<span class="comment">## 🔮 Próximos Passos</span>
+- [ ] Adicionar features de preço
+- [ ] Testar Prophet
+- [ ] Deploy em API
+</code></pre>
+
+                    <h4>API Simples com FastAPI</h4>
+                    <pre><code><span class="comment"># pip install fastapi uvicorn</span>
+<span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI
+<span class="keyword">from</span> pydantic <span class="keyword">import</span> BaseModel
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">from</span> datetime <span class="keyword">import</span> date
+
+app = <span class="function">FastAPI</span>(title=<span class="string">'Demand Forecaster API'</span>)
+
+<span class="comment"># Carregar modelo</span>
+forecaster = DemandForecaster.<span class="function">load</span>(<span class="string">'models/forecaster.pkl'</span>)
+
+<span class="keyword">class</span> <span class="function">PredictionRequest</span>(BaseModel):
+    product_id: <span class="function">str</span>
+    date: date
+    price: <span class="function">float</span>
+    promotion: <span class="function">int</span> = <span class="number">0</span>
+
+<span class="keyword">class</span> <span class="function">PredictionResponse</span>(BaseModel):
+    product_id: <span class="function">str</span>
+    date: date
+    predicted_demand: <span class="function">float</span>
+
+@app.<span class="function">get</span>(<span class="string">'/'</span>)
+<span class="keyword">def</span> <span class="function">health_check</span>():
+    <span class="keyword">return</span> {<span class="string">'status'</span>: <span class="string">'healthy'</span>, <span class="string">'model'</span>: <span class="string">'loaded'</span>}
+
+@app.<span class="function">post</span>(<span class="string">'/predict'</span>, response_model=PredictionResponse)
+<span class="keyword">def</span> <span class="function">predict</span>(request: PredictionRequest):
+    <span class="comment"># Criar DataFrame</span>
+    df = pd.<span class="function">DataFrame</span>([{
+        <span class="string">'date'</span>: pd.<span class="function">to_datetime</span>(request.date),
+        <span class="string">'product_id'</span>: request.product_id,
+        <span class="string">'price'</span>: request.price,
+        <span class="string">'promotion'</span>: request.promotion,
+        <span class="string">'demand'</span>: <span class="number">0</span>  <span class="comment"># Placeholder</span>
+    }])
+    
+    <span class="comment"># Fazer previsão</span>
+    result = forecaster.<span class="function">predict</span>(df)
+    
+    <span class="keyword">return</span> <span class="function">PredictionResponse</span>(
+        product_id=request.product_id,
+        date=request.date,
+        predicted_demand=result[<span class="string">'predicted_demand'</span>].<span class="function">iloc</span>[<span class="number">0</span>]
+    )
+
+<span class="comment"># Executar: uvicorn api:app --reload</span>
+</code></pre>
+
+                    <div class="tip">
+                        <strong>💡 Checklist de Deploy:</strong><br>
+                        ✅ README.md completo<br>
+                        ✅ requirements.txt atualizado<br>
+                        ✅ Código modularizado em src/<br>
+                        ✅ Testes unitários básicos<br>
+                        ✅ Logs estruturados<br>
+                        ✅ API documentada (Swagger)
+                    </div>
+
+                    <!-- EXERCÍCIO 15 -->
+                    <div class="exercise">
+                        <div class="exercise-header">
+                            <span class="exercise-badge">Exercício 15</span>
+                            <span class="exercise-title">Projeto Completo</span>
+                            <span class="difficulty hard">Difícil</span>
+                        </div>
+                        <p>Crie um projeto completo de previsão com estrutura de pastas, README, e API funcionais.</p>
+                        <div class="solution">
+                            <button class="solution-toggle" onclick="toggleSolution(this)">🔓 Ver Solução</button>
+                            <div class="solution-content">
+                                <pre><code><span class="comment"># Script para criar estrutura do projeto</span>
+<span class="keyword">import</span> os
+
+<span class="keyword">def</span> <span class="function">create_project_structure</span>(project_name=<span class="string">'demand_forecaster'</span>):
+    <span class="string">"""Cria estrutura completa do projeto"""</span>
+    
+    dirs = [
+        <span class="string">f'{project_name}/data/raw'</span>,
+        <span class="string">f'{project_name}/data/processed'</span>,
+        <span class="string">f'{project_name}/notebooks'</span>,
+        <span class="string">f'{project_name}/src/data'</span>,
+        <span class="string">f'{project_name}/src/features'</span>,
+        <span class="string">f'{project_name}/src/models'</span>,
+        <span class="string">f'{project_name}/src/api'</span>,
+        <span class="string">f'{project_name}/models'</span>,
+        <span class="string">f'{project_name}/reports'</span>,
+        <span class="string">f'{project_name}/tests'</span>,
+    ]
+    
+    <span class="keyword">for</span> d <span class="keyword">in</span> dirs:
+        os.<span class="function">makedirs</span>(d, exist_ok=<span class="keyword">True</span>)
+        <span class="comment"># Criar __init__.py</span>
+        <span class="keyword">if</span> <span class="string">'src'</span> <span class="keyword">in</span> d:
+            <span class="function">open</span>(<span class="string">f'{d}/__init__.py'</span>, <span class="string">'w'</span>).<span class="function">close</span>()
+    
+    <span class="comment"># Criar arquivos base</span>
+    files = {
+        <span class="string">f'{project_name}/README.md'</span>: <span class="string">'''# Demand Forecaster
+## Setup
+```bash
+pip install -r requirements.txt
+```
+'''</span>,
+        <span class="string">f'{project_name}/requirements.txt'</span>: <span class="string">'''pandas>=1.5.0
+numpy>=1.21.0
+scikit-learn>=1.0.0
+lightgbm>=3.3.0
+fastapi>=0.95.0
+uvicorn>=0.21.0
+joblib>=1.2.0
+'''</span>,
+        <span class="string">f'{project_name}/config.yaml'</span>: <span class="string">'''model:
+  n_estimators: 100
+  random_state: 42
+  
+features:
+  lags: [1, 7, 14, 28]
+  rolling_windows: [7, 14, 28]
+  
+data:
+  train_end_date: "2023-10-01"
+'''</span>
+    }
+    
+    <span class="keyword">for</span> path, content <span class="keyword">in</span> files.<span class="function">items</span>():
+        <span class="keyword">with</span> <span class="function">open</span>(path, <span class="string">'w'</span>) <span class="keyword">as</span> f:
+            f.<span class="function">write</span>(content)
+    
+    <span class="function">print</span>(<span class="string">f'✅ Projeto {project_name} criado com sucesso!'</span>)
+    <span class="function">print</span>(<span class="string">f'\\nPróximos passos:'</span>)
+    <span class="function">print</span>(<span class="string">f'1. cd {project_name}'</span>)
+    <span class="function">print</span>(<span class="string">f'2. pip install -r requirements.txt'</span>)
+    <span class="function">print</span>(<span class="string">f'3. Adicionar dados em data/raw/'</span>)
+    <span class="function">print</span>(<span class="string">f'4. Criar notebooks de análise'</span>)
+
+<span class="comment"># Criar projeto</span>
+<span class="function">create_project_structure</span>()
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip">
+                    <h4>🎓 Parabéns!</h4>
+                    <p>Você completou o curso de <strong>Machine Learning Aplicado</strong>! Agora você tem as
+                        habilidades para:</p>
+                    <ul>
+                        <li>✅ Criar pipelines production-ready com Scikit-learn</li>
+                        <li>✅ Usar modelos poderosos: XGBoost, LightGBM</li>
+                        <li>✅ Fazer previsão de séries temporais com ARIMA, Prophet e ML</li>
+                        <li>✅ Estruturar projetos end-to-end para portfólio</li>
+                    </ul>
+                    <p><strong>Próximo passo:</strong> Aplique esses conhecimentos em um projeto real e adicione ao seu
+                        GitHub!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Machine Learning Aplicado - Fase 2 | Production-Ready ML</p>
+    </footer>
+
+    <script>
+        function toggleSolution(button) {
+            const content = button.nextElementSibling;
+            content.classList.toggle('show');
+            button.textContent = content.classList.contains('show') ? '🔒 Ocultar Solução' : '🔓 Ver Solução';
+        }
+    </script>
+</body>
+
+</html>
